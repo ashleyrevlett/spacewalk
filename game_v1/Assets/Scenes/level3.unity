@@ -5714,6 +5714,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97a165fcfe42f44d4aee386ad1e8e98d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isPaused: 0
+  isGameOver: 0
   pauseCanvas: {fileID: 422190057}
 --- !u!4 &2028937215
 Transform:
@@ -5750,7 +5752,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d65206875135d4a5e9c3eff454aaf339, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  StartingHitPoints: 100
+  StartingHitPoints: 10
   RemainingHitPoints: 0
   damageParticlePrefab: {fileID: 100000, guid: 30afdbc00946d4b36a3f24b88b6046f4, type: 2}
   damageSound: {fileID: 8300000, guid: 3968e8dca02fc409596d86ba3760abdc, type: 3}

@@ -7,7 +7,7 @@ public class HealthController : MonoBehaviour {
 	public float RemainingHitPoints;
 	public GameObject damageParticlePrefab;
 	public AudioClip damageSound;
-	private GameObject player;
+	private GameObject player;	
 
 	// Use this for initialization
 	void Start () {	

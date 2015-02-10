@@ -2,31 +2,67 @@
 using System.Collections;
 
 public class GameController : MonoBehaviour {
-	
+
+	public bool isPaused = false;
+	public bool isGameOver = false;
+
 	public GameObject pauseCanvas; // need to manually wire this up in IDE
+	private int loseScene = 5;
+
+	private GameObject gameController;
+	private HealthController healthController;
 
 	// Use this for initialization
 	void Start () {
-		Unpause ();
+
+		gameController = GameObject.FindWithTag ("GameController");
+		healthController = gameController.GetComponent<HealthController> ();
+		Unpause (); // need to unpause in case we have left a paused scene behind
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 	
-		// pause
+		// pause/unpause
 		if (Input.GetButtonDown ("Pause") && !pauseCanvas.activeInHierarchy) {
-			pauseCanvas.SetActive(true);
-			Debug.Log("PAUSING");
-			Time.timeScale = 0.0F;
+			Pause ();
 		} else if (Input.GetButtonDown ("Pause") && pauseCanvas.activeInHierarchy) {
 			Unpause ();
 		}
 
+		//lose conditions
+		if (healthController.RemainingHitPoints <= 0) {
+			GameLose ();
+		}
+
+
+	}
+
+	
+	public void Pause() {
+		pauseCanvas.SetActive(true);
+		Debug.Log("PAUSING");
+		Time.timeScale = 0.0F;
+		isPaused = true;
 	}
 
 	public void Unpause() {	
 		pauseCanvas.SetActive(false);
 		Debug.Log("UNPAUSING");
 		Time.timeScale = 1.0F;
+		isPaused = false;
 	}
+
+	public void GameLose() {
+		if (!isGameOver) {
+			Debug.Log ("GAME OVER!");
+			isGameOver = true;
+			Time.timeScale = 0.0F;
+			Application.LoadLevelAdditive (loseScene);
+		}
+	}
+
+
+
 }

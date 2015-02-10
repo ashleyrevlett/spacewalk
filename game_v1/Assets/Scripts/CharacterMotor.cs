@@ -30,19 +30,23 @@ public class CharacterMotor : MonoBehaviour {
 	
 	private Animator animator;
 
-//	private GameObject gameController;
-//	private HealthController healthController;
+	private GameObject gameControllerObject;
+	private GameController gameController;
 
+	
 	void Start () {		
 		controller = GetComponent<CharacterController> ();
 		animator = GetComponent<Animator> ();
 		cam = Camera.main.transform;
-//		gameController = GameObject.FindWithTag ("GameController");
-//		healthController = gameController.GetComponent<HealthController> ();
+		gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
+		gameController = gameControllerObject.GetComponent<GameController> ();
 	}
 
 
 	void Update () {	
+
+		if (gameController.isPaused || gameController.isGameOver )
+			return;
 
 		// calculate move relative to forward-facing direction
 		Vector3 forward = transform.forward;
