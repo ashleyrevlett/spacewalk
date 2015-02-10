@@ -1,19 +1,19 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
---- !u!1 &167326
+--- !u!1 &149998
 GameObject:
   m_ObjectHideFlags: 0
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   serializedVersion: 4
   m_Component:
-  - 4: {fileID: 467326}
-  - 20: {fileID: 2067326}
-  - 92: {fileID: 9267326}
-  - 124: {fileID: 12467326}
-  - 81: {fileID: 8167326}
-  - 114: {fileID: 11467326}
-  - 45: {fileID: 4567326}
+  - 4: {fileID: 449998}
+  - 20: {fileID: 2049998}
+  - 92: {fileID: 9249998}
+  - 124: {fileID: 12449998}
+  - 81: {fileID: 8149998}
+  - 45: {fileID: 4549998}
+  - 114: {fileID: 11449998}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -21,24 +21,24 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!4 &467326
+--- !u!4 &449998
 Transform:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 167326}
-  m_LocalRotation: {x: 0, y: .485783935, z: 0, w: .874078989}
-  m_LocalPosition: {x: -31.3519993, y: 5.58090019, z: -23.4090004}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_GameObject: {fileID: 149998}
+  m_LocalRotation: {x: .00614699675, y: -.989868522, z: .134440199, w: -.0452596694}
+  m_LocalPosition: {x: -25.8999996, y: 1.89999998, z: 16.3999996}
+  m_LocalScale: {x: .473847479, y: 1, z: .456152529}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
---- !u!20 &2067326
+--- !u!20 &2049998
 Camera:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 167326}
+  m_GameObject: {fileID: 149998}
   m_Enabled: 1
   serializedVersion: 2
   m_ClearFlags: 1
@@ -65,54 +65,56 @@ Camera:
   m_OcclusionCulling: 1
   m_StereoConvergence: 10
   m_StereoSeparation: .0219999999
---- !u!45 &4567326
+--- !u!45 &4549998
 Skybox:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 167326}
+  m_GameObject: {fileID: 149998}
   m_Enabled: 1
-  m_CustomSkybox: {fileID: 2100000, guid: be102ba99b89148da9a4e184cd6c51dc, type: 2}
---- !u!81 &8167326
+  m_CustomSkybox: {fileID: 2100000, guid: b86b2bf456e574f29a2b9f8ee6174bb0, type: 2}
+--- !u!81 &8149998
 AudioListener:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 167326}
+  m_GameObject: {fileID: 149998}
   m_Enabled: 1
---- !u!92 &9267326
+--- !u!92 &9249998
 Behaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 167326}
+  m_GameObject: {fileID: 149998}
   m_Enabled: 1
---- !u!114 &11467326
+--- !u!114 &11449998
 MonoBehaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 167326}
+  m_GameObject: {fileID: 149998}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 1698916b64003413f8ee69cc335ee581, type: 3}
+  m_Script: {fileID: 11500000, guid: 4b7176d06b98b4c34b34f4efdb83dfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceAway: 6
-  distanceUp: 3
-  smooth: 5
-  cameraVerticalOffset: 2
-  minDistanceAway: 1.5
+  distanceAway: 5
+  distanceUp: 4.25
+  smooth: 1.5
+  cameraVerticalOffset: 1
+  minDistanceAway: 0
   maxDistanceAway: 10
-  zoomSpeed: 2
-  rotateDegrees: 1
-  rotateSpeed: .100000001
---- !u!124 &12467326
+  zoomSpeed: 1.5
+  rotateDegrees: 30
+  rotateSpeed: 10
+  minVerticalMovement: 2
+  minVerticalRotation: 90
+--- !u!124 &12449998
 Behaviour:
   m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 167326}
+  m_GameObject: {fileID: 149998}
   m_Enabled: 1
 --- !u!1001 &100100000
 Prefab:
@@ -123,6 +125,6 @@ Prefab:
     m_Modifications: []
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 0}
-  m_RootGameObject: {fileID: 167326}
+  m_RootGameObject: {fileID: 149998}
   m_IsPrefabParent: 1
   m_IsExploded: 1

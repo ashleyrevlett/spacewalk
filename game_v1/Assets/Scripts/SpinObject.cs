@@ -2,7 +2,7 @@
 using System.Collections;
 
 
-public class Mineral : MonoBehaviour {
+public class SpinObject : MonoBehaviour {
 
 	public float rotateSpeed = 50.0f;
 	// Use this for initialization

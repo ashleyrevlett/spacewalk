@@ -8,6 +8,7 @@ public class CharacterMotor : MonoBehaviour {
 	public float rotateSpeed = 1000f;
 	public float rotateDegrees = 360;
 	public float speed = 6.0F;
+	public float jumpHeight = 12.0F;
 	public float jumpSpeed = 12.0F;
 	public float jumpForwardInertia = 2f;
 	public float gravity = 10.0F;
@@ -20,8 +21,8 @@ public class CharacterMotor : MonoBehaviour {
 	private CharacterController controller;
 	
 	private bool isJumping = false;
-	private float normalJumpHeight = 2.2f;
-	private float minJumpHeight = 1f;
+	private float normalJumpHeight = 4f;
+	private float minJumpHeight = 2f;
 	private float currentJumpHeight = 0f;
 	
 	private bool isFalling = false;
@@ -61,19 +62,17 @@ public class CharacterMotor : MonoBehaviour {
 		animator.SetFloat ("angularVelocity", moveHorizontal);
 
 		// normalize and time step movement
-		moveDirection = moveDirection.normalized * Time.deltaTime * speed;
+		moveDirection = moveDirection.normalized * Time.deltaTime * speed * (moveVertical * moveVertical);
 
 
 		// jumping
-		if (controller.isGrounded & Input.GetButton ("Jump")) {
+		if (controller.isGrounded & Input.GetButton ("Jump") & !isJumping) {
 			// starting a jump
 			isJumping = true;
 			currentJumpHeight = 0f;
 			animator.SetTrigger("isJumping");
 			AudioSource.PlayClipAtPoint(jumpSound, transform.position);
-
-		}
-		if (isJumping) {
+		} else if (isJumping) {
 			if ((currentJumpHeight < minJumpHeight) || ((currentJumpHeight < normalJumpHeight) && Input.GetButton ("Jump"))) {
 				// under min height			
 				// jumping, under max height and still pressing button
@@ -88,8 +87,14 @@ public class CharacterMotor : MonoBehaviour {
 				isFalling = true;
 				animator.SetTrigger("isFalling");
 			}
-		}
-
+		} else if (!isJumping & !controller.isGrounded) {
+			// not jumping, not grounded => falling, apply gravity and accel
+			float distanceToFall = (currentFallDistance * gravityAcceleration * Time.deltaTime) + (gravity * Time.deltaTime);
+			currentFallDistance += distanceToFall;
+			distanceToFall = Mathf.Clamp(distanceToFall, 0.1f, maxFallSpeed);
+			moveDirection.y -= distanceToFall;
+		} 
+				
 		// hit ground
 		//Debug.Log ("controller.collisionFlags: " + controller.collisionFlags);
 		if (controller.collisionFlags == CollisionFlags.Below) {
@@ -98,13 +103,6 @@ public class CharacterMotor : MonoBehaviour {
 			animator.SetFloat("speed", moveVertical);	
 		}
 
-		// not jumping, not grounded => falling, apply gravity and accel
-		if (!isJumping & !controller.isGrounded) {
-			float distanceToFall = (currentFallDistance * gravityAcceleration * Time.deltaTime) + (gravity * Time.deltaTime);
-			currentFallDistance += distanceToFall;
-			distanceToFall = Mathf.Clamp(distanceToFall, 0.1f, maxFallSpeed);
-			moveDirection.y -= distanceToFall;
-		} 
 
 		// move at speed	
 		controller.Move (moveDirection);

@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class PlayerCamera2 : MonoBehaviour {
+public class PlayerCamera : MonoBehaviour {
 	
 	[SerializeField]
 	public float distanceAway = 3.0f;
