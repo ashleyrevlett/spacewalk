@@ -12,27 +12,32 @@ public class HUDController : MonoBehaviour {
 	public Text hitPointsText;
 	
 	private float startTime; // timekeeping	
-	private PlayerController2 player;
+	private GameObject gameController;
+	private ScoreController scoreController;
+	private HealthController healthController;
 
 
 	// Use this for initialization
 	void Start () {
 		startTime = Time.time; // start timer
-		GameObject playerObject = GameObject.FindGameObjectWithTag ("Player");
-		player = playerObject.GetComponent<PlayerController2> ();
+	
+		gameController = GameObject.FindWithTag ("GameController");
+		scoreController = gameController.GetComponent<ScoreController> ();	
+		healthController = gameController.GetComponent<HealthController> ();	
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 		// update score
-		scoreText.text = "Score: " + player.score;
+		scoreText.text = "Score: " + scoreController.score;
 		
 		// update timer
 		float timeElapsed = Time.time - startTime;
 		float timeRemaining = timeLimit - Mathf.Round(timeElapsed);
 		timerText.text = timeRemaining.ToString();		
-		hitPointsText.text = player.hitPoints.ToString();
+		hitPointsText.text = healthController.RemainingHitPoints.ToString();
 
 	}
 

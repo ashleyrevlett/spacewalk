@@ -26,7 +26,7 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 100000}
-  m_LocalRotation: {x: 0, y: -0, z: 0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -13.3699999, y: 1.47000003, z: -2.00999999}
   m_LocalScale: {x: .444999993, y: 1, z: .485000014}
   m_Children: []
@@ -97,6 +97,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   particleEffectPrefab: {fileID: 100000, guid: 57988049bf74847258cb2c53007568d4, type: 2}
   collectSound: {fileID: 8300000, guid: 68c79973c965b452691f93cbf2bcace7, type: 3}
+  objectPoints: 1
+  gameController: {fileID: 0}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1

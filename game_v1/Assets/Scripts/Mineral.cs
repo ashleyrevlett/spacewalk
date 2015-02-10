@@ -20,18 +20,6 @@ public class Mineral : MonoBehaviour {
 		transform.Rotate(Vector3.up, rotateSpeed * Time.deltaTime);
 	}
 
-	
-	// collect minerals
-//	void OnTriggerEnter(Collider other) {
-//		Debug.Log ("Mineral Trigger entered! " + other);
-//		
-//		if (other.tag == "Player") { 
-//			ps.enableEmission = true;
-//		} 	
-//		
-//		
-//	}
-
 
 
 }

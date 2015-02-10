@@ -15,7 +15,6 @@ public class CharacterMotor : MonoBehaviour {
 	
 	public float runScaleFactor = 1.2f;
 	private Vector3 moveDirection = Vector3.zero;
-
 	
 	public Transform cam;
 	private CharacterController controller;
@@ -31,10 +30,15 @@ public class CharacterMotor : MonoBehaviour {
 	
 	private Animator animator;
 
+//	private GameObject gameController;
+//	private HealthController healthController;
+
 	void Start () {		
 		controller = GetComponent<CharacterController> ();
 		animator = GetComponent<Animator> ();
 		cam = Camera.main.transform;
+//		gameController = GameObject.FindWithTag ("GameController");
+//		healthController = gameController.GetComponent<HealthController> ();
 	}
 
 
@@ -45,7 +49,7 @@ public class CharacterMotor : MonoBehaviour {
 		Vector3 right = new Vector3(forward.z, 0, -forward.x);
 		float moveHorizontal = Input.GetAxisRaw ("Horizontal");
 		float moveVertical = Input.GetAxisRaw ("Vertical");
-		Debug.Log ("moveHorizontal: " + moveHorizontal + ", moveVertical: " + moveHorizontal);
+		//Debug.Log ("moveHorizontal: " + moveHorizontal + ", moveVertical: " + moveHorizontal);
 		Vector3 targetDirection = moveHorizontal * right + moveVertical * forward;
 		moveDirection = Vector3.RotateTowards(moveDirection, targetDirection, rotateDegrees * Mathf.Deg2Rad * Time.deltaTime, rotateSpeed);
 
@@ -83,11 +87,11 @@ public class CharacterMotor : MonoBehaviour {
 		}
 
 		// hit ground
-		Debug.Log (controller.collisionFlags);
+		//Debug.Log ("controller.collisionFlags: " + controller.collisionFlags);
 		if (controller.collisionFlags == CollisionFlags.Below) {
 			currentFallDistance = 0f;
 			isFalling = false;
-			animator.SetFloat("velocity", moveVertical);	
+			animator.SetFloat("speed", moveVertical);	
 		}
 
 		// not jumping, not grounded => falling, apply gravity and accel
@@ -109,42 +113,6 @@ public class CharacterMotor : MonoBehaviour {
 		}
 
 	}
-
-
-
-	
-//	Vector3 LocalMovement() {
-//		/* return player movement amount relative to camera position */
-//		
-//		Vector3 local = Vector3.zero;
-//		
-//		// get the joystick input 
-//		float moveHorizontal = Input.GetAxisRaw ("Horizontal");
-//		float moveVertical = Input.GetAxisRaw ("Vertical");
-//		
-//		// calculate local movement vector based on forward/right relative to camera and player				
-//
-//		Vector3 camPosition = cam.transform.position;
-//		Vector3 playerPosition = transform.position;
-//		Vector3 forwardDirection = playerPosition - camPosition;		
-//		forwardDirection.y = 0; // naturally looks downward; so we can see it change to no vertical change
-//		//Debug.DrawRay (playerPosition, forwardDirection, Color.blue);			
-//		
-//		Vector3 right = Vector3.Cross (Vector3.up, forwardDirection); // find "right" direction
-//		
-//		if (moveHorizontal != 0) {
-//			local += right * moveHorizontal;
-//		}
-//		
-//		if (moveVertical != 0) {
-//			local += forwardDirection * moveVertical;
-//		}
-//
-//		
-//		return local;
-//		
-//	}
-
 
 	
 
