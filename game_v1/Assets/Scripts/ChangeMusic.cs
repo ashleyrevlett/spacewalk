@@ -15,13 +15,13 @@ public class ChangeMusic : MonoBehaviour {
 	}
 
 	void OnLevelWasLoaded(int level) {
-	
-		if (level == 2) {
-		
+//	
+//		if (level == 2) {
+//		
 			source.clip = level2Music;
 			source.Play();
 
-		}
+//		}
 	
 	}
 

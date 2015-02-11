@@ -197,7 +197,7 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 2141115631}
   m_GameObject: {fileID: 62058230}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 8db4366c95fe84eeea2bdf3a83a01563, type: 3}
   m_Name: 
@@ -1321,7 +1321,7 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 11439328, guid: 418df29a5f7a449fe94330c781e40018, type: 2}
+      - m_Target: {fileID: 0}
         m_MethodName: Unpause
         m_Mode: 1
         m_Arguments:
@@ -6282,7 +6282,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 11489560, guid: 9c97e9686cce34eb08b4b2f9cf923286, type: 2}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 11489560, guid: 9c97e9686cce34eb08b4b2f9cf923286, type: 2}
       propertyPath: WaveSpeed

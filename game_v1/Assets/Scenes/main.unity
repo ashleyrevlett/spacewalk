@@ -840,10 +840,9 @@ GameObject:
   serializedVersion: 4
   m_Component:
   - 4: {fileID: 402925536}
-  - 95: {fileID: 402925538}
   - 114: {fileID: 402925537}
   m_Layer: 0
-  m_Name: planet4
+  m_Name: planet
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -875,22 +874,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotationAmount: 2
---- !u!95 &402925538
-Animator:
-  serializedVersion: 3
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 9500000, guid: 59121501dec864e6e95ea06b780713ac,
-    type: 3}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 402925535}
-  m_Enabled: 0
-  m_Avatar: {fileID: 9000000, guid: 59121501dec864e6e95ea06b780713ac, type: 3}
-  m_Controller: {fileID: 0}
-  m_CullingMode: 0
-  m_UpdateMode: 0
-  m_ApplyRootMotion: 1
-  m_HasTransformHierarchy: 1
-  m_AllowConstantClipSamplingOptimization: 1
 --- !u!1 &439608435
 GameObject:
   m_ObjectHideFlags: 0
