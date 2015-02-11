@@ -12,8 +12,14 @@ public class WaterController : MonoBehaviour {
 	private float minRandomOffset = 0.05f;
 	private float maxRandomOffset = 1f;
 
+	private GameObject gameControllerObject;
+	private GameController gameController;
+
 	// Use this for initialization
 	void Start () {
+		gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
+		gameController = gameControllerObject.GetComponent<GameController> ();
+
 		randomOffsets = new float[numberRandoms];
 		for (int i = 0; i < numberRandoms; i++) {
 			randomOffsets[i] = Random.Range(minRandomOffset, maxRandomOffset);
@@ -22,6 +28,10 @@ public class WaterController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+
+		if (gameController.isPaused || gameController.isGameOver)
+			return;
+
 		Mesh mesh = GetComponent<MeshFilter>().mesh;
 		Vector3[] vertices = mesh.vertices;
 		Vector3[] normals = mesh.normals;

@@ -3,6 +3,7 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
+	// public so we can check the status in our controllers
 	public bool isPaused = false;
 	public bool isGameOver = false;
 

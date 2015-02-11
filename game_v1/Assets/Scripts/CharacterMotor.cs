@@ -3,39 +3,40 @@ using System.Collections;
 
 public class CharacterMotor : MonoBehaviour {
 
-	public AudioClip jumpSound;
-
+	// running
 	public float rotateSpeed = 1000f;
 	public float rotateDegrees = 360;
 	public float speed = 6.0F;
+	public float runScaleFactor = 1.2f;
+	private Vector3 moveDirection = Vector3.zero;
+
+	// jumping
+	public AudioClip jumpSound;
 	public float jumpHeight = 12.0F;
 	public float jumpSpeed = 12.0F;
 	public float jumpForwardInertia = 2f;
+	public float normalJumpHeight = 4f;
+	public float minJumpHeight = 2f;
+	private bool isJumping = false;
+	private float currentJumpHeight = 0f;
+
+	// gravity
 	public float gravity = 10.0F;
 	public float gravityAcceleration = 1.2F;
-	
-	public float runScaleFactor = 1.2f;
-	private Vector3 moveDirection = Vector3.zero;
-	
-	public Transform cam;
-	private CharacterController controller;
-	
-	private bool isJumping = false;
-	private float normalJumpHeight = 4f;
-	private float minJumpHeight = 2f;
-	private float currentJumpHeight = 0f;
-	
 	private bool isFalling = false;
 	private float maxFallSpeed = 10f;
 	private float currentFallDistance = 0f;
-	
-	private Animator animator;
 
+	// gameobject references	
+	public Transform cam;
+	private CharacterController controller;
+	private Animator animator;
 	private GameObject gameControllerObject;
 	private GameController gameController;
 
 	
 	void Start () {		
+		// cache references to everything 
 		controller = GetComponent<CharacterController> ();
 		animator = GetComponent<Animator> ();
 		cam = Camera.main.transform;
@@ -46,6 +47,7 @@ public class CharacterMotor : MonoBehaviour {
 
 	void Update () {	
 
+		// do nothing if paused or on gameover screen
 		if (gameController.isPaused || gameController.isGameOver )
 			return;
 

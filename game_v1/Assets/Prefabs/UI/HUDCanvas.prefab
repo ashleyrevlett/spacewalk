@@ -502,7 +502,7 @@ MonoBehaviour:
   loadingImage: {fileID: 0}
 --- !u!114 &11439328
 MonoBehaviour:
-  m_ObjectHideFlags: 0
+  m_ObjectHideFlags: 1
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 139322}

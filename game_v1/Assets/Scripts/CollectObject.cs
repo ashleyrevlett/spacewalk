@@ -28,6 +28,7 @@ public class CollectObject : MonoBehaviour {
 			
 			// now destroy and increment score
 			Destroy(gameObject, .2f);
+			Destroy(particleObject, 2f); // destroy in 2 sec
 
 		} 		
 	}
