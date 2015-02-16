@@ -61,6 +61,7 @@
      <Compile Include="Assets\Scripts\PlayerCamera.cs" />
      <Compile Include="Assets\Scripts\RotateObject.cs" />
      <Compile Include="Assets\Scripts\ScoreController.cs" />
+     <Compile Include="Assets\Scripts\ShakeObject.cs" />
      <Compile Include="Assets\Scripts\SpinObject.cs" />
      <Compile Include="Assets\Scripts\TakeDamage.cs" />
      <Compile Include="Assets\Scripts\WalkAround.cs" />

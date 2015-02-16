@@ -7,10 +7,10 @@ public class WaterController : MonoBehaviour {
 	public float WaveFrequency = 2f;
 	public float WaveHeight = 1f;
 
-	private int numberRandoms = 5;
-	private float[] randomOffsets;
-	private float minRandomOffset = 0.05f;
-	private float maxRandomOffset = 1f;
+//	private int numberRandoms = 5;
+//	private float[] randomOffsets;
+//	private float minRandomOffset = 0.05f;
+//	private float maxRandomOffset = 1f;
 
 	private GameObject gameControllerObject;
 	private GameController gameController;
@@ -20,10 +20,10 @@ public class WaterController : MonoBehaviour {
 		gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
 		gameController = gameControllerObject.GetComponent<GameController> ();
 
-		randomOffsets = new float[numberRandoms];
-		for (int i = 0; i < numberRandoms; i++) {
-			randomOffsets[i] = Random.Range(minRandomOffset, maxRandomOffset);
-		}
+//		randomOffsets = new float[numberRandoms];
+//		for (int i = 0; i < numberRandoms; i++) {
+//			randomOffsets[i] = Random.Range(minRandomOffset, maxRandomOffset);
+//		}
 	}
 	
 	// Update is called once per frame
@@ -37,9 +37,7 @@ public class WaterController : MonoBehaviour {
 		Vector3[] normals = mesh.normals;
 		int i = 0;
 		while (i < vertices.Length) {
-			float random_offset = randomOffsets[Random.Range(0,randomOffsets.Length)];
 			float phase = Time.time * WaveSpeed;
-//			float wpos = mul( _Object2World, v.vertex);
 			Vector3 wpos = vertices[i];
 			float offset = (wpos.x + (wpos.z * 0.2f)) * WaveFrequency;
 			wpos.y = wpos.y + (Mathf.Sin(phase + offset) * WaveHeight);
@@ -49,5 +47,6 @@ public class WaterController : MonoBehaviour {
 			i++;
 		}
 		mesh.vertices = vertices;
+		mesh.RecalculateNormals();
 	}
 }

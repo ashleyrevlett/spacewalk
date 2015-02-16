@@ -12,13 +12,16 @@ public class CharacterMotor : MonoBehaviour {
 
 	// jumping
 	public AudioClip jumpSound;
-	public float jumpHeight = 12.0F;
-	public float jumpSpeed = 12.0F;
-	public float jumpForwardInertia = 2f;
-	public float normalJumpHeight = 4f;
-	public float minJumpHeight = 2f;
+	public float jumpHeight = 100f;
+	public float minJumpHeight = 20f;
+	public float normalJumpHeight = 40f;
+	public float highJumpHeight = 70f;
+	private bool jumpInput = false;
+	private bool canJump = true;
+
 	private bool isJumping = false;
 	private float currentJumpHeight = 0f;
+	private float timeSinceJumpStart = 0f;
 
 	// gravity
 	public float gravity = 10.0F;
@@ -34,7 +37,10 @@ public class CharacterMotor : MonoBehaviour {
 	private GameObject gameControllerObject;
 	private GameController gameController;
 
-	
+	// new jump
+	private Vector3 velocity = Vector3.zero;
+
+
 	void Start () {		
 		// cache references to everything 
 		controller = GetComponent<CharacterController> ();
@@ -51,73 +57,112 @@ public class CharacterMotor : MonoBehaviour {
 		if (gameController.isPaused || gameController.isGameOver )
 			return;
 
-		// calculate move relative to forward-facing direction
-		Vector3 forward = transform.forward;
-		Vector3 right = new Vector3(forward.z, 0, -forward.x);
+		Vector2 playerInput = ProcessPlayerInput ();
+
+		moveDirection = LocalMovement (playerInput.x, playerInput.y);
+
+		// look in direction
+		if (playerInput != Vector2.zero)
+		{
+			Vector3 lookDirection = new Vector3(moveDirection.x, 0f, moveDirection.z);
+			transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.LookRotation(lookDirection)), Time.deltaTime * 3);
+		}
+
+		// add gravity
+		moveDirection.y -= gravity * Time.deltaTime;
+
+		ProcessJump();		 
+
+		// move at speed	
+		controller.Move (moveDirection * Time.deltaTime);
+	
+
+	}
+
+
+	private Vector2 ProcessPlayerInput() {
+		
 		float moveHorizontal = Input.GetAxisRaw ("Horizontal");
 		float moveVertical = Input.GetAxisRaw ("Vertical");
-		//Debug.Log ("moveHorizontal: " + moveHorizontal + ", moveVertical: " + moveHorizontal);
-		Vector3 targetDirection = moveHorizontal * right + moveVertical * forward;
-		moveDirection = Vector3.RotateTowards(moveDirection, targetDirection, rotateDegrees * Mathf.Deg2Rad * Time.deltaTime, rotateSpeed);
+		jumpInput = Input.GetButton ("Jump");
 
-		animator.SetFloat ("speed", moveVertical);
+		if (!jumpInput)
+			animator.SetFloat ("speed", moveVertical);
 		animator.SetFloat ("angularVelocity", moveHorizontal);
+		
+		return new Vector2(moveHorizontal, moveVertical);
+		
+	}
 
-		// normalize and time step movement
-		moveDirection = moveDirection.normalized * Time.deltaTime * speed * (moveVertical * moveVertical);
 
+	private void ProcessJump() {	
+		// IEnumerator
+//		if (jumpInput && canJump) { 
+//			//trigger jump
+//			animator.SetBool("Jump", true);
+//			// prevent more jumps
+//			yield return null;
+//			animator.SetBool("Jump", false);
+//			canJump = false;
+//		} else if (!jumpInput) {
+//			yield return null;
+//			canJump = true;
+//		}
 
-		// jumping
-		if (controller.isGrounded & Input.GetButton ("Jump") & !isJumping) {
+		// hit ground
+		if ((controller.collisionFlags & CollisionFlags.Below) != 0) {
+			isJumping = false;
+			animator.SetTrigger("isGrounded");
+			Debug.Log("Is Grounded");
+		}
+
+		// start jump
+		if (controller.isGrounded & Input.GetButton ("Jump")) {
 			// starting a jump
 			isJumping = true;
 			currentJumpHeight = 0f;
 			animator.SetTrigger("isJumping");
 			AudioSource.PlayClipAtPoint(jumpSound, transform.position);
-		} else if (isJumping) {
+			timeSinceJumpStart = 0f;
+		} 
+
+
+		// perform a jump
+		if (isJumping) {
+
 			if ((currentJumpHeight < minJumpHeight) || ((currentJumpHeight < normalJumpHeight) && Input.GetButton ("Jump"))) {
-				// under min height			
-				// jumping, under max height and still pressing button
-				// continuing a jump
-				float jumpDistance = jumpSpeed * Time.deltaTime;
-				moveDirection.y += jumpDistance;
-				currentJumpHeight += jumpDistance;
+				// jumping under min height or 			
+				// jumping under max height and still pressing button
+				//float jumpDistance = jumpSpeed * Time.deltaTime;
+//				float jumpAmount = (float)(-.05f * (timeSinceJumpStart*timeSinceJumpStart)) + (10f * timeSinceJumpStart);
+				float jumpAmount = jumpHeight * Time.deltaTime;
+				moveDirection.y += jumpAmount;
+				currentJumpHeight += jumpAmount;
 			} else if ((currentJumpHeight >= normalJumpHeight) || !Input.GetButton ("Jump")) {
 				// ending a jump if we're over max jump height
 				// or the button is no longer pressed and we're above min jump height
-				isJumping = false;
-				isFalling = true;
 				animator.SetTrigger("isFalling");
+				isJumping = false;
+				timeSinceJumpStart = 0;
+				currentJumpHeight = 0;
 			}
-		} else if (!isJumping & !controller.isGrounded) {
-			// not jumping, not grounded => falling, apply gravity and accel
-			float distanceToFall = (currentFallDistance * gravityAcceleration * Time.deltaTime) + (gravity * Time.deltaTime);
-			currentFallDistance += distanceToFall;
-			distanceToFall = Mathf.Clamp(distanceToFall, 0.1f, maxFallSpeed);
-			moveDirection.y -= distanceToFall;
+
+
 		} 
-				
-		// hit ground
-		//Debug.Log ("controller.collisionFlags: " + controller.collisionFlags);
-		if (controller.collisionFlags == CollisionFlags.Below) {
-			currentFallDistance = 0f;
-			isFalling = false;
-			animator.SetFloat("speed", moveVertical);	
-		}
-
-
-		// move at speed	
-		controller.Move (moveDirection);
-
-		// look in direction
-		if (targetDirection != Vector3.zero)
-		{
-			moveDirection.y = 0f; // don't fall forward
-			transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.LookRotation(moveDirection)), Time.deltaTime * 3);
-		}
 
 	}
 
+
+	Vector3 LocalMovement( float moveHorizontal, float moveVertical) {
+		//Debug.Log ("moveHorizontal: " + moveHorizontal + ", moveVertical: " + moveHorizontal);
+		Vector3 forward = transform.forward;
+		Vector3 right = new Vector3(forward.z, 0, -forward.x);
+		Vector3 targetDirection = moveHorizontal * right + moveVertical * forward;
+		moveDirection = Vector3.RotateTowards(moveDirection, targetDirection, rotateDegrees * Mathf.Deg2Rad * Time.deltaTime, rotateSpeed);
+		moveDirection = moveDirection.normalized * speed;
+
+		return(moveDirection);
 	
+	}
 
 }

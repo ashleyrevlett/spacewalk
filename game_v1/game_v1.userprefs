@@ -1,18 +1,20 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/WalkAround.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Release" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/ShakeObject.cs">
     <Files>
-      <File FileName="Assets/Scripts/WalkAround.cs" Line="51" Column="8" />
-      <File FileName="Assets/Scripts/TakeDamage.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/CharacterMotor.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/SpinObject.cs" Line="20" Column="62" />
+      <File FileName="Assets/Scripts/ShakeObject.cs" Line="10" Column="28" />
+      <File FileName="Assets/Scripts/CharacterMotor.cs" Line="74" Column="15" />
+      <File FileName="Assets/Scripts/SpinObject.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/TakeDamage.cs" Line="21" Column="40" />
+      <File FileName="Assets/Scripts/WaterController.cs" Line="37" Column="1" />
+      <File FileName="Assets/Scripts/CauseDamage.cs" Line="24" Column="29" />
     </Files>
     <Pads>
       <Pad Id="ProjectPad">
         <State expanded="True">
           <Node name="Assembly-CSharp" expanded="True">
             <Node name="Scripts" expanded="True">
-              <Node name="WalkAround.cs" selected="True" />
+              <Node name="ShakeObject.cs" selected="True" />
             </Node>
           </Node>
         </State>
@@ -29,9 +31,7 @@
     </Pads>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
-    <BreakpointStore>
-      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/WalkAround.cs" line="23" />
-    </BreakpointStore>
+    <BreakpointStore />
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
 </Properties>
