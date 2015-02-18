@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
      <Compile Include="Assets\Mixamo\BasicLocomotionPack\LocomotionScript.cs" />
+     <Compile Include="Assets\Scripts\AttackNearby.cs" />
      <Compile Include="Assets\Scripts\CauseDamage.cs" />
      <Compile Include="Assets\Scripts\ChangeMusic.cs" />
      <Compile Include="Assets\Scripts\CharacterMotor.cs" />
@@ -58,12 +59,16 @@
      <Compile Include="Assets\Scripts\HealthController.cs" />
      <Compile Include="Assets\Scripts\LoadAdditive.cs" />
      <Compile Include="Assets\Scripts\LoadOnClick.cs" />
+     <Compile Include="Assets\Scripts\NoiseGenerator.cs" />
+     <Compile Include="Assets\Scripts\PlatformController.cs" />
      <Compile Include="Assets\Scripts\PlayerCamera.cs" />
+     <Compile Include="Assets\Scripts\ProcTerrain.cs" />
      <Compile Include="Assets\Scripts\RotateObject.cs" />
      <Compile Include="Assets\Scripts\ScoreController.cs" />
      <Compile Include="Assets\Scripts\ShakeObject.cs" />
      <Compile Include="Assets\Scripts\SpinObject.cs" />
      <Compile Include="Assets\Scripts\TakeDamage.cs" />
+     <Compile Include="Assets\Scripts\TriggerPlatformFall.cs" />
      <Compile Include="Assets\Scripts\WalkAround.cs" />
      <Compile Include="Assets\Scripts\WaterController.cs" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />

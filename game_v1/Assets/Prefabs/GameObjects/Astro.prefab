@@ -1721,8 +1721,8 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 145982}
-  m_LocalRotation: {x: 0, y: .976341069, z: 0, w: .216236383}
-  m_LocalPosition: {x: -26.4877262, y: 0, z: 10.8463421}
+  m_LocalRotation: {x: 0, y: .975246012, z: 0, w: .221122861}
+  m_LocalPosition: {x: -26.4899998, y: 0, z: 10.8500004}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 445998}
@@ -1966,16 +1966,17 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 999de92bff19748ddbdf79058b1d0293, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  jumpSound: {fileID: 8300000, guid: ad829240430cd4592acf4dcfc9d83f92, type: 3}
   rotateSpeed: 1000
   rotateDegrees: 1000
-  speed: 7.5
-  jumpHeight: 12
-  jumpSpeed: 3
-  jumpForwardInertia: 1
-  gravity: .100000001
-  gravityAcceleration: .100000001
+  speed: 8.5
   runScaleFactor: 1
+  jumpSound: {fileID: 8300000, guid: ad829240430cd4592acf4dcfc9d83f92, type: 3}
+  jumpHeight: 400
+  minJumpHeight: 100
+  normalJumpHeight: 130
+  highJumpHeight: 200
+  gravity: 150
+  gravityAcceleration: 1
   cam: {fileID: 0}
 --- !u!114 &11445874
 MonoBehaviour:

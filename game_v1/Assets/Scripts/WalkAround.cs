@@ -23,16 +23,16 @@ public class WalkAround : MonoBehaviour {
 		timeUntilTurn -= Time.deltaTime;
 
 		if (timeUntilTurn <= 0 && !isTurning) {
-			Debug.Log ("Starting Turn");
+//			Debug.Log ("Starting Turn");
 			isTurning = true;
 		}
 
 		if (isTurning && anglesTurnedSoFar < turnDegrees) {
-			Debug.Log ("Continuing Turn");
+//			Debug.Log ("Continuing Turn");
 			transform.Rotate(Vector3.up, rotateSpeed * Time.deltaTime);		
 			anglesTurnedSoFar += rotateSpeed * Time.deltaTime;
 		} else if (isTurning && anglesTurnedSoFar >= turnDegrees) {
-			Debug.Log ("Ending Turn");
+//			Debug.Log ("Ending Turn");
 			isTurning = false;
 			timeUntilTurn = secondsTillTurn;
 			anglesTurnedSoFar = 0f;
@@ -47,7 +47,7 @@ public class WalkAround : MonoBehaviour {
 
 	void OnCollisionEnter(Collision collision) {
 		foreach (ContactPoint contact in collision.contacts) {
-			Debug.Log ("contact: " + contact);
+//			Debug.Log ("contact: " + contact);
 			if (contact.normal != Vector3.up) {
 				Debug.DrawRay(contact.point, contact.normal, Color.white);
 				timeUntilTurn = 0f;

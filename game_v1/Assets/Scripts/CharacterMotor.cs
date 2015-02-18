@@ -54,8 +54,8 @@ public class CharacterMotor : MonoBehaviour {
 	void Update () {	
 
 		// do nothing if paused or on gameover screen
-		if (gameController.isPaused || gameController.isGameOver )
-			return;
+//		if (gameController.isPaused || gameController.isGameOver )
+//			return;
 
 		Vector2 playerInput = ProcessPlayerInput ();
 
@@ -113,7 +113,7 @@ public class CharacterMotor : MonoBehaviour {
 		if ((controller.collisionFlags & CollisionFlags.Below) != 0) {
 			isJumping = false;
 			animator.SetTrigger("isGrounded");
-			Debug.Log("Is Grounded");
+			//Debug.Log("Is Grounded");
 		}
 
 		// start jump
