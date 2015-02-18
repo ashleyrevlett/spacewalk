@@ -6,8 +6,12 @@ public class CharacterMotor : MonoBehaviour {
 	// running
 	public float rotateSpeed = 1000f;
 	public float rotateDegrees = 360;
-	public float speed = 6.0F;
-	public float runScaleFactor = 1.2f;
+	public float walkSpeed = 6.0F;
+	public float runSpeed = 12.0F;
+	public float acceleration = 1.2F;
+	public float deceleration = 5f;
+	public float accelStart = .2F;
+	private float currentSpeed = 0f;
 	private Vector3 moveDirection = Vector3.zero;
 
 	// jumping
@@ -59,6 +63,23 @@ public class CharacterMotor : MonoBehaviour {
 
 		Vector2 playerInput = ProcessPlayerInput ();
 
+		// determine current speed based on joystick angle + current + accel
+		if (playerInput.y != 0) {	
+			if (currentSpeed == 0) {
+				currentSpeed += (playerInput.y * acceleration * Time.deltaTime) + accelStart;
+			} else if (playerInput.y == 1) {
+				// only accelerate beyond normal speed if running!
+				currentSpeed += (playerInput.y * acceleration * Time.deltaTime);
+			}
+		} else {
+			// not wanting forward, slow down
+			currentSpeed -= (deceleration * Time.deltaTime);
+		}
+		currentSpeed = Mathf.Clamp (currentSpeed, 0f, runSpeed);
+		Debug.Log (currentSpeed);
+		
+		UpdateAnimations (playerInput.x, playerInput.y, currentSpeed);
+
 		moveDirection = LocalMovement (playerInput.x, playerInput.y);
 
 		// look in direction
@@ -68,10 +89,16 @@ public class CharacterMotor : MonoBehaviour {
 			transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.LookRotation(lookDirection)), Time.deltaTime * 3);
 		}
 
+		// slide
+		if (playerInput.y == 0) {
+			moveDirection += (transform.forward * currentSpeed);		
+		}
+
 		// add gravity
 		moveDirection.y -= gravity * Time.deltaTime;
 
 		ProcessJump();		 
+			
 
 		// move at speed	
 		controller.Move (moveDirection * Time.deltaTime);
@@ -85,15 +112,19 @@ public class CharacterMotor : MonoBehaviour {
 		float moveHorizontal = Input.GetAxisRaw ("Horizontal");
 		float moveVertical = Input.GetAxisRaw ("Vertical");
 		jumpInput = Input.GetButton ("Jump");
-
-		if (!jumpInput)
-			animator.SetFloat ("speed", moveVertical);
-		animator.SetFloat ("angularVelocity", moveHorizontal);
 		
 		return new Vector2(moveHorizontal, moveVertical);
 		
 	}
 
+
+	private void UpdateAnimations(float moveHorizontal, float moveVertical, float speed) {
+		
+		if (!jumpInput)
+			animator.SetFloat ("speed", speed/runSpeed); // normalize to 0-1
+		animator.SetFloat ("angularVelocity", moveHorizontal);
+
+	}
 
 	private void ProcessJump() {	
 		// IEnumerator
@@ -159,7 +190,7 @@ public class CharacterMotor : MonoBehaviour {
 		Vector3 right = new Vector3(forward.z, 0, -forward.x);
 		Vector3 targetDirection = moveHorizontal * right + moveVertical * forward;
 		moveDirection = Vector3.RotateTowards(moveDirection, targetDirection, rotateDegrees * Mathf.Deg2Rad * Time.deltaTime, rotateSpeed);
-		moveDirection = moveDirection.normalized * speed;
+		moveDirection = moveDirection.normalized * currentSpeed;
 
 		return(moveDirection);
 	
