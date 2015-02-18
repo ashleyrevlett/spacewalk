@@ -7,7 +7,8 @@ public class PlatformController : MonoBehaviour {
 	public float whenToFall = 2f;
 	public float fallSpeed = 1f;
 	public float fallAcceleration = .2f;
-	
+	public Color triggeredColor;
+
 	public bool linearMove = false;
 	public Vector3 moveDirection = Vector3.up;
 	public float moveTime = 3f;
@@ -32,7 +33,6 @@ public class PlatformController : MonoBehaviour {
 			
 			if (timeElapsed > whenToFall && !falling) {
 				falling = true;			
-				gameObject.renderer.material.color = Color.white;
 			}
 			
 			if (falling)
@@ -70,7 +70,7 @@ public class PlatformController : MonoBehaviour {
 			timeFalling = 0f;
 			
 			// change material color
-			gameObject.renderer.material.color = Color.red;
+			gameObject.renderer.material.color = triggeredColor;
 		}
 		
 	}
@@ -80,7 +80,13 @@ public class PlatformController : MonoBehaviour {
 		float newY = gameObject.transform.position.y - (timeElapsed * fallAcceleration) - (fallSpeed * Time.deltaTime);
 		gameObject.transform.position = Vector3.Lerp (gameObject.transform.position, 
 		                                              new Vector3 (gameObject.transform.position.x, newY, gameObject.transform.position.z),
-		                                              Time.deltaTime);	
+		                                              Time.deltaTime);
+
+		// fade color to white
+		float change = (fallSpeed * Time.deltaTime);
+		Color newColor = new Color (gameObject.renderer.material.color.r + change, gameObject.renderer.material.color.g + change, gameObject.renderer.material.color.b + change);
+		gameObject.renderer.material.color = newColor;
+
 	}
 	
 	
