@@ -20,24 +20,6 @@ AnimatorController:
     m_DefaultInt: 0
     m_DefaultBool: 0
     m_Controller: {fileID: 9100000}
-  - m_Name: isJumping
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: isFalling
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
-  - m_Name: isGrounded
-    m_Type: 9
-    m_DefaultFloat: 0
-    m_DefaultInt: 0
-    m_DefaultBool: 0
-    m_Controller: {fileID: 9100000}
   - m_Name: Jump
     m_Type: 4
     m_DefaultFloat: 0
@@ -110,24 +92,24 @@ BlendTree:
   m_PrefabInternal: {fileID: 0}
   m_Name: Blend Tree
   m_Childs:
-  - m_Motion: {fileID: 7400000, guid: 67b4ad10dba264b0e8ac7144340fec6e, type: 3}
+  - m_Motion: {fileID: 7400000, guid: aa1b17b250ead4a47938b5549c77f08a, type: 3}
     m_Threshold: 0
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: 1.04825389
     m_CycleOffset: 0
     m_IsAnim: 1
     m_Mirror: 0
   - m_Motion: {fileID: 7400000, guid: 49a7be0e3619548d488688aa1d37ecdf, type: 3}
-    m_Threshold: 1
+    m_Threshold: .5
     m_Position: {x: 0, y: 0}
-    m_TimeScale: 1
+    m_TimeScale: .955993056
     m_CycleOffset: 0
     m_IsAnim: 1
     m_Mirror: 0
   m_BlendParameter: speed
   m_BlendParameterY: speed
   m_MinThreshold: 0
-  m_MaxThreshold: 1
+  m_MaxThreshold: .5
   m_UseAutomaticThresholds: 0
   m_BlendType: 0
 --- !u!206 &20636380

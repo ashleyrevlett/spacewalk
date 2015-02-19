@@ -6,11 +6,11 @@ public class CharacterMotor : MonoBehaviour {
 	// running
 	public float rotateSpeed = 1000f;
 	public float rotateDegrees = 360;
-	public float walkSpeed = 6.0F;
-	public float runSpeed = 12.0F;
-	public float acceleration = 1.2F;
+	public float walkSpeed = 6.0f;
+	public float runSpeed = 12.0f;
+	public float acceleration = 1.2f;
 	public float deceleration = 5f;
-	public float accelStart = .2F;
+	public float accelStart = .2f;
 	private float currentSpeed = 0f;
 	private Vector3 moveDirection = Vector3.zero;
 
@@ -20,6 +20,11 @@ public class CharacterMotor : MonoBehaviour {
 	public float minJumpHeight = 20f;
 	public float normalJumpHeight = 40f;
 	public float highJumpHeight = 70f;
+	public float jumpAcceleration = 1.2f;
+	public float minJumpSpeed = 2f;
+	public float maxJumpSpeed = 12f;
+	private float currentJumpSpeed = 0f;
+
 	private bool jumpInput = false;
 	private bool canJump = true;
 
@@ -28,8 +33,8 @@ public class CharacterMotor : MonoBehaviour {
 	private float timeSinceJumpStart = 0f;
 
 	// gravity
-	public float gravity = 10.0F;
-	public float gravityAcceleration = 1.2F;
+	public float gravity = 10.0f;
+	public float gravityAcceleration = 1.2f;
 	private bool isFalling = false;
 	private float maxFallSpeed = 10f;
 	private float currentFallDistance = 0f;
@@ -76,7 +81,7 @@ public class CharacterMotor : MonoBehaviour {
 			currentSpeed -= (deceleration * Time.deltaTime);
 		}
 		currentSpeed = Mathf.Clamp (currentSpeed, 0f, runSpeed);
-		Debug.Log (currentSpeed);
+//		Debug.Log (currentSpeed);
 		
 		UpdateAnimations (playerInput.x, playerInput.y, currentSpeed);
 
@@ -103,6 +108,10 @@ public class CharacterMotor : MonoBehaviour {
 		// move at speed	
 		controller.Move (moveDirection * Time.deltaTime);
 	
+		// check for release of jump button before jumping again
+		if (Input.GetButtonUp ("Jump"))
+			canJump = true;
+
 
 	}
 
@@ -127,52 +136,49 @@ public class CharacterMotor : MonoBehaviour {
 	}
 
 	private void ProcessJump() {	
-		// IEnumerator
-//		if (jumpInput && canJump) { 
-//			//trigger jump
-//			animator.SetBool("Jump", true);
-//			// prevent more jumps
-//			yield return null;
-//			animator.SetBool("Jump", false);
-//			canJump = false;
-//		} else if (!jumpInput) {
-//			yield return null;
-//			canJump = true;
-//		}
 
 		// hit ground
-		if ((controller.collisionFlags & CollisionFlags.Below) != 0) {
-			isJumping = false;
-			animator.SetTrigger("isGrounded");
+		if (!isJumping && (controller.collisionFlags & CollisionFlags.Below) != 0) {
+//			isJumping = false;
+//			animator.SetTrigger("isGrounded");
+			animator.SetBool("Jump", false);
 			//Debug.Log("Is Grounded");
+			currentJumpSpeed = 0f;
+
 		}
 
 		// start jump
-		if (controller.isGrounded & Input.GetButton ("Jump")) {
+		if (controller.isGrounded && Input.GetButtonDown ("Jump") && canJump) {
 			// starting a jump
 			isJumping = true;
 			currentJumpHeight = 0f;
-			animator.SetTrigger("isJumping");
+			animator.SetBool("Jump", true);
 			AudioSource.PlayClipAtPoint(jumpSound, transform.position);
 			timeSinceJumpStart = 0f;
+//			currentJumpSpeed = minJumpSpeed;
+//			Debug.Log ("starting jump - currentJumpSpeed: " + currentJumpSpeed);
 		} 
 
 
 		// perform a jump
 		if (isJumping) {
 
+			timeSinceJumpStart += Time.deltaTime;
+
 			if ((currentJumpHeight < minJumpHeight) || ((currentJumpHeight < normalJumpHeight) && Input.GetButton ("Jump"))) {
 				// jumping under min height or 			
 				// jumping under max height and still pressing button
-				//float jumpDistance = jumpSpeed * Time.deltaTime;
-//				float jumpAmount = (float)(-.05f * (timeSinceJumpStart*timeSinceJumpStart)) + (10f * timeSinceJumpStart);
-				float jumpAmount = jumpHeight * Time.deltaTime;
+//				float jumpDistance = jumpSpeed * Time.deltaTime;
+//				float jumpAmount = (float)(-.05f * (timeSinceJumpStart*timeSinceJumpStart)) + (10f * timeSinceJumpStart) + (minJumpSpeed);
+//				currentJumpSpeed += (jumpAcceleration * currentJumpSpeed);
+//				float jumpAmount = currentJumpSpeed * Time.deltaTime;
+				float jumpAmount = Mathf.Max(minJumpSpeed, (maxJumpSpeed - (timeSinceJumpStart * jumpAcceleration)));
 				moveDirection.y += jumpAmount;
 				currentJumpHeight += jumpAmount;
 			} else if ((currentJumpHeight >= normalJumpHeight) || !Input.GetButton ("Jump")) {
 				// ending a jump if we're over max jump height
 				// or the button is no longer pressed and we're above min jump height
-				animator.SetTrigger("isFalling");
+//				animator.SetTrigger("isFalling");
 				isJumping = false;
 				timeSinceJumpStart = 0;
 				currentJumpHeight = 0;

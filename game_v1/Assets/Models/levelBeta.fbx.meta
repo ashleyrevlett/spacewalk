@@ -8,22 +8,27 @@ ModelImporter:
     100004: Ground
     100006: Pathway
     100008: Mesh
+    100010: Walkable
     400000: //RootNode
     400002: Backdrop Item
     400004: Ground
     400006: Pathway
     400008: Mesh
+    400010: Walkable
     2300000: //RootNode
     2300002: Ground
     2300004: Pathway
     2300006: Mesh
+    2300008: Walkable
     3300000: //RootNode
     3300002: Ground
     3300004: Pathway
     3300006: Mesh
+    3300008: Walkable
     4300000: Mesh
     4300002: Ground
     4300004: Pathway
+    4300006: Walkable
     9500000: //RootNode
   materials:
     importMaterials: 0
@@ -49,7 +54,7 @@ ModelImporter:
     addColliders: 0
     importBlendShapes: 1
     swapUVChannels: 0
-    generateSecondaryUV: 0
+    generateSecondaryUV: 1
     useFileUnits: 1
     optimizeMeshForGPU: 1
     weldVertices: 1
