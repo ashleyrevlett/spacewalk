@@ -9,15 +9,14 @@ public class GameController : MonoBehaviour {
 
 	public GameObject pauseCanvas; // need to manually wire this up in IDE
 	private int loseScene = 5;
-
-	private GameObject gameController;
+	
 	private HealthController healthController;
 
 	// Use this for initialization
 	void Start () {
 
-		gameController = GameObject.FindWithTag ("GameController");
-		healthController = gameController.GetComponent<HealthController> ();
+		GameObject player = GameObject.FindWithTag ("Player");
+		healthController = player.GetComponent<HealthController> ();
 		Unpause (); // need to unpause in case we have left a paused scene behind
 
 	}

@@ -9,20 +9,18 @@ public class HealthController : MonoBehaviour {
 	public float RemainingHitPoints;
 	public GameObject damageParticlePrefab;
 	public AudioClip damageSound;
-	private GameObject player;	
 
 	// for blink damage
 	private bool isVulnerable = true;
-	private Component[] playerMeshes;
-	private SkinnedMeshRenderer playerSkin;
+	private Component[] characterMeshes;
+	private SkinnedMeshRenderer characterSkin;
 
 	
 
 	void Start () {	
 		RemainingHitPoints = StartingHitPoints;
-		player = GameObject.FindGameObjectWithTag ("Player");
-		playerMeshes = player.GetComponentsInChildren<MeshRenderer> ();
-		playerSkin = player.GetComponentInChildren<SkinnedMeshRenderer> ();
+		characterMeshes = gameObject.GetComponentsInChildren<MeshRenderer> ();
+		characterSkin = gameObject.GetComponentInChildren<SkinnedMeshRenderer> ();
 	}
 
 
@@ -32,8 +30,8 @@ public class HealthController : MonoBehaviour {
 
 		isVulnerable = false;
 		RemainingHitPoints -= points;
-		AudioSource.PlayClipAtPoint (damageSound, player.transform.position);
-		GameObject particleObject = (GameObject)Instantiate (damageParticlePrefab, player.transform.position, player.transform.rotation);	
+		AudioSource.PlayClipAtPoint (damageSound, gameObject.transform.position);
+		GameObject particleObject = (GameObject)Instantiate (damageParticlePrefab, gameObject.transform.position, gameObject.transform.rotation);	
 		Destroy (particleObject, 3f); // destroy the particles in X sec
 		StartCoroutine(DoBlinks(0.2f, 0.08f));
 	}
@@ -44,20 +42,20 @@ public class HealthController : MonoBehaviour {
 			duration -= Time.deltaTime;
 			
 			//toggle renderer
-			foreach (MeshRenderer playerRenderer in playerMeshes) {
-				playerRenderer.enabled = !playerRenderer.enabled;
+			foreach (MeshRenderer characterRenderer in characterMeshes) {
+				characterRenderer.enabled = !characterRenderer.enabled;
 			}
-			playerSkin.enabled = !playerSkin.enabled;
+			characterSkin.enabled = !characterSkin.enabled;
 					
 			//wait for a bit
 			yield return new WaitForSeconds(blinkTime);
 		}
 		
 		//make sure renderer is enabled when we exit
-		foreach (MeshRenderer playerRenderer in playerMeshes) {
-			playerRenderer.enabled = true;
+		foreach (MeshRenderer characterRenderer in characterMeshes) {
+			characterRenderer.enabled = true;
 		}
-		playerSkin.enabled = true;
+		characterSkin.enabled = true;
 
 		isVulnerable = true;
 	

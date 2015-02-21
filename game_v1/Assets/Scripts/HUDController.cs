@@ -20,10 +20,11 @@ public class HUDController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		startTime = Time.time; // start timer
-	
+
+		GameObject player = GameObject.FindWithTag ("Player");
 		gameController = GameObject.FindWithTag ("GameController");
 		scoreController = gameController.GetComponent<ScoreController> ();	
-		healthController = gameController.GetComponent<HealthController> ();	
+		healthController = player.GetComponent<HealthController> ();	
 
 	}
 	

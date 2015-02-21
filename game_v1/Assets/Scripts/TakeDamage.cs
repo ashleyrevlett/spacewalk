@@ -10,7 +10,7 @@ public class TakeDamage : MonoBehaviour {
 	
 	void Start () {
 		gameController = GameObject.FindWithTag ("GameController");
-		healthController = gameController.GetComponent<HealthController> ();	
+		healthController = gameObject.GetComponent<HealthController> ();	
 		cameraShake = Camera.main.GetComponent<ShakeObject> ();
 
 	}
