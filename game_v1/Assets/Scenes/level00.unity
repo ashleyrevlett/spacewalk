@@ -4161,11 +4161,7 @@ Prefab:
       objectReference: {fileID: 1239663188}
     - target: {fileID: 11445872, guid: 38d0444ff714f46fdb1909811bc76687, type: 2}
       propertyPath: minJumpSpeed
-      value: 130
-      objectReference: {fileID: 0}
-    - target: {fileID: 11445872, guid: 38d0444ff714f46fdb1909811bc76687, type: 2}
-      propertyPath: normalJumpHeight
-      value: 80
+      value: 2
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 38d0444ff714f46fdb1909811bc76687, type: 2}
@@ -5962,7 +5958,6 @@ MonoBehaviour:
   zoomSpeed: 1.5
   rotateDegrees: 30
   rotateSpeed: 10
-  minVerticalMovement: 2
   minVerticalRotation: 90
 --- !u!81 &1239663184
 AudioListener:

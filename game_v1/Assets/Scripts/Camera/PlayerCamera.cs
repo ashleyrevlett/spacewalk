@@ -21,8 +21,7 @@ public class PlayerCamera : MonoBehaviour {
 	public float zoomSpeed = 1.5f;
 	public float rotateDegrees = 30.0f;
 	public float rotateSpeed = 10f;
-	
-	public float minVerticalMovement = 2f;
+
 	public float minVerticalRotation = 10f; // min degrees req'd to vertically rotate camera 
 
 	private GameController gamecontroller;
@@ -49,10 +48,6 @@ public class PlayerCamera : MonoBehaviour {
 		// update camera position to follow player
 		cameraTargetPosition = follow.position + (follow.up * distanceUp) - (follow.forward * distanceAway);
 
-		// if vertical look movement is < min value, don't move vertically
-//		if (Mathf.Abs (transform.position.y - cameraTargetPosition.y) < minVerticalMovement)
-//				cameraTargetPosition.y = transform.position.y;
-//
 		transform.position = Vector3.Lerp (transform.position, cameraTargetPosition, Time.deltaTime * smooth);
 
 		// if vertical rotation is < min value, don't rotate vertically

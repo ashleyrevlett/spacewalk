@@ -173,7 +173,7 @@ BlendTree:
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 3e22dbcbb875cfd488d30a2253575816, type: 2}
-    m_Threshold: -1
+    m_Threshold: -.00999999978
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -189,7 +189,7 @@ BlendTree:
     m_Mirror: 0
   - serializedVersion: 2
     m_Motion: {fileID: 7400000, guid: 19f80332a04121141845354001e6b25b, type: 2}
-    m_Threshold: 1
+    m_Threshold: .00999999978
     m_Position: {x: 0, y: 0}
     m_TimeScale: 1
     m_CycleOffset: 0
@@ -197,8 +197,8 @@ BlendTree:
     m_Mirror: 0
   m_BlendParameter: angularVelocity
   m_BlendParameterY: Blend
-  m_MinThreshold: -1
-  m_MaxThreshold: 1
+  m_MinThreshold: -.00999999978
+  m_MaxThreshold: .00999999978
   m_UseAutomaticThresholds: 0
   m_NormalizedBlendValues: 0
   m_BlendType: 0
@@ -275,7 +275,7 @@ BlendTree:
   m_ObjectHideFlags: 3
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 0}
-  m_Name: Walk Blend Tree
+  m_Name: Locomotion Blend Tree
   m_Childs:
   - serializedVersion: 2
     m_Motion: {fileID: 20636380}
@@ -381,7 +381,7 @@ AnimatorStateTransition:
   m_TransitionDuration: .0303697437
   m_TransitionOffset: .0131845828
   m_ExitTime: .899999976
-  m_HasExitTime: 1
+  m_HasExitTime: 0
   m_InterruptionSource: 0
   m_OrderedInterruption: 1
   m_CanTransitionToSelf: 0

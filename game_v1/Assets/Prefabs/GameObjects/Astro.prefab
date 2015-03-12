@@ -1983,19 +1983,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 999de92bff19748ddbdf79058b1d0293, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  accel: 30
+  gravity: 1
+  acceleration: 4.5
+  deceleration: 24
   terminalVelocity: 12
+  jumpForce: 12
   rotateSpeed: 2.5999999
-  rotateDegrees: 1000
   walkSpeed: 6
   runSpeed: 10
-  acceleration: 18
-  deceleration: 24
-  accelStart: 5
+  accelStart: 4.30000019
   jumpSound: {fileID: 8300000, guid: ad829240430cd4592acf4dcfc9d83f92, type: 3}
-  normalJumpHeight: 65
-  minJumpSpeed: 6
-  gravity: 106.839996
+  normalJumpHeight: 80
+  minJumpSpeed: 1
   cam: {fileID: 0}
 --- !u!114 &11445874
 MonoBehaviour:
