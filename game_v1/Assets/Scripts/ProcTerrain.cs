@@ -25,7 +25,7 @@ public class ProcTerrain : MonoBehaviour {
 	private List<Vector3> m_Vertices = new List<Vector3>();
 	private List<int> m_Indices = new List<int>();
 	private MeshFilter meshFilter;
-	private MeshCollider collider;
+	private MeshCollider myCollider;
 
 	private float textureScale = 1f;
 	
@@ -41,11 +41,11 @@ public class ProcTerrain : MonoBehaviour {
 			Debug.LogError("MeshFilter not found!");
 			return;
 		}
-		collider = GetComponent<MeshCollider>();
-		if (collider == null) {
-			collider = gameObject.AddComponent<MeshCollider>();
+		myCollider = GetComponent<MeshCollider>();
+		if (myCollider == null) {
+			myCollider = gameObject.AddComponent<MeshCollider>();
 		}
-		collider.sharedMesh = meshFilter.sharedMesh;
+		myCollider.sharedMesh = meshFilter.sharedMesh;
 
 
 		float w = QuadDimension.x, h = QuadDimension.y;
@@ -123,7 +123,7 @@ public class ProcTerrain : MonoBehaviour {
 		mesh.RecalculateNormals ();
 		mesh.Optimize();
 		
-		collider.sharedMesh = mesh; // update collider
+		myCollider.sharedMesh = mesh; // update collider
 		
 		
 	}
@@ -209,9 +209,9 @@ public class ProcTerrain : MonoBehaviour {
 			meshFilter.sharedMesh.Clear ();
 			meshFilter.sharedMesh = null;
 		}
-		collider = GetComponent<MeshCollider>();
-		if (collider) {
-			collider.sharedMesh = meshFilter.sharedMesh;
+		myCollider = GetComponent<MeshCollider>();
+		if (myCollider) {
+			myCollider.sharedMesh = meshFilter.sharedMesh;
 		}
 		m_Vertices.Clear ();
 		m_Indices.Clear ();

@@ -4,13 +4,12 @@ using System.Collections;
 public class CauseDamage : MonoBehaviour {
 	
 	public float damagePoints = 1f;
-	private GameObject gameController;
 	private HealthController healthController;
 
 	// Use this for initialization
 	void Start () {
-		gameController = GameObject.FindWithTag ("GameController");
-		healthController = gameController.GetComponent<HealthController> ();
+		GameObject player = GameObject.FindWithTag ("Player");
+		healthController = player.GetComponent<HealthController> ();
 	}
 		
 	/* 

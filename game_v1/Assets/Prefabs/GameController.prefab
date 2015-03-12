@@ -10,7 +10,6 @@ GameObject:
   - 4: {fileID: 449840}
   - 114: {fileID: 11449840}
   - 114: {fileID: 11449842}
-  - 114: {fileID: 11449844}
   m_Layer: 0
   m_Name: GameController
   m_TagString: GameController
@@ -41,9 +40,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97a165fcfe42f44d4aee386ad1e8e98d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  showIntro: 0
   isPaused: 0
   isGameOver: 0
   pauseCanvas: {fileID: 0}
+  levelIntro: {fileID: 0}
 --- !u!114 &11449842
 MonoBehaviour:
   m_ObjectHideFlags: 1
@@ -56,21 +57,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   score: 0
---- !u!114 &11449844
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 100100000}
-  m_GameObject: {fileID: 149840}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d65206875135d4a5e9c3eff454aaf339, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  StartingHitPoints: 100
-  RemainingHitPoints: 0
-  damageParticlePrefab: {fileID: 100000, guid: 30afdbc00946d4b36a3f24b88b6046f4, type: 2}
-  damageSound: {fileID: 8300000, guid: 3968e8dca02fc409596d86ba3760abdc, type: 3}
 --- !u!1001 &100100000
 Prefab:
   m_ObjectHideFlags: 1
@@ -82,4 +68,3 @@ Prefab:
   m_ParentPrefab: {fileID: 0}
   m_RootGameObject: {fileID: 149840}
   m_IsPrefabParent: 1
-  m_IsExploded: 1

@@ -19,7 +19,7 @@
 	<DebugType>full</DebugType>
 	<Optimize>false</Optimize>
 	<OutputPath>Temp\bin\Debug\</OutputPath>
-	<DefineConstants>DEBUG;TRACE;UNITY_4_6_2;UNITY_4_6;UNITY_STANDALONE_OSX;ENABLE_MICROPHONE;ENABLE_TEXTUREID_MAP;ENABLE_UNITYEVENTS;ENABLE_NEW_HIERARCHY ;ENABLE_AUDIO_FMOD;UNITY_STANDALONE;ENABLE_TERRAIN;ENABLE_SUBSTANCE;ENABLE_GENERICS;INCLUDE_IL2CPP;INCLUDE_WP8SUPPORT;ENABLE_MOVIES;ENABLE_WWW;ENABLE_IMAGEEFFECTS;ENABLE_4_6_FEATURES;INCLUDE_WP_BLUE_SUPPORT;ENABLE_WEBCAM;INCLUDE_METROSUPPORT;RENDER_SOFTWARE_CURSOR;ENABLE_NETWORK;ENABLE_PHYSICS;UNITY5_SCRIPTING_IN_UNITY4;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_2D_PHYSICS;ENABLE_GAMECENTER;ENABLE_SHADOWS;ENABLE_AUDIO;ENABLE_NAVMESH_CARVING;ENABLE_DUCK_TYPING;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_MONO;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_OSX</DefineConstants>
+	<DefineConstants>DEBUG;TRACE;UNITY_5_0_0;UNITY_5_0;UNITY_5;ENABLE_LICENSE_RENAME;ENABLE_NEW_BUGREPORTER;ENABLE_2D_PHYSICS;ENABLE_4_6_FEATURES;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_NEW_HIERARCHY;ENABLE_PHYSICS;ENABLE_PHYSICS_PHYSX3;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SINGLE_INSTANCE_BUILD_SETTING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_AUDIOMIXER_SUSPEND;ENABLE_NONPRO;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;UNITY_STANDALONE_OSX;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_GAMECENTER;ENABLE_TEXTUREID_MAP;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_MONO;ENABLE_PROFILER;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_OSX</DefineConstants>
 	<ErrorReport>prompt</ErrorReport>
 	<WarningLevel>4</WarningLevel>
 	<NoWarn>0169</NoWarn>
@@ -46,30 +46,133 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\Scripts\Editor\NoiseGeneratorEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\AntialiasingEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\BloomAndFlaresEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\BloomEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\CameraMotionBlurEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\ColorCorrectionCurvesEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\ColorCorrectionLookupEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\DepthOfFieldDeprecatedEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\DepthOfFieldEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\EdgeDetectionEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\NoiseAndGrainEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\SunShaftsEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\TonemappingEditor.cs" />
+     <Compile Include="Assets\Editor\ImageEffects\VignetteAndChromaticAberrationEditor.cs" />
+     <Compile Include="Assets\MecanimAnimationStore\Editor\MixamoStoreWindow.cs" />
      <Compile Include="Assets\Scripts\Editor\ProcTerrainEditor.cs" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\BlendOneOne.shader" />
+     <None Include="Assets\Shaders\Shaders\NoiseEffectShaderRGB.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
+     <None Include="Assets\Shaders\Shaders\_DepthOfField\SeparableWeightedBlurDof34.shader" />
+     <None Include="Assets\Shaders\Shaders\ShowAlphaChannel.shader" />
+     <None Include="Assets\Shaders\Shaders\SunShaftsComposite.shader" />
+     <None Include="Assets\Shaders\Shaders\ColorCorrectionCurves.shader" />
+     <None Include="Assets\Shaders\Shaders\ScreenSpaceAmbientObscurance.shader" />
+     <None Include="Assets\Shaders\Shaders\_Antialiasing\NFAA.shader" />
+     <None Include="Assets\Shaders\Shaders\_DepthOfField\TiltShiftHdrLensBlur.shader" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\VignetteShader.shader" />
+     <None Include="Assets\Shaders\Shaders\_DepthOfField\DepthOfFieldScatter.shader" />
+     <None Include="Assets\Standard Assets\Effects\Projectors\Guidelines.txt" />
+     <None Include="Assets\Shaders\Shaders\MotionBlur.shader" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\MobileBloom.shader" />
+     <None Include="Assets\Shaders\Shaders\Contrast Stretch\MinMaxReduction.shader" />
+     <None Include="Assets\Shaders\Shaders\_Antialiasing\SSAA.shader" />
+     <None Include="Assets\Shaders\Shaders\RadialBlur.shader" />
+     <None Include="Assets\Shaders\Shaders\_DepthOfField\DepthOfFieldDX11.shader" />
+     <None Include="Assets\Shaders\Shaders\ContrastComposite.shader" />
+     <None Include="Assets\Shaders\Shaders\_Antialiasing\FXAAPreset3.shader" />
+     <None Include="Assets\Shaders\Shaders\FisheyeShader.shader" />
+     <None Include="Assets\Shaders\Shaders\Contrast Stretch\Apply.shader" />
      <None Include="Assets\Shaders\Water2.shader" />
-     <None Include="Assets\Mobility_01_Free_v2\Mobility_Free_Unity_Info.txt" />
+     <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
+     <None Include="Assets\Shaders\Shaders\frag_ao.cginc" />
+     <None Include="Assets\Animations\Mobility_01_Free_v2\Mobility_Free_Unity_Info.txt" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
+     <None Include="Assets\Shaders\Shaders\_DepthOfField\DepthOfField34.shader" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\MobileBlur.shader" />
+     <None Include="Assets\Shaders\SSAOShader.shader" />
+     <None Include="Assets\Shaders\Shaders\ConvertDepth.shader" />
+     <None Include="Assets\Shaders\Shaders\ColorCorrectionCurvesSimple.shader" />
+     <None Include="Assets\Shaders\Shaders\NoiseEffectShaderYUV.shader" />
+     <None Include="Assets\Shaders\Shaders\CreaseApply.shader" />
+     <None Include="Assets\Shaders\Shaders\ChromaticAberrationShader.shader" />
+     <None Include="Assets\Shaders\Shaders\GlobalFog.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedOutline.shader" />
+     <None Include="Assets\Shaders\Shaders\Contrast Stretch\Luminance.shader" />
      <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted.shader" />
+     <None Include="Assets\Shaders\Shaders\ColorCorrectionSelective.shader" />
+     <None Include="Assets\Shaders\Shaders\_DepthOfField\Bokeh34.shader" />
+     <None Include="Assets\Shaders\Shaders\CameraMotionBlurDX11.shader" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\SeparableBlurPlus.shader" />
+     <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorLight.shader" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\MultiPassHollywoodFlares.shader" />
+     <None Include="Assets\Shaders\Shaders\BlurEffectConeTaps.shader" />
+     <None Include="Assets\Shaders\Shaders\CameraMotionBlur.shader" />
+     <None Include="Assets\Shaders\Shaders\_Antialiasing\DLAA.shader" />
+     <None Include="Assets\Shaders\Shaders\NoiseAndGrainDX11.shader" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\BrightPassFilter2.shader" />
+     <None Include="Assets\Shaders\Shaders\_DepthOfField\SeparableBlur.shader" />
+     <None Include="Assets\Shaders\Shaders\MotionBlurClear.shader" />
+     <None Include="Assets\Shaders\Shaders\ColorCorrectionEffect.shader" />
+     <None Include="Assets\Shaders\GrayscaleEffect.shader" />
+     <None Include="Assets\Shaders\Shaders\SepiaToneEffect.shader" />
+     <None Include="Assets\Shaders\Shaders\TwirlEffect.shader" />
+     <None Include="Assets\Shaders\Shaders\VortexEffect.shader" />
+     <None Include="Assets\Shaders\Shaders\Contrast Stretch\Adaptation.shader" />
+     <None Include="Assets\Shaders\Shaders\NoiseAndGrain.shader" />
+     <None Include="Assets\Standard Assets\Effects\Projectors\Shaders\ProjectorMultiply.shader" />
+     <None Include="Assets\Shaders\Shaders\VignettingShader.shader" />
+     <None Include="Assets\Shaders\Shaders\Tonemapper.shader" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\BrightPassFilter.shader" />
+     <None Include="Assets\Shaders\Shaders\_Antialiasing\FXAA2.shader" />
+     <None Include="Assets\Shaders\Shaders\ColorCorrection3DLut.shader" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\LensFlareCreate.shader" />
+     <None Include="Assets\Shaders\Shaders\EdgeDetectNormals.shader" />
+     <None Include="Assets\Shaders\Shaders\PrepareSunShaftsBlur.shader" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\Blend.shader" />
+     <None Include="Assets\Shaders\Shaders\BlendModesOverlay.shader" />
+     <None Include="Assets\Shaders\Shaders\SimpleClear.shader" />
      <None Include="Assets\Shaders\Water3.shader" />
+     <None Include="Assets\Shaders\Shaders\_Antialiasing\FXAA3Console.shader" />
+     <None Include="Assets\Shaders\Shaders\_Antialiasing\FXAAPreset2.shader" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\BlurAndFlares.shader" />
+     <None Include="Assets\Shaders\Shaders\_BloomAndFlares\BlendForBloom.shader" />
  <Reference Include="UnityEngine.UI">
- <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.2/UnityEngine.UI.dll</HintPath>
- </Reference>
- <Reference Include="UnityEditor.UI">
- <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/4.6.2/Editor/UnityEditor.UI.dll</HintPath>
+ <HintPath>/Applications/Unity/Unity.app/Contents/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
  </Reference>
  <Reference Include="UnityEditor.Graphs">
  <HintPath>/Applications/Unity/Unity.app/Contents/Frameworks/Managed/UnityEditor.Graphs.dll</HintPath>
  </Reference>
+ <Reference Include="UnityEditor.Android.Extensions">
+ <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/AndroidPlayer/UnityEditor.Android.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.iOS.Extensions">
+ <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/iossupport/UnityEditor.iOS.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.BB10.Extensions">
+ <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/BlackBerryPlayer/UnityEditor.BB10.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.WebGL.Extensions">
+ <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/WebGLSupport/UnityEditor.WebGL.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.LinuxStandalone.Extensions">
+ <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/LinuxStandaloneSupport/UnityEditor.LinuxStandalone.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.WindowsStandalone.Extensions">
+ <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/WindowsStandaloneSupport/UnityEditor.WindowsStandalone.Extensions.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEditor.OSXStandalone.Extensions">
+ <HintPath>/Applications/Unity/Unity.app/Contents/PlaybackEngines/MacStandaloneSupport/UnityEditor.OSXStandalone.Extensions.dll</HintPath>
+ </Reference>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
+      <Project>{26240B9F-2725-B139-9502-5B4460CFCF94}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
+    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
+      <Project>{672A25C3-6A3C-7EAE-6EDA-57F12CA017FA}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
     <ProjectReference Include="Assembly-CSharp.csproj">
       <Project>{5445B005-0A70-C6FD-ECA0-920098E20FDC}</Project>      <Name>Assembly-CSharp</Name>    </ProjectReference>
-    <ProjectReference Include="Assembly-UnityScript.unityproj">
-      <Project>{A404879C-F9D3-4170-FEEB-C26C7B7B58C2}</Project>      <Name>Assembly-UnityScript</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
