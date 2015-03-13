@@ -31,7 +31,8 @@ public class CharacterMotor : MonoBehaviour {
 	private Vector3 slideDirection = Vector3.zero; // direction to slide in
 	private float timeSinceSlideStart = 0f; // for acceleration tracking
 	private float groundToControllerDist = 0f; // how far the center of the controller bottom is from ground
-	
+	private float shortestDistToController = 0f;
+
 	// various gameobject references	
 	public Transform cam;
 	private CharacterController controller; // used to move the player
@@ -64,10 +65,10 @@ public class CharacterMotor : MonoBehaviour {
 		// convert player input to worldspace direction, rotate player 
 		moveDirection = LocalMovement (playerInput.x, playerInput.y, currentSpeed);
 
+		ProcessSlide ();
+
 		// handle jump start, continue, and end
 		ProcessJump ();
-
-		ProcessSlide ();
 
 		// apply gravity and accel if nec. / ie, fall
 		if (isFalling) {
@@ -186,20 +187,21 @@ public class CharacterMotor : MonoBehaviour {
 
 		} 
 
+		// check for falling too 		
 		// test if we've hit the ground or if we're falling but didn't jump up first
-		RaycastHit hit;
-		if (Physics.Raycast(transform.position, -Vector3.up, out hit)) {
-			if (hit.distance <= .3f && !isJumping) {
-				Debug.Log("Stop fall, distance to ground: " + hit.distance.ToString("F1"));	
-				// hitting ground
-				EndFall();
-			} else {
-				// ground's not underneath us and we're not known to be jumping,
-				// so we must have fallen off a ledge
-				if (!isJumping && !isFalling && !isSliding) 
-					StartFall();
-			}
+		Debug.Log ("controller.isGrounded" + controller.isGrounded);
+		Debug.Log("Stop fall, distance to ground: " + shortestDistToController.ToString("F1"));	
+		if (shortestDistToController <= .95f && isFalling) {
+			Debug.Log("Stop fall, distance to ground: " + shortestDistToController.ToString("F1"));	
+			// hitting ground
+			EndFall();
+		} else if (shortestDistToController > .95f && !isJumping && !isFalling)  {
+			// ground's not underneath us and we're not known to be jumping,
+			Debug.Log("Starting fall from edge");
+			// so we must have fallen off a ledge
+			StartFall();
 		}
+
 				
 	}
 	
@@ -208,20 +210,25 @@ public class CharacterMotor : MonoBehaviour {
 		isFalling = false;
 		isSliding = false;
 		timeSinceJumpStart = 0f;
+		timeSinceFallStart = 0f;
 		currentJumpHeight = 0f;
 		animator.SetBool("Jump", true);
 		AudioSource.PlayClipAtPoint(jumpSound, transform.position);
 	}
 	
 	public void StartFall() {
+		Debug.Log ("Starting fall");
 		isJumping = false;
 		isFalling = true;
 		isSliding = false;
 		animator.SetBool("Jump", false);
+		animator.SetBool("Fall", true);	
 		timeSinceFallStart = 0f;
 	}
 
 	public void EndFall() {
+		isJumping = false;
+		isSliding = false;
 		isFalling = false;
 		animator.SetBool("Jump", false);
 		animator.SetBool("Fall", false);	
@@ -280,7 +287,8 @@ public class CharacterMotor : MonoBehaviour {
 		}
 		
 		//Debug.Log ("shortestDist: " + shortestDist);
-		
+		shortestDistToController = shortestDist;
+
 		// not on ground
 		if (shortestDist >= .9f)
 			return;
@@ -314,6 +322,7 @@ public class CharacterMotor : MonoBehaviour {
 			isSliding = false;
 			timeSinceSlideStart = 0f;
 		}
+
 		
 	}
 

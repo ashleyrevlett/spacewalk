@@ -3473,6 +3473,10 @@ Prefab:
       propertyPath: m_Name
       value: creature v6
       objectReference: {fileID: 0}
+    - target: {fileID: 136730, guid: e08bd80fea241404dabfa642f76aca92, type: 2}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: e08bd80fea241404dabfa642f76aca92, type: 2}
   m_IsPrefabParent: 0
@@ -4125,15 +4129,15 @@ Prefab:
     m_Modifications:
     - target: {fileID: 445982, guid: 38d0444ff714f46fdb1909811bc76687, type: 2}
       propertyPath: m_LocalPosition.x
-      value: -31.9699993
+      value: 20.6599998
       objectReference: {fileID: 0}
     - target: {fileID: 445982, guid: 38d0444ff714f46fdb1909811bc76687, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 9.80000019
+      value: 13.8500004
       objectReference: {fileID: 0}
     - target: {fileID: 445982, guid: 38d0444ff714f46fdb1909811bc76687, type: 2}
       propertyPath: m_LocalPosition.z
-      value: 63.9599991
+      value: 67.5
       objectReference: {fileID: 0}
     - target: {fileID: 445982, guid: 38d0444ff714f46fdb1909811bc76687, type: 2}
       propertyPath: m_LocalRotation.x
@@ -4161,7 +4165,15 @@ Prefab:
       objectReference: {fileID: 1239663188}
     - target: {fileID: 11445872, guid: 38d0444ff714f46fdb1909811bc76687, type: 2}
       propertyPath: minJumpSpeed
-      value: 2
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 11445872, guid: 38d0444ff714f46fdb1909811bc76687, type: 2}
+      propertyPath: normalJumpHeight
+      value: 65
+      objectReference: {fileID: 0}
+    - target: {fileID: 11445872, guid: 38d0444ff714f46fdb1909811bc76687, type: 2}
+      propertyPath: gravity
+      value: .300000012
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 38d0444ff714f46fdb1909811bc76687, type: 2}
@@ -5949,11 +5961,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4b7176d06b98b4c34b34f4efdb83dfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceAway: 6.11999989
+  distanceAway: 9.5
   distanceUp: 3.41000009
   smooth: 3.22000003
   cameraVerticalOffset: 1
-  minDistanceAway: 0
+  minDistanceAway: 2
   maxDistanceAway: 10
   zoomSpeed: 1.5
   rotateDegrees: 30
