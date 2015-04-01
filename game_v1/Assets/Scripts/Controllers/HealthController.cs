@@ -5,8 +5,10 @@ using System.Collections.Generic;
 
 public class HealthController : MonoBehaviour {
 
-	public float StartingHitPoints = 100f;
-	public float RemainingHitPoints;
+	public float startingHitPoints = 3f;
+	public int startingLives = 3;
+	public float remainingHitPoints;
+	public int remainingLives;
 	public GameObject damageParticlePrefab;
 	public AudioClip damageSound;
 
@@ -18,9 +20,10 @@ public class HealthController : MonoBehaviour {
 	
 
 	void Start () {	
-		RemainingHitPoints = StartingHitPoints;
+		remainingHitPoints = startingHitPoints;
 		characterMeshes = gameObject.GetComponentsInChildren<MeshRenderer> ();
 		characterSkin = gameObject.GetComponentInChildren<SkinnedMeshRenderer> ();
+		remainingLives = startingLives;
 	}
 
 
@@ -29,7 +32,7 @@ public class HealthController : MonoBehaviour {
 			return;
 
 		isVulnerable = false;
-		RemainingHitPoints -= points;
+		remainingHitPoints -= points;
 		AudioSource.PlayClipAtPoint (damageSound, gameObject.transform.position);
 		GameObject particleObject = (GameObject)Instantiate (damageParticlePrefab, gameObject.transform.position, gameObject.transform.rotation);	
 		Destroy (particleObject, 3f); // destroy the particles in X sec

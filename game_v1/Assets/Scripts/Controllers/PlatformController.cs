@@ -13,15 +13,27 @@ public class PlatformController : MonoBehaviour {
 	public Vector3 moveDirection = Vector3.up;
 	public float moveTime = 3f;
 	public float moveSpeed = 1f;
+	public float secondsTillReset = 10f; // time after fall to reset
 	
 	private bool triggered = false;
 	private bool falling = false;
 	private float timeElapsed = 0f; // time waiting after trigger for action
-//	private float timeFalling = 0f; // keep track of how long it's been falling for accel calc
 
 	private float moveTimeElapsed = 0f; // change direction timer
-	
-	
+	private CharacterController playerController;
+
+	private Vector3 originalPosition;
+	private Color originalColor;
+
+
+	void Start() {
+		GameObject player = GameObject.FindGameObjectWithTag ("Player");
+		playerController = player.GetComponent<CharacterController> ();
+		originalPosition = transform.position; // remember for when we reset the platform
+		originalColor = gameObject.GetComponent<Renderer> ().material.color;
+	}
+
+
 	void Update () {
 		
 		if (fallWhenWalkedOn) {
@@ -36,8 +48,12 @@ public class PlatformController : MonoBehaviour {
 			
 			if (falling)
 				Fall();
-			
-			// end fall, reset everything, remove objects
+
+			// fell below screen, reset
+			if (falling & transform.position.y <= -100f)  {
+				StartCoroutine("ResetPlatform", secondsTillReset);
+			}
+
 		}
 		
 		if (linearMove) {
@@ -55,14 +71,19 @@ public class PlatformController : MonoBehaviour {
 			
 			// add time to since the last direction change
 			moveTimeElapsed += Time.deltaTime;
-			
-			
+						
 		}
 		
 		
 	}
+
 	
 	public void Trigger() {
+
+		// have to check fallWhenWalkedOn because this may be called via message instead of Update		
+		if (!fallWhenWalkedOn)
+			return;
+
 		if (!triggered) {
 			triggered = true;
 			timeElapsed = 0f; // reset these
@@ -74,6 +95,7 @@ public class PlatformController : MonoBehaviour {
 	}
 	
 	private void Fall() {
+
 		// move downward
 		float newY = gameObject.transform.position.y - (timeElapsed * fallAcceleration) - (fallSpeed * Time.deltaTime);
 		gameObject.transform.position = Vector3.Lerp (gameObject.transform.position, 
@@ -86,20 +108,39 @@ public class PlatformController : MonoBehaviour {
 		gameObject.GetComponent<Renderer>().material.color = newColor;
 
 	}
+
 	
-	
+	private IEnumerator ResetPlatform (float seconds) {
+		
+		// stop falling
+		timeElapsed = 0f;
+		triggered = false;
+		timeElapsed = 0f;
+		moveTimeElapsed = 0f;
+		
+		// wait till reset timer goes off
+		yield return new WaitForSeconds (seconds);
+		
+		// restore appearance
+		transform.position = originalPosition; 
+		gameObject.GetComponent<Renderer>().material.color = originalColor;
+		
+		
+	}
+
+
 	void OnCollisionEnter(Collision collision) {
-		Debug.Log ("Collision with platform!");
+
+		if (!fallWhenWalkedOn)
+			return;
+
 		foreach (ContactPoint contact in collision.contacts) {
-			Debug.Log ("contacted by: " + contact.otherCollider.tag);
-			
-			if (contact.otherCollider.tag == "Player") {
+			// make sure player is above platform; don't trigger if hit from below
+			if (contact.otherCollider.tag == "Player" && playerController.transform.position.y > transform.position.y)
 				Trigger ();
-			}
+
 		}
 	}
-	
-	
-	
-	
+
+
 }

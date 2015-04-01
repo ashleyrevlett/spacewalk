@@ -10,7 +10,7 @@ public class GameController : MonoBehaviour {
 	public bool isGameOver = false;
 
 	public GameObject pauseCanvas; // need to manually wire this up in IDE
-	private int loseScene = 8; // scene # from build settings
+	private int loseScene = 1; // scene # from build settings
 	
 	private HealthController healthController;
 
@@ -56,7 +56,7 @@ public class GameController : MonoBehaviour {
 		}
 
 		//lose conditions
-		if (healthController.RemainingHitPoints <= 0) {
+		if (healthController.remainingHitPoints <= 0) {
 			GameLose ();
 		}
 

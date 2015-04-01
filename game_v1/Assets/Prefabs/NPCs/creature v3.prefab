@@ -213,7 +213,7 @@ GameObject:
   - 114: {fileID: 11401110}
   m_Layer: 0
   m_Name: creature v3
-  m_TagString: Boss
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -861,9 +861,9 @@ Transform:
   m_PrefabParentObject: {fileID: 0}
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 136730}
-  m_LocalRotation: {x: 0, y: -.724051476, z: 0, w: -.689746022}
-  m_LocalPosition: {x: 6.63000011, y: 4.80000019, z: 4.67999983}
-  m_LocalScale: {x: 3.51715755, y: 3.51715755, z: 3.51715755}
+  m_LocalRotation: {x: 0, y: -.982333601, z: 0, w: .187138319}
+  m_LocalPosition: {x: -100.900002, y: -4.30000019, z: -192.800003}
+  m_LocalScale: {x: 5, y: 5, z: 5}
   m_Children:
   - {fileID: 432632}
   - {fileID: 471890}
@@ -1139,7 +1139,7 @@ SkinnedMeshRenderer:
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_Materials:
-  - {fileID: 2100000, guid: 5914fae527e0b4b979674e148034f4d6, type: 2}
+  - {fileID: 2100000, guid: 44bc17d5f6776458c93dd67f1944c613, type: 2}
   - {fileID: 2100000, guid: b66d2daec63f74982b67f7043d878183, type: 2}
   m_SubsetIndices: 
   m_StaticBatchRoot: {fileID: 0}
