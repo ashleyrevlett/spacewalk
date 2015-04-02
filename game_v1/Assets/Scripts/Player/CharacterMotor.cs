@@ -67,10 +67,13 @@ public class CharacterMotor : MonoBehaviour {
 	private GameObject levelRoot;
 	private GameController gameController;
 
-	// powerups!
+	// enable powerups!
 	public bool canUseJetpack = true;
-	
-	
+
+	// allow force to be applied from outside, like enemy hit
+	private float forceAmount = 0f;
+	private Vector3 forceDirection = Vector3.zero;
+
 	#endregion
 
 
@@ -132,6 +135,13 @@ public class CharacterMotor : MonoBehaviour {
 		// apply gravity & jump force if not sliding
 		if (!isSliding) {
 			moveDirection.y = verticalVelocity;
+		}
+
+		// is there another stronger force acting? like a push from enemy hit
+		if (forceAmount > 0f) {
+			forceAmount -= gravity * Time.deltaTime;
+			forceAmount = Mathf.Clamp(forceAmount, -terminalVelocity, terminalVelocity);
+			moveDirection = forceDirection * forceAmount;
 		}
 
 		// move
@@ -207,10 +217,10 @@ public class CharacterMotor : MonoBehaviour {
 		}
 
 		// if there's something in front of us, don't try to move forward into it
-		if (distToForwardObstacle <= obstacleDistanceTolerance) {
-			// but do allow moving backwards away from it
-			moveVertical = Mathf.Min(0, moveVertical);
-		}
+//		if (distToForwardObstacle <= obstacleDistanceTolerance) {
+//			// but do allow moving backwards away from it
+//			moveVertical = Mathf.Min(0, moveVertical);
+//		}
 
 		// movement direction is determined by the direction we're facing
 		Vector3 forward = transform.forward;
@@ -489,6 +499,12 @@ public class CharacterMotor : MonoBehaviour {
 			Destroy(particleObject, 2f); // destroy in 2 sec
 		}
 		
+	}
+
+	public void ApplyForce(Vector3 direction, float amount) {
+		// used to push player away from enemy after hit; accessed via other scripts
+		forceAmount = amount;
+		forceDirection = direction;			
 	}
 	
 	

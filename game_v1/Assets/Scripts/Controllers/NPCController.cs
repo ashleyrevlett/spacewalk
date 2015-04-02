@@ -3,15 +3,19 @@ using System.Collections;
 
 public class NPCController : MonoBehaviour {
 
+
 	// walking back and forth
 	public bool walkAround = true;
 	public float walkSpeed = 1f;
 	public float rotateSpeed = 20f;
 	public float turnDegrees = 180f;
 	public float secondsTillTurn = 3f;	
+	public float gravity = 19f;
+	public float terminalVelocity = 12f;
 	private float timeUntilTurn; // countdown clock till turning
 	private bool isTurning = false;
 	private float anglesTurnedSoFar = 0f;
+	private float yVel = 0f;
 		
 	// attacking
 	public int attackStrength = 1;
@@ -97,11 +101,20 @@ public class NPCController : MonoBehaviour {
 				timeUntilTurn = secondsTillTurn;
 				anglesTurnedSoFar = 0f;
 			}
-			
-			// don't move when turning
+
+			// add gravity
+//			float yDelta = gravity * Time.deltaTime;
+//			yVel -= yDelta;
+//			yVel = Mathf.Max (-terminalVelocity, yVel);
+			Vector3 newPosition = transform.position;
+//			newPosition.y += yVel;
+
+			// move forward when not turning
 			if (!isTurning) {
-				transform.position = Vector3.Lerp (transform.position, transform.position + transform.forward * walkSpeed, Time.deltaTime);
+				newPosition += transform.forward * walkSpeed;
 			}
+
+			transform.position = Vector3.Lerp (transform.position, newPosition, Time.deltaTime);
 
 		}// end walkaround
 
@@ -156,7 +169,7 @@ public class NPCController : MonoBehaviour {
 		yield return new WaitForSeconds(.75f);
 
 		GameObject particleObject = (GameObject) Instantiate(deathParticleEffectPrefab, transform.position + Vector3.up*2f, transform.rotation);
-		scoreController.score += points;
+//		scoreController.score += points;
 
 		Destroy(gameObject);
 		Destroy(particleObject, 3.5f);

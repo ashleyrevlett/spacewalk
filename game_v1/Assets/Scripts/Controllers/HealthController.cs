@@ -18,6 +18,7 @@ public class HealthController : MonoBehaviour {
 	private GameObject levelRoot; // make all instantiated objects children of this
 	private GameController gameController;
 	private GameObject particleObject;
+	private ShakeObject cameraShake;
 	
 
 	void Start () {	
@@ -27,6 +28,7 @@ public class HealthController : MonoBehaviour {
 		levelRoot = GameObject.FindGameObjectWithTag ("Level");
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
 		gameController = gameControllerObject.GetComponent<GameController> ();
+		cameraShake = Camera.main.GetComponent<ShakeObject> ();
 	}
 
 	void Update() {
@@ -57,6 +59,8 @@ public class HealthController : MonoBehaviour {
 
 		if (!isVulnerable || !gameController.isPlaying)
 			return;
+
+		cameraShake.SendMessage("Shake", .05f);
 
 		isVulnerable = false;
 		remainingHitPoints -= points;
