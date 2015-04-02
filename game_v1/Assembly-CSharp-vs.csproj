@@ -46,8 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\JetpackJump.cs" />
-     <Compile Include="Assets\LevelController.cs" />
      <Compile Include="Assets\Scripts\Camera\PlayerCamera.cs" />
      <Compile Include="Assets\Scripts\Controllers\GUIController.cs" />
      <Compile Include="Assets\Scripts\Controllers\GameController.cs" />
@@ -58,12 +56,15 @@
      <Compile Include="Assets\Scripts\Controllers\ScoreController.cs" />
      <Compile Include="Assets\Scripts\Controllers\WaterController.cs" />
      <Compile Include="Assets\Scripts\FlashLivesRemaining.cs" />
+     <Compile Include="Assets\Scripts\GameOverHUDController.cs" />
+     <Compile Include="Assets\Scripts\LevelTimer.cs" />
      <Compile Include="Assets\Scripts\NPC\AttackNearby.cs" />
      <Compile Include="Assets\Scripts\NPC\CauseDamage.cs" />
      <Compile Include="Assets\Scripts\NPC\WalkAround.cs" />
      <Compile Include="Assets\Scripts\Player\CharacterMotor.cs" />
      <Compile Include="Assets\Scripts\Player\CollectObject.cs" />
      <Compile Include="Assets\Scripts\Player\DamageNPC.cs" />
+     <Compile Include="Assets\Scripts\Player\JetpackJump.cs" />
      <Compile Include="Assets\Scripts\Player\TakeDamage.cs" />
      <Compile Include="Assets\Scripts\Player\TriggerPlatformFall.cs" />
      <Compile Include="Assets\Scripts\Utilities\ChangeMusic.cs" />

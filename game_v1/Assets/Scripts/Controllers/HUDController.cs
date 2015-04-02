@@ -19,7 +19,7 @@ public class HUDController : MonoBehaviour {
 	private GameController gameController;
 	private ScoreController scoreController;
 	private HealthController healthController;
-	private LevelController levelController;
+	private LevelTimer levelTimer;
 
 	// Use this for initialization
 	void Start () {
@@ -29,15 +29,15 @@ public class HUDController : MonoBehaviour {
 		scoreController = gameControllerObject.GetComponent<ScoreController> ();	
 		healthController = player.GetComponent<HealthController> ();	
 
-		GameObject levelControllerObject = GameObject.FindWithTag ("Level");
-		levelController = levelControllerObject.GetComponent<LevelController> ();	
+		GameObject levelTimerObject = GameObject.FindWithTag ("Level");
+		levelTimer = levelTimerObject.GetComponent<LevelTimer> ();	
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
 		// update timer
-		timerText.text = levelController.GetTimeRemaining();
+		timerText.text = levelTimer.GetTimeRemaining();
 
 		// update score
 		if (int.Parse(scoreText.text) != scoreController.score) 

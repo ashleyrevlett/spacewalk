@@ -1,28 +1,29 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Controllers/HUDController.cs">
     <Files>
-      <File FileName="Assets/Scripts/Player/CharacterMotor.cs" Line="103" Column="18" />
-      <File FileName="Assets/Scripts/Controllers/GameController.cs" Line="140" Column="2" />
-      <File FileName="Assets/Scripts/Controllers/HUDController.cs" Line="56" Column="3" />
-      <File FileName="Assets/Scripts/Controllers/NPCController.cs" Line="63" Column="24" />
-      <File FileName="Assets/Scripts/Controllers/HealthController.cs" Line="40" Column="26" />
-      <File FileName="Assets/Scripts/Player/CollectObject.cs" Line="27" Column="60" />
-      <File FileName="Assets/Scripts/FlashLivesRemaining.cs" Line="11" Column="17" />
+      <File FileName="Assets/Scripts/Player/CharacterMotor.cs" Line="83" Column="1" />
+      <File FileName="Assets/Scripts/Controllers/GameController.cs" Line="115" Column="24" />
+      <File FileName="Assets/Scripts/Controllers/HUDController.cs" Line="40" Column="3" />
+      <File FileName="Assets/Scripts/Controllers/NPCController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Controllers/HealthController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Player/CollectObject.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/FlashLivesRemaining.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/Camera/PlayerCamera.cs" Line="1" Column="1" />
-      <File FileName="Assets/JetpackJump.cs" Line="22" Column="26" />
       <File FileName="Assets/Scripts/Player/TakeDamage.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/NPC/CauseDamage.cs" Line="25" Column="5" />
-      <File FileName="Assets/Scripts/Player/DamageNPC.cs" Line="13" Column="1" />
+      <File FileName="Assets/Scripts/NPC/CauseDamage.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Player/DamageNPC.cs" Line="1" Column="1" />
+      <File FileName="Assets/GameOverHUDController.cs" Line="28" Column="56" />
+      <File FileName="Assets/Scripts/Controllers/ScoreController.cs" Line="7" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/FlashLivesRemaining.cs" line="11" />
-      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Controllers/GameController.cs" line="123" />
+      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Controllers/GameController.cs" line="129" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/CollectObject.cs" line="25" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/CharacterMotor.cs" line="486" />
-      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Controllers/GameController.cs" line="105" />
+      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Controllers/GameController.cs" line="110" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

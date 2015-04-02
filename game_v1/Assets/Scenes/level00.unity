@@ -204,7 +204,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 112762, guid: 92378f90226c64823ab050afabac55e5, type: 2}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 92378f90226c64823ab050afabac55e5, type: 2}
@@ -2482,23 +2482,6 @@ Transform:
   - {fileID: 661181499}
   m_Father: {fileID: 1158235735}
   m_RootOrder: 0
---- !u!1 &1269182160
-GameObject:
-  m_PrefabParentObject: {fileID: 125734, guid: b7a2d2573465a4994a1a223e2c394a0a, type: 2}
-  m_PrefabInternal: {fileID: 1818053130}
---- !u!114 &1269182162
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1269182160}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b93dc902c3fd54fc7b40446567eb8e9e, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  levelName: Demo Level
-  timeLimit: 120
 --- !u!1 &1281748245
 GameObject:
   m_ObjectHideFlags: 0
@@ -2982,7 +2965,7 @@ Prefab:
       objectReference: {fileID: 1732596256}
     - target: {fileID: 11449840, guid: cf85cbb67accf4b76940e699db2c2019, type: 2}
       propertyPath: startingLives
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: cf85cbb67accf4b76940e699db2c2019, type: 2}
@@ -3507,6 +3490,7 @@ GameObject:
   - 223: {fileID: 1732596262}
   - 114: {fileID: 1732596261}
   - 114: {fileID: 1732596260}
+  - 114: {fileID: 1732596258}
   m_Layer: 5
   m_Name: GameOverCanvas
   m_TagString: Untagged
@@ -3540,6 +3524,22 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0, y: 0}
+--- !u!114 &1732596258
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1732596256}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1b512740693c246edad790eeb91e7a99, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  scoreTextObj: {fileID: 1852264621}
+  mineralsTextObj: {fileID: 647854844}
+  timerTextObj: {fileID: 1536380416}
+  restartButton: {fileID: 1441774049}
+  quitButton: {fileID: 1479379336}
 --- !u!114 &1732596260
 MonoBehaviour:
   m_ObjectHideFlags: 0

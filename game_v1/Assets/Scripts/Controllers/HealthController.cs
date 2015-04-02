@@ -62,8 +62,10 @@ public class HealthController : MonoBehaviour {
 		remainingHitPoints -= points;
 		AudioSource.PlayClipAtPoint (damageSound, gameObject.transform.position);
 		particleObject = (GameObject)Instantiate (damageParticlePrefab, gameObject.transform.position, gameObject.transform.rotation);	
-		particleObject.transform.parent = levelRoot.transform;
-		Destroy (particleObject, 3f); // destroy the particles in X sec
+		if (particleObject != null) {
+			particleObject.transform.parent = levelRoot.transform;
+			Destroy (particleObject, 3f); // destroy the particles in X sec
+		}
 		StartCoroutine(DoBlinks(0.2f, 0.08f));
 	}
 

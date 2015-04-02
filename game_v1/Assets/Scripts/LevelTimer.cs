@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class LevelController : MonoBehaviour {
+public class LevelTimer : MonoBehaviour {
 
 	public string levelName = "Demo Level";
 	public float timeLimit = 120f; // seconds for level timer
@@ -20,6 +20,13 @@ public class LevelController : MonoBehaviour {
 		int seconds = Mathf.FloorToInt(timeRemaining - minutes * 60);
 		string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
 		return (niceTime);
+	}
+
+	public int GetSecondsRemaining () {
+		float timeElapsed = Time.time - startTime;
+		float timeRemaining = timeLimit - Mathf.Round(timeElapsed);
+		int seconds = Mathf.FloorToInt(timeRemaining * 60);
+		return (seconds);
 	}
 
 	public void ResetTimer() {

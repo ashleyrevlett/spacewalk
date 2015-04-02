@@ -23,7 +23,7 @@ public class GameController : MonoBehaviour {
 	
 	private HealthController healthController;
 	private ScoreController scoreController;
-	private LevelController levelController;
+	private LevelTimer levelTimer;
 
 	public GameObject levelIntro; // need to manually wire this up in IDE
 //	private bool isPlaying = false;
@@ -39,8 +39,8 @@ public class GameController : MonoBehaviour {
 	void Start () {
 
 		
-		GameObject levelControllerObject = GameObject.FindWithTag ("Level");
-		levelController = levelControllerObject.GetComponent<LevelController> ();	
+		GameObject levelTimerObject = GameObject.FindWithTag ("Level");
+		levelTimer = levelTimerObject.GetComponent<LevelTimer> ();	
 
 		remainingLives = startingLives;
 
@@ -112,7 +112,7 @@ public class GameController : MonoBehaviour {
 
 		healthController.remainingHitPoints = healthController.startingHitPoints;
 		scoreController.score = 0;
-		levelController.ResetTimer ();
+		levelTimer.ResetTimer ();
 
 		player.transform.position = playerSpawnPoint;
 		player.transform.rotation = playerSpawnRotation;

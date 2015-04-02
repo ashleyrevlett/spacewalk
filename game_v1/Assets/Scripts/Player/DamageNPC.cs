@@ -30,7 +30,7 @@ public class DamageNPC : MonoBehaviour {
 		Vector3 position = new Vector3 (transform.position.x, transform.position.y, transform.position.z);
 		if (Physics.Raycast(position, -transform.up, out rayhit)) {
 
-			Debug.Log ("downward hit distance: " + rayhit.distance.ToString("F1"));
+			//Debug.Log ("downward hit distance: " + rayhit.distance.ToString("F1"));
 
 
 			// make sure ray hit same enemy that the controller collided with
@@ -43,7 +43,7 @@ public class DamageNPC : MonoBehaviour {
 			// if npc is below player, assume we jumped on int and should damage it
 			NPCController npccontroller = npc.GetComponent<NPCController>();
 			if (rayhit.distance <= .2f && !npccontroller.damaged) {
-				Debug.Log ("Damaging NPC");
+				//Debug.Log ("Damaging NPC");
 				// npc takes damage if vulnerable
 				// and player should be sprung upwards
 				npccontroller.SendMessage("TakeDamage");
