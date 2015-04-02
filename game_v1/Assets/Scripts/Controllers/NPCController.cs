@@ -30,7 +30,7 @@ public class NPCController : MonoBehaviour {
 	public float scaleDown = 10f;
 	public AudioClip deathSound; // sound fx
 	public GameObject deathParticleEffectPrefab; // particle explosions
-	private GameObject gameController;
+	private GameController gameController;
 	private ScoreController scoreController;
 	public bool damaged = false; // public so damageNPC can check vulnerability status
 	private MeshRenderer[] renderers;
@@ -44,7 +44,8 @@ public class NPCController : MonoBehaviour {
 		player = GameObject.FindGameObjectWithTag ("Player");
 		timeUntilTurn = secondsTillTurn;
 
-		gameController = GameObject.FindWithTag ("GameController");
+		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
+		gameController = gameControllerObject.GetComponent<GameController> ();
 		scoreController = gameController.GetComponent<ScoreController> ();	
 
 		renderers = gameObject.GetComponentsInChildren<MeshRenderer> ();
@@ -56,6 +57,14 @@ public class NPCController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
+		
+		if (!gameController.isPlaying) {
+			animator.speed = 0f;
+			StopAllCoroutines();
+			return;
+		} else {
+			animator.speed = 1f;
+		}
 	
 		if (attackTarget && !damaged) {
 

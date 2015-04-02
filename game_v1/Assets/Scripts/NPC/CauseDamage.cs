@@ -18,9 +18,18 @@ public class CauseDamage : MonoBehaviour {
 	 * If the player hits the object, it's detected by the player's TakeDamage script.
 	*/
 
+	void Update() {
+
+
+	}
+
+
 	void OnCollisionEnter(Collision collision) {
+
 		if (collision.gameObject.tag == "Player") {
-			healthController.SendMessage("ApplyDamage", damagePoints);
+			if (healthController != null) {
+				healthController.SendMessage("ApplyDamage", damagePoints);
+			}
 		}
 
 	}

@@ -7,14 +7,17 @@ public class TakeDamage : MonoBehaviour {
 	private HealthController healthController;
 	private ShakeObject cameraShake;
 	private CharacterController controller;
-	
+
 	void Start () {
 		healthController = gameObject.GetComponent<HealthController> ();	
 		cameraShake = Camera.main.GetComponent<ShakeObject> ();
 		controller = gameObject.GetComponent<CharacterController> ();
+
 	}
 
+
 	void OnControllerColliderHit(ControllerColliderHit hit) {
+
 		if (hit.gameObject.tag == "Hazard") {
 			healthController.SendMessage("ApplyDamage", hazardDamagePoints);
 			cameraShake.SendMessage("Shake", .05f);

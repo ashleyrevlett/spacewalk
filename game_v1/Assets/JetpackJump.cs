@@ -26,7 +26,9 @@ public class JetpackJump : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-	
+		if (particles == null) 
+			return;
+
 		if (motor.canUseJetpack && motor.verticalVelocity > 0) {
 			particles.enableEmission = true;
 		} else {

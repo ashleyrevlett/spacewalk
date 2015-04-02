@@ -64,6 +64,8 @@ public class CharacterMotor : MonoBehaviour {
 	// various gameobject references	
 	private CharacterController controller; // used to move the player
 	private Animator animator;
+	private GameObject levelRoot;
+	private GameController gameController;
 
 	// powerups!
 	public bool canUseJetpack = true;
@@ -77,6 +79,10 @@ public class CharacterMotor : MonoBehaviour {
 		// cache object references
 		controller = GetComponent<CharacterController> ();
 		animator = GetComponent<Animator> ();
+		levelRoot = GameObject.FindGameObjectWithTag ("Level");
+		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
+		gameController = gameControllerObject.GetComponent<GameController> ();
+
 
 		// create new sound source for sfx
 		soundEffectsSource = gameObject.AddComponent<AudioSource>();
@@ -87,7 +93,16 @@ public class CharacterMotor : MonoBehaviour {
 	
 	
 	void Update () {	
-		
+
+
+		if (!gameController.isPlaying) {
+			animator.speed = 0f;
+			StopAllCoroutines();
+			return;
+		} else {
+			animator.speed = 1f;
+		}
+
 		// get input from player
 		playerInput = ProcessPlayerInput ();
 		
@@ -465,7 +480,12 @@ public class CharacterMotor : MonoBehaviour {
 	void AddDustClouds() {		
 		// add dust particles if sudden acceleration
 		if (Mathf.Abs(currentSpeed - previousSpeed) >= runSpeed / 2 && controller.isGrounded) {
+
 			GameObject particleObject = (GameObject) Instantiate(dustParticlePrefab, transform.position, transform.rotation);
+
+			if (!levelRoot)
+				levelRoot = GameObject.FindGameObjectWithTag ("Level");
+			particleObject.transform.parent = levelRoot.transform;
 			Destroy(particleObject, 2f); // destroy in 2 sec
 		}
 		

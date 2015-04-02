@@ -3,47 +3,60 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
+	public int startingLives = 3;
+	public int remainingLives;
+
+	public GameObject levelPrefab;
+
 	public bool showIntro = false;
 
 	// public so we can check the status in our controllers
 	public bool isPaused = false;
 	public bool isGameOver = false;
+	public bool isPlaying = true;
 
 	public GameObject pauseCanvas; // need to manually wire this up in IDE
-	private int loseScene = 1; // scene # from build settings
+	public GameObject loseLifeCanvas;
+	public GameObject gameOverCanvas;
+	public GameObject hudCanvas;
+	//private int loseScene = 1; // scene # from build settings
 	
 	private HealthController healthController;
+	private ScoreController scoreController;
+	private LevelController levelController;
 
 	public GameObject levelIntro; // need to manually wire this up in IDE
-	private bool isPlaying = false;
+//	private bool isPlaying = false;
 
+	private GameObject player;
+	private Vector3 playerSpawnPoint;
+	private Quaternion playerSpawnRotation;
+	private Vector3 cameraSpawnPoint;
+	private Quaternion cameraSpawnRotation;
+	private GameObject levelRoot;
 
 	// Use this for initialization
 	void Start () {
 
-		GameObject player = GameObject.FindWithTag ("Player");
+		
+		GameObject levelControllerObject = GameObject.FindWithTag ("Level");
+		levelController = levelControllerObject.GetComponent<LevelController> ();	
+
+		remainingLives = startingLives;
+
+		player = GameObject.FindWithTag ("Player");
 		healthController = player.GetComponent<HealthController> ();
-		Unpause (); // need to unpause in case we have left a paused scene behind
+		scoreController = gameObject.GetComponent<ScoreController> ();
 
-		// wait for player to hit start before upausing and playing
-		if (showIntro) {
-			Time.timeScale = 0.0F;
-			isPaused = true;
-			levelIntro.SetActive(true);
-		} else {
-			StartLevel ();
-		}
+		playerSpawnPoint = player.transform.position;
+		playerSpawnRotation = player.transform.rotation;
+		cameraSpawnPoint = Camera.main.transform.position;
+		cameraSpawnRotation = Camera.main.transform.rotation;
+
+		levelRoot = GameObject.FindGameObjectWithTag ("Level");
+		RestartLevel ();
 
 	}
-
-	public void StartLevel() {
-
-		Debug.Log ("Starting level!");
-		levelIntro.SetActive(false);
-		isPlaying = true;
-		Unpause ();
-	}
-
 
 	// Update is called once per frame
 	void Update () {
@@ -56,37 +69,112 @@ public class GameController : MonoBehaviour {
 		}
 
 		//lose conditions
-		if (healthController.remainingHitPoints <= 0) {
-			GameLose ();
+		if (healthController.remainingHitPoints <= 0 && remainingLives > 0) {		
+			LoseLife ();
+		} else if (healthController.remainingHitPoints <= 0 && remainingLives == 0) {
+			GameOver();
 		}
 
 
-	}
 
-	
+	}
+		
 	public void Pause() {
 		pauseCanvas.SetActive(true);
-		Debug.Log("PAUSING");
-		Time.timeScale = 0.0F;
+		isPlaying = false;
 		isPaused = true;
 	}
 
 	public void Unpause() {	
 		pauseCanvas.SetActive(false);
-		Debug.Log("UNPAUSING");
-		Time.timeScale = 1.0F;
+		isPlaying = true;
 		isPaused = false;
 	}
 
-	public void GameLose() {
+	public void LoseLife() {
 		if (!isGameOver) {
-			Debug.Log ("GAME OVER!");
+			Debug.Log ("Lost life!");
 			isGameOver = true;
-			Time.timeScale = 0.0F;
-			Application.LoadLevelAdditive (loseScene);
+			isPlaying = false;
+			hudCanvas.SetActive(false);
+			remainingLives -= 1;
+			healthController.remainingHitPoints = healthController.startingHitPoints;
+			loseLifeCanvas.SetActive(true);
 		}
 	}
 
+	// TODO can't just restart, have to reset all npcs minerals etc... might as well reload level 
+	// requires game controller to be outside level so it won't get destroyed
+	// should this contain the health logic instead of the player character?
+
+	public void RestartLevel() {
+		Debug.Log ("Restarting level!");
+
+		healthController.remainingHitPoints = healthController.startingHitPoints;
+		scoreController.score = 0;
+		levelController.ResetTimer ();
+
+		player.transform.position = playerSpawnPoint;
+		player.transform.rotation = playerSpawnRotation;
+		Camera.main.transform.position = cameraSpawnPoint;
+		Camera.main.transform.rotation = cameraSpawnRotation;
+
+		hudCanvas.SetActive(true);
+		loseLifeCanvas.SetActive(false);
+		gameOverCanvas.SetActive(false);
+
+		isGameOver = false;
+		isPlaying = true;
+
+		if (levelRoot) { // if level object is in scene, destroy and reload
+			Destroy (levelRoot);
+			levelRoot = Instantiate (levelPrefab) as GameObject;
+		}
+		Unpause (); // need to unpause in case we have left a paused scene behind
+		
+		// wait for player to hit start before upausing and playing
+		if (showIntro) {
+			isPlaying = false;
+			levelIntro.SetActive(true);
+		} else {
+			StartLevel ();
+		}
+
+
+	}
+
+
+	public void StartLevel() {
+		Debug.Log ("Starting level!");
+		levelIntro.SetActive(false);
+		hudCanvas.SetActive(true);
+		isGameOver = false;
+		isPaused = false;
+		Unpause (); // resumes timescale = 1
+	}
+
+
+	public void GameOver() {
+		if (!isGameOver) {
+			Debug.Log ("GAME OVER!");
+			isGameOver = true;
+			isPlaying = false;
+			hudCanvas.SetActive(false);
+			gameOverCanvas.SetActive(true);
+		}
+
+	}
+
+	public void QuitGame() {
+		Application.Quit();
+	}
+
+
+	public void RestartGame() {
+		remainingLives = startingLives;
+		RestartLevel ();
+
+	}
 
 
 }

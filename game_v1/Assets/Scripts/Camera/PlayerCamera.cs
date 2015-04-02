@@ -7,7 +7,8 @@ public class PlayerCamera : MonoBehaviour {
 	public float distanceUp = 3.0f;
 	public float smooth = 6.0f;
 	public float cameraVerticalOffset = 1.5f; // so we're not looking at the player's feet
-	
+
+	private GameObject player;
 	private Transform follow;
 	private Vector3 cameraTargetPosition;	
 	private CharacterController controller;
@@ -19,36 +20,42 @@ public class PlayerCamera : MonoBehaviour {
 
 
 	void Start () {
-
 		// follow the player
-		GameObject player = GameObject.FindWithTag ("Player");
+		player = GameObject.FindWithTag ("Player");
 		follow = player.transform;			
 		controller = player.GetComponent<CharacterController> ();
 	}
 	
 
 	
-	void LateUpdate() {
+	void Update() {
 
-		// update camera position to follow player
-		cameraTargetPosition = follow.position + (follow.up * distanceUp) - (follow.forward * distanceAway);
-		
-		
-		transform.position = Vector3.Lerp (transform.position, cameraTargetPosition, Time.deltaTime * smooth);
-		Vector3 lookAtLocation = new Vector3( follow.position.x, 
-		                                     this.transform.position.y - cameraVerticalOffset, 
-		                                     follow.position.z ) ;
-		transform.LookAt( lookAtLocation );
+		if (!player) {
+			player = GameObject.FindWithTag ("Player");
+			follow = player.transform;			
+			controller = player.GetComponent<CharacterController> ();
+		} else {
 
-		// TODO 
-		// if !viewIsClear rotate around player until it is
+			// update camera position to follow player
+			cameraTargetPosition = follow.position + (follow.up * distanceUp) - (follow.forward * distanceAway);
+			
+			
+			transform.position = Vector3.Lerp (transform.position, cameraTargetPosition, Time.deltaTime * smooth);
+			Vector3 lookAtLocation = new Vector3( follow.position.x, 
+			                                     this.transform.position.y - cameraVerticalOffset, 
+			                                     follow.position.z ) ;
+			transform.LookAt( lookAtLocation );
 
+			// TODO 
+			// if !viewIsClear rotate around player until it is
+
+		}
 	}
 
 
 	void FixedUpdate() {
 
-		viewIsClear = isViewClear();		
+		// viewIsClear = isViewClear();		
 	
 	}
 

@@ -4,14 +4,12 @@ using System.Collections;
 public class DamageNPC : MonoBehaviour {
 
 	private CharacterController controller;
-	private HealthController healthcontroller;
 	private CharacterMotor motor;
 
 	// Use this for initialization
 	void Start () {
 		GameObject player = GameObject.FindGameObjectWithTag ("Player");
 		controller = player.GetComponent<CharacterController> ();
-		healthcontroller = player.GetComponent<HealthController> ();
 		motor = player.GetComponent<CharacterMotor> ();
 	}
 

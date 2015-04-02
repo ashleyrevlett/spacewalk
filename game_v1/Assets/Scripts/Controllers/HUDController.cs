@@ -15,32 +15,29 @@ public class HUDController : MonoBehaviour {
 	public float textEffectSpeed = .5f;
 
 	private float startTime; // timekeeping	
-	private GameObject gameController;
+	private GameObject gameControllerObject;
+	private GameController gameController;
 	private ScoreController scoreController;
 	private HealthController healthController;
-
+	private LevelController levelController;
 
 	// Use this for initialization
 	void Start () {
-		startTime = Time.time; // start timer
-
 		GameObject player = GameObject.FindWithTag ("Player");
-		gameController = GameObject.FindWithTag ("GameController");
-		scoreController = gameController.GetComponent<ScoreController> ();	
+		gameControllerObject = GameObject.FindWithTag ("GameController");
+		gameController = gameControllerObject.GetComponent<GameController> ();	
+		scoreController = gameControllerObject.GetComponent<ScoreController> ();	
 		healthController = player.GetComponent<HealthController> ();	
 
+		GameObject levelControllerObject = GameObject.FindWithTag ("Level");
+		levelController = levelControllerObject.GetComponent<LevelController> ();	
 	}
 	
 	// Update is called once per frame
 	void Update () {
 
 		// update timer
-		float timeElapsed = Time.time - startTime;
-		float timeRemaining = timeLimit - Mathf.Round(timeElapsed);
-		int minutes = Mathf.FloorToInt(timeRemaining / 60F);
-		int seconds = Mathf.FloorToInt(timeRemaining - minutes * 60);
-		string niceTime = string.Format("{0:0}:{1:00}", minutes, seconds);
-		timerText.text = niceTime;
+		timerText.text = levelController.GetTimeRemaining();
 
 		// update score
 		if (int.Parse(scoreText.text) != scoreController.score) 
@@ -50,8 +47,8 @@ public class HUDController : MonoBehaviour {
 		if (int.Parse(hitPointsText.text) != healthController.remainingHitPoints) 
 			StartCoroutine( ChangeText(healthController.remainingHitPoints.ToString(), hitPointsText) );
 
-		if (int.Parse(livesText.text) != healthController.remainingLives) 
-			StartCoroutine( ChangeText(healthController.remainingLives.ToString(), livesText) );		
+		if (int.Parse(livesText.text) != gameController.remainingLives) 
+			StartCoroutine( ChangeText(gameController.remainingLives.ToString(), livesText) );		
 
 	}
 

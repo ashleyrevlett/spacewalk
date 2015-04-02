@@ -46,9 +46,8 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\FlashLivesRemaining.cs" />
      <Compile Include="Assets\JetpackJump.cs" />
-     <Compile Include="Assets\Mixamo\BasicLocomotionPack\LocomotionScript.cs" />
+     <Compile Include="Assets\LevelController.cs" />
      <Compile Include="Assets\Scripts\Camera\PlayerCamera.cs" />
      <Compile Include="Assets\Scripts\Controllers\GUIController.cs" />
      <Compile Include="Assets\Scripts\Controllers\GameController.cs" />
@@ -58,6 +57,7 @@
      <Compile Include="Assets\Scripts\Controllers\PlatformController.cs" />
      <Compile Include="Assets\Scripts\Controllers\ScoreController.cs" />
      <Compile Include="Assets\Scripts\Controllers\WaterController.cs" />
+     <Compile Include="Assets\Scripts\FlashLivesRemaining.cs" />
      <Compile Include="Assets\Scripts\NPC\AttackNearby.cs" />
      <Compile Include="Assets\Scripts\NPC\CauseDamage.cs" />
      <Compile Include="Assets\Scripts\NPC\WalkAround.cs" />
@@ -77,7 +77,6 @@
      <Compile Include="Assets\Scripts\Utilities\SpinObject.cs" />
      <None Include="Assets\Shaders\Shaders\_BloomAndFlares\BlendOneOne.shader" />
      <None Include="Assets\Shaders\Shaders\NoiseEffectShaderRGB.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Basic.shader" />
      <None Include="Assets\Shaders\Shaders\_DepthOfField\SeparableWeightedBlurDof34.shader" />
      <None Include="Assets\Shaders\Shaders\ShowAlphaChannel.shader" />
      <None Include="Assets\Shaders\Shaders\SunShaftsComposite.shader" />
@@ -99,10 +98,8 @@
      <None Include="Assets\Shaders\Shaders\FisheyeShader.shader" />
      <None Include="Assets\Shaders\Shaders\Contrast Stretch\Apply.shader" />
      <None Include="Assets\Shaders\Water2.shader" />
-     <None Include="Assets\Standard Assets\Skyboxes\_skybox info.txt" />
      <None Include="Assets\Shaders\Shaders\frag_ao.cginc" />
      <None Include="Assets\Animations\Mobility_01_Free_v2\Mobility_Free_Unity_Info.txt" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-BasicOutline.shader" />
      <None Include="Assets\Shaders\Shaders\_DepthOfField\DepthOfField34.shader" />
      <None Include="Assets\Shaders\Shaders\_BloomAndFlares\MobileBlur.shader" />
      <None Include="Assets\Shaders\SSAOShader.shader" />
@@ -112,9 +109,7 @@
      <None Include="Assets\Shaders\Shaders\CreaseApply.shader" />
      <None Include="Assets\Shaders\Shaders\ChromaticAberrationShader.shader" />
      <None Include="Assets\Shaders\Shaders\GlobalFog.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-LightedOutline.shader" />
      <None Include="Assets\Shaders\Shaders\Contrast Stretch\Luminance.shader" />
-     <None Include="Assets\Standard Assets\Toon Shading\Sources\Shaders\Toony-Lighted.shader" />
      <None Include="Assets\Shaders\Shaders\ColorCorrectionSelective.shader" />
      <None Include="Assets\Shaders\Shaders\_DepthOfField\Bokeh34.shader" />
      <None Include="Assets\Shaders\Shaders\CameraMotionBlurDX11.shader" />
@@ -159,8 +154,6 @@
   <ItemGroup>
     <ProjectReference Include="Assembly-CSharp-firstpass.csproj">
       <Project>{26240B9F-2725-B139-9502-5B4460CFCF94}</Project>      <Name>Assembly-CSharp-firstpass</Name>    </ProjectReference>
-    <ProjectReference Include="Assembly-UnityScript-firstpass.unityproj">
-      <Project>{672A25C3-6A3C-7EAE-6EDA-57F12CA017FA}</Project>      <Name>Assembly-UnityScript-firstpass</Name>    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
