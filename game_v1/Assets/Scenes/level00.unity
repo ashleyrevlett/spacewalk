@@ -2000,10 +2000,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d65206875135d4a5e9c3eff454aaf339, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  startingHitPoints: 3
+  startingHitPoints: 2
   remainingHitPoints: 0
   damageParticlePrefab: {fileID: 100000, guid: 30afdbc00946d4b36a3f24b88b6046f4, type: 2}
   damageSound: {fileID: 8300000, guid: 3968e8dca02fc409596d86ba3760abdc, type: 3}
+  deathSound: {fileID: 8300000, guid: 14ac0c3019b754ab5953abcb48431505, type: 3}
+  takingDamage: 0
+  invulnerableTime: 1.5
+  blinkTime: .0599999987
 --- !u!114 &979845009
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2051,7 +2055,7 @@ MonoBehaviour:
   useJump: 1
   jumpVelocity: 10
   useVariableHeightJump: 1
-  cutJumpSpeed: 1
+  cutJumpSpeed: -.100000001
   endFallAnimationTime: .899999976
   inAirControl: .349999994
   useDoubleJump: 0
@@ -2336,8 +2340,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   distanceAway: 9
   distanceUp: 3
-  smooth: 6
+  smooth: 30
   cameraVerticalOffset: 1.5
+  minDegreesToRotate: 12
+  timeTillRotateReset: 4
   avoidObstacles: 0
   timeTillMove: 1
 --- !u!114 &1182207314

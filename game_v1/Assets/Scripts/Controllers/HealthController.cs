@@ -9,9 +9,11 @@ public class HealthController : MonoBehaviour {
 	public float remainingHitPoints;
 	public GameObject damageParticlePrefab;
 	public AudioClip damageSound;
-
-	// for blink damage
-	private bool isVulnerable = true;
+	public AudioClip deathSound;
+	
+	public bool takingDamage; // for testing whether player should have control or not
+	public float invulnerableTime = 1.05f; // seconds after damage player should be invulnerable and flashing
+	public float blinkTime = .075f;
 	private Component[] characterMeshes;
 	private SkinnedMeshRenderer characterSkin;
 
@@ -19,6 +21,7 @@ public class HealthController : MonoBehaviour {
 	private GameController gameController;
 	private GameObject particleObject;
 	private ShakeObject cameraShake;
+	private Animator animator; // player's animator, to set damaged animation state
 	
 
 	void Start () {	
@@ -29,12 +32,17 @@ public class HealthController : MonoBehaviour {
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
 		gameController = gameControllerObject.GetComponent<GameController> ();
 		cameraShake = Camera.main.GetComponent<ShakeObject> ();
+		animator = gameObject.GetComponent<Animator> ();
+		takingDamage = false;
 	}
 
 	void Update() {
+
+		// game has been restarted and we need a new reference to level root
 		if (levelRoot == null) 
 			levelRoot = GameObject.FindGameObjectWithTag ("Level");
 
+		// on pause or game over, stop everything
 		if (!gameController.isPlaying) {
 			StopAllCoroutines();
 
@@ -42,60 +50,96 @@ public class HealthController : MonoBehaviour {
 			foreach (MeshRenderer characterRenderer in characterMeshes) {
 				characterRenderer.enabled = true;
 			}
-			characterSkin.enabled = true;			
-			isVulnerable = true;
+			characterSkin.enabled = true;					
+			takingDamage = false;
 
 			// turn off the particles
 			if (particleObject) {
 				ParticleSystem particleSystem = particleObject.GetComponent<ParticleSystem>();
 				particleSystem.enableEmission = false;
 			}
-
 		}
+//				
+//		// if the damage animations are done, we're done taking damage
+//		if (animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion")) { 
+//			takingDamage = false;
+////			int locoHash = Animator.StringToHash("Locomotion");
+////			int baseLocoHash = Animator.StringToHash("Base Layer.Locomotion");
+////			int mainBaseLocoHash = Animator.StringToHash("Main.Base Layer.Locomotion");
+////			int nowHash = animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
+////			Debug.Log (animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion"));
+////			Debug.Log ("nowHash: " + nowHash + " locoHash: " + locoHash);
+//		}
+
 	}
+
 
 	public void ApplyDamage(float points) {	
 
-
-		if (!isVulnerable || !gameController.isPlaying)
+		if (!gameController.isPlaying || takingDamage)
 			return;
 
-		cameraShake.SendMessage("Shake", .05f);
+		takingDamage = true;
+		Debug.Log ("Applying damage, takingDamage: " + takingDamage);
 
-		isVulnerable = false;
-		remainingHitPoints -= points;
-		AudioSource.PlayClipAtPoint (damageSound, gameObject.transform.position);
-		particleObject = (GameObject)Instantiate (damageParticlePrefab, gameObject.transform.position, gameObject.transform.rotation);	
-		if (particleObject != null) {
-			particleObject.transform.parent = levelRoot.transform;
-			Destroy (particleObject, 3f); // destroy the particles in X sec
-		}
-		StartCoroutine(DoBlinks(0.2f, 0.08f));
+		// DIE
+		StartCoroutine(DoDamage (points));
+
 	}
 
 
-	IEnumerator DoBlinks(float duration, float blinkTime) {
-		while (duration > 0f) {
-			duration -= Time.deltaTime;
-			
-			//toggle renderer
-			foreach (MeshRenderer characterRenderer in characterMeshes) {
-				characterRenderer.enabled = !characterRenderer.enabled;
+	IEnumerator DoDamage(float points) {
+
+		if (remainingHitPoints == 0) {
+			animator.SetTrigger ("Dead");
+			AudioSource.PlayClipAtPoint (damageSound, gameObject.transform.position);
+			particleObject = (GameObject)Instantiate (damageParticlePrefab, gameObject.transform.position, gameObject.transform.rotation);	
+			if (particleObject != null) {
+				particleObject.transform.parent = levelRoot.transform;
+				Destroy (particleObject, 3f); // destroy the particles in X sec
 			}
-			characterSkin.enabled = !characterSkin.enabled;
-					
-			//wait for a bit
-			yield return new WaitForSeconds(blinkTime);
+			if ( gameController.remainingLives > 0)
+				gameController.EndLife ();
+			else 
+				gameController.EndGame();
+
+		// OR TAKE DAMAGE
+		} else {
+			// cameraShake.SendMessage("Shake", .05f);		
+			animator.SetTrigger ("Damaged");
+			remainingHitPoints -= points;
+			AudioSource.PlayClipAtPoint (damageSound, gameObject.transform.position);
+			particleObject = (GameObject)Instantiate (damageParticlePrefab, gameObject.transform.position, gameObject.transform.rotation);	
+			if (particleObject != null) {
+				particleObject.transform.parent = levelRoot.transform;
+				Destroy (particleObject, 3f); // destroy the particles in X sec
+			}
+
+			// blink
+			float duration = invulnerableTime;
+			while (duration > 0f) {
+				duration -= Time.deltaTime;
+				
+				//toggle renderer
+				foreach (MeshRenderer characterRenderer in characterMeshes) {
+					characterRenderer.enabled = !characterRenderer.enabled;
+				}
+				characterSkin.enabled = !characterSkin.enabled;
+				
+				//wait for a bit
+				yield return new WaitForSeconds(blinkTime);
+			}
+			
+			//make sure renderer is enabled when we exit
+			foreach (MeshRenderer characterRenderer in characterMeshes) {
+				characterRenderer.enabled = true;
+			}
+			characterSkin.enabled = true;
+
+			takingDamage = false;
 		}
 		
-		//make sure renderer is enabled when we exit
-		foreach (MeshRenderer characterRenderer in characterMeshes) {
-			characterRenderer.enabled = true;
-		}
-		characterSkin.enabled = true;
-
-		isVulnerable = true;
-	
 	}
+
 
 }

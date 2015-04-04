@@ -9,18 +9,18 @@ public class FlashLivesRemaining : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-		Debug.Log ("TXT Starting");
+//		Debug.Log ("TXT Starting");
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
 		gameController = gameControllerObject.GetComponent<GameController> ();
 		livesText = gameObject.GetComponent<Text> ();
 		int lives = gameController.remainingLives + 1;
 		livesText.text = "x " + lives.ToString();
-		Debug.Log ("Flashing lives");		
+//		Debug.Log ("Flashing lives");		
 		StartCoroutine(UpdateLives());
 	}
 
 	void Update() {
-		Debug.Log ("TXT Updating");
+		//Debug.Log ("TXT Updating");
 		if (!gameController) {
 			GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
 			gameController = gameControllerObject.GetComponent<GameController> ();
@@ -29,7 +29,7 @@ public class FlashLivesRemaining : MonoBehaviour {
 
 
 	void OnEnable() {
-		Debug.Log ("TXT Enabling");
+//		Debug.Log ("TXT Enabling");
 		if (gameController) {
 			int lives = gameController.remainingLives + 1;
 			livesText.text = "x " + lives.ToString();
@@ -38,15 +38,13 @@ public class FlashLivesRemaining : MonoBehaviour {
 	}
 
 	void OnDisable () {
-		Debug.Log ("TXT Disabling");
+//		Debug.Log ("TXT Disabling");
 	}
 
 	private IEnumerator UpdateLives() {
-		Debug.Log ("running coroutine");
+		yield return new WaitForSeconds(.5f);
 		int lives = gameController.remainingLives;
 		livesText.text = "x " + lives.ToString();
-		yield return new WaitForSeconds(1f);
-		Debug.Log ("coroutine finished!");
 		yield return null;
 	}
 

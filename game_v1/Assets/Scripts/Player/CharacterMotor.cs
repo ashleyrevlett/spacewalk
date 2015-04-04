@@ -66,6 +66,7 @@ public class CharacterMotor : MonoBehaviour {
 	private Animator animator;
 	private GameObject levelRoot;
 	private GameController gameController;
+	private HealthController healthController;
 
 	// enable powerups!
 	public bool canUseJetpack = true;
@@ -73,6 +74,7 @@ public class CharacterMotor : MonoBehaviour {
 	// allow force to be applied from outside, like enemy hit
 	private float forceAmount = 0f;
 	private Vector3 forceDirection = Vector3.zero;
+	private bool forceApplied = false;
 
 	#endregion
 
@@ -86,19 +88,22 @@ public class CharacterMotor : MonoBehaviour {
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
 		gameController = gameControllerObject.GetComponent<GameController> ();
 
+		GameObject player = GameObject.FindGameObjectWithTag ("Player");
+		healthController = player.GetComponent<HealthController> ();
 
 		// create new sound source for sfx
 		soundEffectsSource = gameObject.AddComponent<AudioSource>();
 		soundEffectsSource.loop = false;
 		soundEffectsSource.Stop ();
-		
+
+
 	}
 	
 	
 	void Update () {	
 
-
 		if (!gameController.isPlaying) {
+			// we are paused or a dialog is displaying
 			animator.speed = 0f;
 			StopAllCoroutines();
 			return;
@@ -106,43 +111,46 @@ public class CharacterMotor : MonoBehaviour {
 			animator.speed = 1f;
 		}
 
-		// get input from player
-		playerInput = ProcessPlayerInput ();
-		
-		// figure current speed based on accel, past speed and player input
-		currentSpeed = CalculatePlayerSpeed (playerInput, currentSpeed);
-		
-		// convert player input to worldspace direction, rotate player 
-		moveDirection = LocalMovement (playerInput.x, playerInput.y, currentSpeed);
-
-		// listen for jump input and handle jump animations, sfx
-		if (useJump)
-			ProcessJump ();
-
-		// dust clouds during sudden accel
-		AddDustClouds ();
-		
-		// slide on slopes
-		if (useSlide)
-			ProcessSlide ();
-
-		// add gravity if not on ground
-		if (!isNearlyGrounded()) {
-			verticalVelocity -= gravity * Time.deltaTime;
-			verticalVelocity = Mathf.Max(-terminalVelocity, verticalVelocity);
-		}
-
-		// apply gravity & jump force if not sliding
-		if (!isSliding) {
-			moveDirection.y = verticalVelocity;
-		}
-
-		// is there another stronger force acting? like a push from enemy hit
-		if (forceAmount > 0f) {
+		// if force is being applied, don't let player control movement
+		if (healthController.takingDamage) {
 			forceAmount -= gravity * Time.deltaTime;
-			forceAmount = Mathf.Clamp(forceAmount, -terminalVelocity, terminalVelocity);
+			forceAmount = Mathf.Clamp(forceAmount, 0f, terminalVelocity);
 			moveDirection = forceDirection * forceAmount;
+		} else {
+					
+			// get input from player if not being moved elsewhere
+			playerInput = ProcessPlayerInput ();
+			
+			// figure current speed based on accel, past speed and player input
+			currentSpeed = CalculatePlayerSpeed (playerInput, currentSpeed);
+			
+			// convert player input to worldspace direction, rotate player 
+			moveDirection = LocalMovement (playerInput.x, playerInput.y, currentSpeed);
+			
+			// listen for jump input and handle jump animations, sfx
+			if (useJump)
+				ProcessJump ();
+			
+			// dust clouds during sudden accel
+			AddDustClouds ();
+			
+			// slide on slopes
+			if (useSlide)
+				ProcessSlide ();
+			
+			// add gravity if not on ground
+			if (!isNearlyGrounded()) {
+				verticalVelocity -= gravity * Time.deltaTime;
+				verticalVelocity = Mathf.Max(-terminalVelocity, verticalVelocity);
+			}
+			
+			// apply gravity & jump force if not sliding
+			if (!isSliding) {
+				moveDirection.y = verticalVelocity;
+			}
+
 		}
+
 
 		// move
 		controller.Move(moveDirection * Time.deltaTime);

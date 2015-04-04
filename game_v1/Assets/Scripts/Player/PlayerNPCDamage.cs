@@ -22,7 +22,7 @@ public class PlayerNPCDamage : MonoBehaviour {
 	void OnControllerColliderHit(ControllerColliderHit hit) {
 
 		if (hit.gameObject.tag == "Hazard") {
-			healthController.SendMessage("ApplyDamage", hazardDamagePoints);
+			healthController.ApplyDamage(hazardDamagePoints);
 		}
 
 		if (hit.gameObject.tag == "Enemy" || hit.gameObject.tag == "Boss") {
@@ -42,12 +42,14 @@ public class PlayerNPCDamage : MonoBehaviour {
 			Debug.Log ("yDiff: " + yDiff);
 			if (yDiff < npcAboveAmount) {
 				float damagePoints = npccontroller.points;
-				healthController.SendMessage("ApplyDamage", damagePoints);
+				healthController.ApplyDamage(damagePoints);
 				Vector3 pushDir = -hit.moveDirection;
 				Debug.Log("pushdir: " + pushDir);
-				motor.ApplyForce(pushDir, 20f);
+				// if this isn't death, move him backwards
+				if (healthController.remainingHitPoints > 0)
+					motor.ApplyForce(pushDir, 20f);
 			} else {
-				npccontroller.SendMessage("TakeDamage");
+				npccontroller.TakeDamage();
 			}
 
 		}

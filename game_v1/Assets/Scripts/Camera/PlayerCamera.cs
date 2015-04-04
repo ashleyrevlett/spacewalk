@@ -5,8 +5,12 @@ public class PlayerCamera : MonoBehaviour {
 
 	public float distanceAway = 8.0f;
 	public float distanceUp = 3.0f;
-	public float smooth = 6.0f;
+	public float smooth = 12.0f;
 	public float cameraVerticalOffset = 1.5f; // so we're not looking at the player's feet
+	public float minDegreesToRotate = 12f;
+	public float timeTillRotateReset = 4f;
+	private float timeRemainingTillReset;
+
 
 	private GameObject player;
 	private Transform follow;
@@ -19,11 +23,13 @@ public class PlayerCamera : MonoBehaviour {
 	private float rotateOffset = 0f;
 
 
+
 	void Start () {
 		// follow the player
 		player = GameObject.FindWithTag ("Player");
 		follow = player.transform;			
 		controller = player.GetComponent<CharacterController> ();
+		timeRemainingTillReset = timeTillRotateReset;
 	}
 	
 
@@ -32,24 +38,28 @@ public class PlayerCamera : MonoBehaviour {
 
 		if (!player) {
 			player = GameObject.FindWithTag ("Player");
-			follow = player.transform;			
 			controller = player.GetComponent<CharacterController> ();
-		} else {
-
-			// update camera position to follow player
-			cameraTargetPosition = follow.position + (follow.up * distanceUp) - (follow.forward * distanceAway);
-			
-			
-			transform.position = Vector3.Lerp (transform.position, cameraTargetPosition, Time.deltaTime * smooth);
-			Vector3 lookAtLocation = new Vector3( follow.position.x, 
-			                                     this.transform.position.y - cameraVerticalOffset, 
-			                                     follow.position.z ) ;
-			transform.LookAt( lookAtLocation );
-
-			// TODO 
-			// if !viewIsClear rotate around player until it is
-
+			follow = controller.transform;
 		}
+
+		// update camera position to follow player
+		Vector3 playerTarget = follow.position + (follow.up * distanceUp);
+		cameraTargetPosition = playerTarget - (follow.forward * distanceAway);
+		transform.position = Vector3.Lerp (transform.position, cameraTargetPosition, Time.deltaTime * smooth);
+
+		// update rotation to look at player if diff is enough
+		Vector3 camToPlayerDir = playerTarget - cameraTargetPosition;
+		Quaternion newRot = new Quaternion ();
+		newRot.SetLookRotation (camToPlayerDir);
+		float angle = Quaternion.Angle(transform.rotation, newRot);
+//		if (Mathf.Abs(angle) > minDegreesToRotate) {
+			transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * smooth);
+//		}		
+
+
+		// TODO 
+		// if !viewIsClear rotate around player until it is
+
 	}
 
 

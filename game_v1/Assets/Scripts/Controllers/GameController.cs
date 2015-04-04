@@ -29,6 +29,7 @@ public class GameController : MonoBehaviour {
 //	private bool isPlaying = false;
 
 	private GameObject player;
+	private Animator playerAnim; 
 	private Vector3 playerSpawnPoint;
 	private Quaternion playerSpawnRotation;
 	private Vector3 cameraSpawnPoint;
@@ -47,6 +48,7 @@ public class GameController : MonoBehaviour {
 		player = GameObject.FindWithTag ("Player");
 		healthController = player.GetComponent<HealthController> ();
 		scoreController = gameObject.GetComponent<ScoreController> ();
+		playerAnim = player.GetComponent<Animator> ();
 
 		playerSpawnPoint = player.transform.position;
 		playerSpawnRotation = player.transform.rotation;
@@ -69,11 +71,15 @@ public class GameController : MonoBehaviour {
 		}
 
 		//lose conditions
-		if (healthController.remainingHitPoints <= 0 && remainingLives > 0) {		
-			LoseLife ();
-		} else if (healthController.remainingHitPoints <= 0 && remainingLives == 0) {
-			GameOver();
-		}
+//		if (healthController.remainingHitPoints < 0 && remainingLives >= 0) {		 // 
+//			StartCoroutine ("LoseLife");
+//		}
+//
+//		} else if (healthController.remainingHitPoints <= 0 && remainingLives < 0) {
+//				
+//			StartCoroutine("GameOver");
+//
+//		}
 
 
 
@@ -91,16 +97,44 @@ public class GameController : MonoBehaviour {
 		isPaused = false;
 	}
 
-	public void LoseLife() {
+	public void EndGame() {
+		// public wrapper for gameover coroutine
+		StartCoroutine ("GameOver");
+	}
+	
+	IEnumerator GameOver() {
+		Debug.Log ("GAME OVER!");	
 		if (!isGameOver) {
-			Debug.Log ("Lost life!");
+			// finish death animation
+			yield return new WaitForSeconds(3.8f);
+			isGameOver = true;
+			isPlaying = false;
+			hudCanvas.SetActive(false);
+			gameOverCanvas.SetActive(true);
+		}
+		yield return null;
+		
+	}
+	
+	public void EndLife() {
+		// public wrapper for gameover coroutine
+		StartCoroutine ("LoseLife");
+	}
+
+	IEnumerator LoseLife() {
+		Debug.Log ("Losing life!!!");
+		if (!isGameOver) {
+			// finish death animation
+			yield return new WaitForSeconds(2.5f);
 			isGameOver = true;
 			isPlaying = false;
 			hudCanvas.SetActive(false);
 			remainingLives -= 1;
 			healthController.remainingHitPoints = healthController.startingHitPoints;
 			loseLifeCanvas.SetActive(true);
+			yield return null;
 		}
+		yield return null;
 	}
 
 	// TODO can't just restart, have to reset all npcs minerals etc... might as well reload level 
@@ -108,6 +142,9 @@ public class GameController : MonoBehaviour {
 	// should this contain the health logic instead of the player character?
 
 	public void RestartLevel() {
+
+		hudCanvas.SetActive (true);
+
 		Debug.Log ("Restarting level!");
 
 		healthController.remainingHitPoints = healthController.startingHitPoints;
@@ -140,6 +177,15 @@ public class GameController : MonoBehaviour {
 			StartLevel ();
 		}
 
+		// reset animations (after game over)
+		playerAnim.SetBool ("Damaged", false);
+		playerAnim.SetBool ("FallStart", false);
+		playerAnim.SetBool ("JumpStart", false);
+		playerAnim.SetBool ("JumpLoop", false);
+		playerAnim.SetBool ("JumpEnd", false);
+		playerAnim.SetBool ("DoubleJump", false);
+		playerAnim.SetTrigger ("Alive");
+
 
 	}
 
@@ -153,17 +199,6 @@ public class GameController : MonoBehaviour {
 		Unpause (); // resumes timescale = 1
 	}
 
-
-	public void GameOver() {
-		if (!isGameOver) {
-			Debug.Log ("GAME OVER!");
-			isGameOver = true;
-			isPlaying = false;
-			hudCanvas.SetActive(false);
-			gameOverCanvas.SetActive(true);
-		}
-
-	}
 
 	public void QuitGame() {
 		Application.Quit();

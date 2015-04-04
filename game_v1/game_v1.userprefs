@@ -1,26 +1,21 @@
 ﻿<Properties>
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Player/PlayerNPCDamage.cs">
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Controllers/HealthController.cs">
     <Files>
-      <File FileName="Assets/Scripts/Player/PlayerNPCDamage.cs" Line="48" Column="5" />
-      <File FileName="Assets/Scripts/Controllers/HUDController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Controllers/NPCController.cs" Line="110" Column="28" />
-      <File FileName="Assets/Scripts/FlashLivesRemaining.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/NPC/CauseDamage.cs" Line="28" Column="1" />
-      <File FileName="Assets/Scripts/Player/DamageNPC.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Controllers/ScoreController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/LevelTimer.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/GameOverHUDController.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Player/CharacterMotor.cs" Line="504" Column="24" />
+      <File FileName="Assets/Scripts/Player/PlayerNPCDamage.cs" Line="28" Column="68" />
+      <File FileName="Assets/Scripts/Controllers/HealthController.cs" Line="57" Column="2" />
+      <File FileName="Assets/Scripts/Player/CharacterMotor.cs" Line="116" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/FlashLivesRemaining.cs" line="11" />
+      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/FlashLivesRemaining.cs" line="63" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/GameOverHUDController.cs" line="68" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/GameOverHUDController.cs" line="43" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/NPC/CauseDamage.cs" line="31" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/TakeDamage.cs" line="54" />
+      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/CharacterMotor.cs" line="116" />
+      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Controllers/HealthController.cs" line="69" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />
