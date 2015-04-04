@@ -2,14 +2,24 @@
 using System.Collections;
 
 public class PlayerCamera : MonoBehaviour {
-
+	
 	public float distanceAway = 8.0f;
 	public float distanceUp = 3.0f;
-	public float smooth = 12.0f;
-	public float cameraVerticalOffset = 1.5f; // so we're not looking at the player's feet
+	
+	public float minSpeed = 12f;
+	public float maxSpeed = 12f;
+	public float moveAccel = 2f;
+	private float startMoveTime = 0f;
+	private float curMoveSpeed = 0f;
+	
 	public float minDegreesToRotate = 12f;
-	public float timeTillRotateReset = 4f;
-	private float timeRemainingTillReset;
+//	public float timeTillRotateReset = 4f;
+//	private float timeRemainingTillReset;
+
+	public float maxRotSpeed = 300f;
+	public float minRotSpeed = 2f;
+	public float rotAccel = 2f;
+	private float curRotSpeed = 0f;
 
 
 	private GameObject player;
@@ -29,7 +39,6 @@ public class PlayerCamera : MonoBehaviour {
 		player = GameObject.FindWithTag ("Player");
 		follow = player.transform;			
 		controller = player.GetComponent<CharacterController> ();
-		timeRemainingTillReset = timeTillRotateReset;
 	}
 	
 
@@ -39,26 +48,51 @@ public class PlayerCamera : MonoBehaviour {
 		if (!player) {
 			player = GameObject.FindWithTag ("Player");
 			controller = player.GetComponent<CharacterController> ();
-			follow = controller.transform;
 		}
 
 		// update camera position to follow player
-		Vector3 playerTarget = follow.position + (follow.up * distanceUp);
-		cameraTargetPosition = playerTarget - (follow.forward * distanceAway);
-		transform.position = Vector3.Lerp (transform.position, cameraTargetPosition, Time.deltaTime * smooth);
+
+		Vector3 playerTarget = controller.transform.position + controller.center + Vector3.up * distanceUp;
+		cameraTargetPosition = playerTarget - (controller.transform.forward * distanceAway);
+
+		float distance = Vector3.Distance (cameraTargetPosition, transform.position);
+		if (distance > .1f) {
+
+			if (startMoveTime <= 0f) {
+				startMoveTime = Time.time;
+			}
+
+			curMoveSpeed += Mathf.Pow (minSpeed * moveAccel, 2f) * Time.deltaTime;
+			curMoveSpeed = Mathf.Clamp(curMoveSpeed, minSpeed, maxSpeed);
+			float distCovered = (Time.time - startMoveTime) * curMoveSpeed;
+			float fracDistance = distCovered / distance;
+			transform.position = Vector3.Lerp(transform.position, cameraTargetPosition, fracDistance);
+
+		} else {
+			startMoveTime = 0f;
+		}
+
 
 		// update rotation to look at player if diff is enough
-		Vector3 camToPlayerDir = playerTarget - cameraTargetPosition;
-		Quaternion newRot = new Quaternion ();
-		newRot.SetLookRotation (camToPlayerDir);
-		float angle = Quaternion.Angle(transform.rotation, newRot);
-//		if (Mathf.Abs(angle) > minDegreesToRotate) {
-			transform.rotation = Quaternion.Slerp(transform.rotation, newRot, Time.deltaTime * smooth);
-//		}		
+		Vector3 camToPlayerDir = (playerTarget - transform.position);
+		///Quaternion lookRotation = Quaternion.LookRotation(player.transform.forward);
+		Quaternion lookRotation = Quaternion.LookRotation(camToPlayerDir);
+		float angle = Quaternion.Angle(transform.rotation, lookRotation);
+
+		//curRotSpeed += minRotSpeed;
+		curRotSpeed = Mathf.Pow (curRotSpeed, 2f) * Time.deltaTime;
+		curRotSpeed = Mathf.Clamp(curRotSpeed, minRotSpeed, maxRotSpeed);
+		float timeToComplete = angle / curRotSpeed;
+		float donePercentage = Mathf.Min(1F, Time.deltaTime / timeToComplete);
+		transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, donePercentage);
+
+		// reset speed if not turning anymore
+		if (angle < minDegreesToRotate) 
+			curRotSpeed = minRotSpeed;
 
 
-		// TODO 
-		// if !viewIsClear rotate around player until it is
+
+		// TODO if !viewIsClear rotate around player until it is
 
 	}
 

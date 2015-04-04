@@ -13,7 +13,13 @@ public class CharacterMotor : MonoBehaviour {
 	public float groundTolerance = .1f; // distance controller can be from ground and still be considered "grounded"
 
 	// locomotion speeds
-	public float rotateSpeed = 2.6f; // how fast to rotate the player when turning
+	public float maxRotSpeed = 300f;
+	public float minRotSpeed = 2f;
+	public float rotAccel = 2f;
+	private float curRotSpeed = 0f;
+	
+
+	//public float rotateSpeed = 2.6f; // how fast to rotate the player when turning
 	public float runSpeed = 10.0f; // max speed while running
 	private float currentSpeed = 0f;
 	private float previousSpeed = 0f; // we base our new speed off the previous speed
@@ -234,13 +240,22 @@ public class CharacterMotor : MonoBehaviour {
 		Vector3 forward = transform.forward;
 		Vector3 right = new Vector3 (forward.z, 0, -forward.x);
 		Vector3 targetDirection = moveHorizontal * right + moveVertical * forward;
-		moveDirection = Vector3.RotateTowards (moveDirection, targetDirection, 360 * Mathf.Deg2Rad * Time.deltaTime, rotateSpeed);
+
+		// update rotate speed w/ accel if joystick pressed to turn
+		if (Mathf.Abs (moveHorizontal) > .1f) {
+			curRotSpeed = Mathf.Pow (curRotSpeed, 2f) * Time.deltaTime;
+		} else {
+			curRotSpeed = minRotSpeed;			
+		}
+		curRotSpeed = Mathf.Clamp(curRotSpeed, minRotSpeed, maxRotSpeed);
+
+		moveDirection = Vector3.RotateTowards (moveDirection, targetDirection, 360 * Mathf.Deg2Rad * Time.deltaTime, curRotSpeed);
 		moveDirection = moveDirection.normalized * speed;
 
 		// look in direction of movement if player is pressing joystick
 		if (moveHorizontal != 0 || moveVertical != 0) {
 			Vector3 lookDirection = new Vector3(targetDirection.x, 0f, targetDirection.z);
-			transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.LookRotation(lookDirection)), Time.deltaTime * rotateSpeed);
+			transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.LookRotation(lookDirection)), Time.deltaTime * curRotSpeed);
 		}
 
 		return(moveDirection);

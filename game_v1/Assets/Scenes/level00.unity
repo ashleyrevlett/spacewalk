@@ -2045,7 +2045,9 @@ MonoBehaviour:
   gravity: 19
   terminalVelocity: 12
   groundTolerance: .0299999993
-  rotateSpeed: 2.5999999
+  maxRotSpeed: 300
+  minRotSpeed: 1.10000002
+  rotAccel: 2
   runSpeed: 11
   obstacleDistanceTolerance: .200000003
   useAcceleration: 0
@@ -2339,11 +2341,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   distanceAway: 9
-  distanceUp: 3
-  smooth: 30
-  cameraVerticalOffset: 1.5
-  minDegreesToRotate: 12
-  timeTillRotateReset: 4
+  distanceUp: 2
+  minSpeed: .200000003
+  maxSpeed: 6
+  moveAccel: 3
+  minDegreesToRotate: 3
+  maxRotSpeed: 250
+  minRotSpeed: 250
+  rotAccel: 1
   avoidObstacles: 0
   timeTillMove: 1
 --- !u!114 &1182207314
