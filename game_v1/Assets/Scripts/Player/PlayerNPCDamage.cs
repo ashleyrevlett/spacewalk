@@ -28,28 +28,31 @@ public class PlayerNPCDamage : MonoBehaviour {
 		if (hit.gameObject.tag == "Enemy" || hit.gameObject.tag == "Boss") {
 
 
+			// check if enemy is dangerous/vulnerable
+			NPCController npccontroller = hit.gameObject.GetComponent<NPCController>();
+			if (npccontroller.damaged)
+				return;
+
 			// hit an enemy that we're not on top of -> take damage
 			Vector3 playerFeetPosition = transform.position + controller.center + Vector3.up * -controller.height/2;
 			BoxCollider npcCollider = hit.gameObject.GetComponent<BoxCollider>();
 			Vector3 npcPosition = hit.gameObject.transform.position + npcCollider.center * hit.gameObject.transform.localScale.x;
 			Vector3 npcHeadPosition = new Vector3(npcPosition.x, npcPosition.y + npcCollider.bounds.size.y/2, npcPosition.z);
 			p1 = playerFeetPosition;
-			p2 = npcHeadPosition;
-
-			NPCController npccontroller = hit.gameObject.GetComponent<NPCController>();
-
+			p2 = npcHeadPosition;		
 			float yDiff = playerFeetPosition.y - npcHeadPosition.y;
-			Debug.Log ("yDiff: " + yDiff);
+			//Debug.Log ("yDiff: " + yDiff);
 			if (yDiff < npcAboveAmount) {
 				float damagePoints = npccontroller.points;
 				healthController.ApplyDamage(damagePoints);
 				Vector3 pushDir = -hit.moveDirection;
-				Debug.Log("pushdir: " + pushDir);
 				// if this isn't death, move him backwards
 				if (healthController.remainingHitPoints > 0)
 					motor.ApplyForce(pushDir, 20f);
 			} else {
 				npccontroller.TakeDamage();
+				//Debug.Log("pushing player up!");
+				//motor.TriggerJump(); // make him bounce up in reaction
 			}
 
 		}

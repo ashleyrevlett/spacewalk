@@ -1792,6 +1792,18 @@ Prefab:
       propertyPath: m_RootOrder
       value: 3
       objectReference: {fileID: 0}
+    - target: {fileID: 162086, guid: b7a2d2573465a4994a1a223e2c394a0a, type: 2}
+      propertyPath: m_TagString
+      value: Terrain
+      objectReference: {fileID: 0}
+    - target: {fileID: 165430, guid: b7a2d2573465a4994a1a223e2c394a0a, type: 2}
+      propertyPath: m_TagString
+      value: Terrain
+      objectReference: {fileID: 0}
+    - target: {fileID: 151848, guid: b7a2d2573465a4994a1a223e2c394a0a, type: 2}
+      propertyPath: m_TagString
+      value: Terrain
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: b7a2d2573465a4994a1a223e2c394a0a, type: 2}
   m_IsPrefabParent: 0
@@ -1969,7 +1981,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 979845004}
   m_LocalRotation: {x: 0, y: .671796679, z: 0, w: .74073565}
-  m_LocalPosition: {x: 7.80096626, y: .789999962, z: 22.3976784}
+  m_LocalPosition: {x: 44, y: -4.23000002, z: -34.2000008}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 1749169090}
@@ -2045,10 +2057,10 @@ MonoBehaviour:
   gravity: 19
   terminalVelocity: 12
   groundTolerance: .0299999993
-  maxRotSpeed: 300
-  minRotSpeed: 1.10000002
-  rotAccel: 2
-  runSpeed: 11
+  maxRotSpeed: 3
+  minRotSpeed: 2.30999994
+  rotAccel: 1.5
+  runSpeed: 5.67999983
   obstacleDistanceTolerance: .200000003
   useAcceleration: 0
   acceleration: 5
@@ -2059,7 +2071,7 @@ MonoBehaviour:
   useVariableHeightJump: 1
   cutJumpSpeed: -.100000001
   endFallAnimationTime: .899999976
-  inAirControl: .349999994
+  inAirControl: 1
   useDoubleJump: 0
   doubleJumpVelocity: 16
   timeDoubleJumpAvailable: .5
@@ -2321,6 +2333,10 @@ GameObject:
   - 81: {fileID: 1182207315}
   - 114: {fileID: 1182207314}
   - 114: {fileID: 1182207313}
+  - 114: {fileID: 1182207320}
+  - 114: {fileID: 1182207321}
+  - 65: {fileID: 1182207322}
+  - 54: {fileID: 1182207323}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2335,19 +2351,20 @@ MonoBehaviour:
     type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1182207312}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4b7176d06b98b4c34b34f4efdb83dfa2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distanceAway: 9
+  distanceAway: 13
   distanceUp: 2
-  minSpeed: .200000003
-  maxSpeed: 6
-  moveAccel: 3
-  minDegreesToRotate: 3
-  maxRotSpeed: 250
-  minRotSpeed: 250
+  minSpeed: .100000001
+  maxSpeed: 1.5
+  moveAccel: 1.20000005
+  minDegreesToRotate: 8
+  allowableDistance: 10
+  maxRotSpeed: 32
+  minRotSpeed: 32
   rotAccel: 1
   avoidObstacles: 0
   timeTillMove: 1
@@ -2429,12 +2446,69 @@ Transform:
   m_PrefabParentObject: {fileID: 469944, guid: b7a2d2573465a4994a1a223e2c394a0a, type: 2}
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 1182207312}
-  m_LocalRotation: {x: .00460246392, y: -.908163071, z: .00721569592, w: .418529153}
-  m_LocalPosition: {x: 46.5999985, y: 9, z: 42.2999992}
+  m_LocalRotation: {x: .0736282021, y: .695718408, z: -.0527655557, w: .712580264}
+  m_LocalPosition: {x: .330000013, y: 3.61999989, z: 22.5400009}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
+--- !u!114 &1182207320
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1182207312}
+  m_Enabled: 0
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 195b86b12c0194689ad39080ac364ea5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  damping: 1
+--- !u!114 &1182207321
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1182207312}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f20c7c8f0cec940079dc8aafccd58c87, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  smooth: 4
+  rotateSmooth: 8
+  followDistance: 9
+  followHeight: 2.5
+  lookAheadDistance: 3
+  maxDistanceAbove: 5
+  minSecondsBeforeCameraChange: 1
+--- !u!65 &1182207322
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1182207312}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1, y: 1, z: 1}
+  m_Center: {x: 0, y: 0, z: 0}
+--- !u!54 &1182207323
+Rigidbody:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1182207312}
+  serializedVersion: 2
+  m_Mass: 1
+  m_Drag: 0
+  m_AngularDrag: .0500000007
+  m_UseGravity: 0
+  m_IsKinematic: 0
+  m_Interpolate: 0
+  m_Constraints: 80
+  m_CollisionDetection: 1
 --- !u!1 &1237709552
 GameObject:
   m_ObjectHideFlags: 0
@@ -4032,7 +4106,7 @@ GameObject:
   - 4: {fileID: 1932609913}
   m_Layer: 0
   m_Name: AstroLoPoly
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4135,7 +4209,7 @@ GameObject:
   - 137: {fileID: 2010570928}
   m_Layer: 0
   m_Name: Body
-  m_TagString: Untagged
+  m_TagString: Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

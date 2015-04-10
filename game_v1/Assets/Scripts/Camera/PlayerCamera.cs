@@ -12,7 +12,8 @@ public class PlayerCamera : MonoBehaviour {
 	private float startMoveTime = 0f;
 	private float curMoveSpeed = 0f;
 	
-	public float minDegreesToRotate = 12f;
+	public float minDegreesToRotate = 3f;
+	public float allowableDistance = 10f;
 //	public float timeTillRotateReset = 4f;
 //	private float timeRemainingTillReset;
 
@@ -32,6 +33,10 @@ public class PlayerCamera : MonoBehaviour {
 	private bool viewIsClear = true;
 	private float rotateOffset = 0f;
 
+	private bool isMoving = false;
+	private bool isRotating = false;
+	private bool holdPosition = true;
+
 
 
 	void Start () {
@@ -50,46 +55,66 @@ public class PlayerCamera : MonoBehaviour {
 			controller = player.GetComponent<CharacterController> ();
 		}
 
-		// update camera position to follow player
 
+		// update camera position to follow player
 		Vector3 playerTarget = controller.transform.position + controller.center + Vector3.up * distanceUp;
 		cameraTargetPosition = playerTarget - (controller.transform.forward * distanceAway);
-
+		Vector3 camToPlayerDir = (playerTarget - transform.position);
 		float distance = Vector3.Distance (cameraTargetPosition, transform.position);
-		if (distance > .1f) {
+		Quaternion targetRotation = Quaternion.LookRotation(camToPlayerDir, Vector3.up);		
+		float angle = Quaternion.Angle(transform.rotation, targetRotation);
 
-			if (startMoveTime <= 0f) {
-				startMoveTime = Time.time;
-			}
+		if (angle > minDegreesToRotate || distance > allowableDistance) {
+			holdPosition = false;
+		} else {
+			holdPosition = true;
+		}
 
-			curMoveSpeed += Mathf.Pow (minSpeed * moveAccel, 2f) * Time.deltaTime;
+		if (distance > 1f && startMoveTime <= 0f) {
+			isMoving = true;
+			startMoveTime = Time.time;
+		} else if (distance <= .1f) {
+			isMoving = false;
+			startMoveTime = 0f;
+		}			
+				
+		Debug.Log ("holdPosition: " + holdPosition);
+		Debug.Log ("angle: " + angle.ToString("F1"));
+		Debug.Log ("distance: " + distance.ToString("F1"));
+
+		if (!holdPosition) {
+			//curMoveSpeed += curMoveSpeed * moveAccel * Time.deltaTime;
 			curMoveSpeed = Mathf.Clamp(curMoveSpeed, minSpeed, maxSpeed);
 			float distCovered = (Time.time - startMoveTime) * curMoveSpeed;
 			float fracDistance = distCovered / distance;
 			transform.position = Vector3.Lerp(transform.position, cameraTargetPosition, fracDistance);
 
-		} else {
-			startMoveTime = 0f;
+			// Create a rotation that is an increment closer to the target rotation from the player's rotation.
+			Quaternion newRotation = Quaternion.Lerp(transform.rotation, targetRotation, minRotSpeed * Time.deltaTime);
+			
+			// Change the players rotation to this new rotation.
+			transform.rotation = newRotation;
 		}
 
 
-		// update rotation to look at player if diff is enough
-		Vector3 camToPlayerDir = (playerTarget - transform.position);
-		///Quaternion lookRotation = Quaternion.LookRotation(player.transform.forward);
-		Quaternion lookRotation = Quaternion.LookRotation(camToPlayerDir);
-		float angle = Quaternion.Angle(transform.rotation, lookRotation);
-
-		//curRotSpeed += minRotSpeed;
-		curRotSpeed = Mathf.Pow (curRotSpeed, 2f) * Time.deltaTime;
-		curRotSpeed = Mathf.Clamp(curRotSpeed, minRotSpeed, maxRotSpeed);
-		float timeToComplete = angle / curRotSpeed;
-		float donePercentage = Mathf.Min(1F, Time.deltaTime / timeToComplete);
-		transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, donePercentage);
-
-		// reset speed if not turning anymore
-		if (angle < minDegreesToRotate) 
-			curRotSpeed = minRotSpeed;
-
+//
+//
+//
+//		Quaternion lookRotation = Quaternion.LookRotation(camToPlayerDir);
+//
+//		float angle = Quaternion.Angle(transform.rotation, lookRotation);
+//
+//		curRotSpeed += minRotSpeed;
+//		//curRotSpeed = Mathf.Pow (curRotSpeed, 2f) * Time.deltaTime;
+//		curRotSpeed = Mathf.Clamp(curRotSpeed, minRotSpeed, maxRotSpeed);
+//		float timeToComplete = angle / curRotSpeed;
+//		float donePercentage = Mathf.Min(1F, Time.deltaTime / timeToComplete);
+//		transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, donePercentage);
+//
+//		// reset speed if not turning anymore
+//		if (angle < minDegreesToRotate) 
+//			curRotSpeed = minRotSpeed;
+//
 
 
 		// TODO if !viewIsClear rotate around player until it is

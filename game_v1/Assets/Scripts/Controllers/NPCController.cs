@@ -35,7 +35,6 @@ public class NPCController : MonoBehaviour {
 	public AudioClip deathSound; // sound fx
 	public GameObject deathParticleEffectPrefab; // particle explosions
 	private GameController gameController;
-	private ScoreController scoreController;
 	public bool damaged = false; // public so damageNPC can check vulnerability status
 	private MeshRenderer[] renderers;
 	private SkinnedMeshRenderer[] skinnedRenderers;
@@ -50,7 +49,6 @@ public class NPCController : MonoBehaviour {
 
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
 		gameController = gameControllerObject.GetComponent<GameController> ();
-		scoreController = gameController.GetComponent<ScoreController> ();	
 
 		renderers = gameObject.GetComponentsInChildren<MeshRenderer> ();
 		skinnedRenderers = gameObject.GetComponentsInChildren<SkinnedMeshRenderer> ();

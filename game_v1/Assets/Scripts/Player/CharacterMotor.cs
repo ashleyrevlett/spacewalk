@@ -44,6 +44,7 @@ public class CharacterMotor : MonoBehaviour {
 	public float verticalVelocity { get; private set; } // jump/fall velocity	
 	private float distToGround = 0f; // used instead of isGrounded
 	private float distToCeiling = 1000f; // dist to obstacle above; set to 1000 if no obstacle 
+	private bool triggerJump = false;
 
 	// double jumping
 	public bool useDoubleJump = true;
@@ -117,10 +118,13 @@ public class CharacterMotor : MonoBehaviour {
 			animator.speed = 1f;
 		}
 
-		// if force is being applied, don't let player control movement
-		if (healthController.takingDamage) {
+		if (forceAmount > 0f) {
 			forceAmount -= gravity * Time.deltaTime;
 			forceAmount = Mathf.Clamp(forceAmount, 0f, terminalVelocity);
+		}
+
+		// if damage is being taken, don't let player control movement
+		if (healthController.takingDamage) {
 			moveDirection = forceDirection * forceAmount;
 		} else {
 					
@@ -154,6 +158,7 @@ public class CharacterMotor : MonoBehaviour {
 			if (!isSliding) {
 				moveDirection.y = verticalVelocity;
 			}
+
 
 		}
 
@@ -210,7 +215,7 @@ public class CharacterMotor : MonoBehaviour {
 			}
 		} else {			
 			// no accel: 
-			speed = playerInput.y * runSpeed;
+			speed = (Mathf.Abs(playerInput.y) + Mathf.Abs(playerInput.x)) * runSpeed;
 		}
 
 		speed = Mathf.Clamp (speed, 0f, runSpeed); // don't exceed running speed
@@ -230,33 +235,77 @@ public class CharacterMotor : MonoBehaviour {
 			moveHorizontal *= inAirControl;
 		}
 
-		// if there's something in front of us, don't try to move forward into it
+		// TODO: if there's something in front of us, don't try to move forward into it
 //		if (distToForwardObstacle <= obstacleDistanceTolerance) {
 //			// but do allow moving backwards away from it
 //			moveVertical = Mathf.Min(0, moveVertical);
 //		}
 
 		// movement direction is determined by the direction we're facing
-		Vector3 forward = transform.forward;
-		Vector3 right = new Vector3 (forward.z, 0, -forward.x);
-		Vector3 targetDirection = moveHorizontal * right + moveVertical * forward;
+//		Vector3 forward = transform.forward;
+//		Vector3 right = new Vector3 (forward.z, 0, -forward.x);
+//		Vector3 targetDirection = moveHorizontal * right + moveVertical * forward;
 
-		// update rotate speed w/ accel if joystick pressed to turn
-		if (Mathf.Abs (moveHorizontal) > .1f) {
-			curRotSpeed = Mathf.Pow (curRotSpeed, 2f) * Time.deltaTime;
-		} else {
-			curRotSpeed = minRotSpeed;			
+//		// TODO: update rotate speed w/ accel if joystick pressed to turn
+//		if (Mathf.Abs (moveHorizontal) <= .01f)
+//			curRotSpeed = minRotSpeed;
+//		else 
+//			curRotSpeed += rotAccel * Time.deltaTime;
+//
+//		curRotSpeed = Mathf.Clamp(curRotSpeed, minRotSpeed, maxRotSpeed);
+//		curRotSpeed = minRotSpeed; 
+//
+//		float step = curRotSpeed * Time.deltaTime;
+//		moveDirection = Vector3.RotateTowards (moveDirection, targetDirection, step, 0.0F);
+//		moveDirection = moveDirection.normalized * speed;
+		
+		if (moveVertical == 0f && moveHorizontal == 0f) {
+			moveDirection = Vector3.zero;
+		} else if (moveHorizontal != 0 || moveVertical != 0) {
+
+			// look in direction of movement if player is pressing joystick
+		
+			// Create a new vector of the horizontal and vertical inputs.
+			Vector3 targetDirection = new Vector3(moveHorizontal, 0f, moveVertical);
+			targetDirection = Camera.main.transform.TransformDirection(targetDirection);
+
+			// Create a rotation based on this new vector assuming that up is the global y axis.
+			Quaternion targetRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
+
+			// do not rotate around x or z axis
+			targetRotation = Quaternion.Euler( new Vector3(0f, targetRotation.eulerAngles.y, 0f) );
+
+			// Create a rotation that is an increment closer to the target rotation from the player's rotation.
+			curRotSpeed = (Mathf.Abs (moveHorizontal) * minRotSpeed + Mathf.Abs(moveVertical) * minRotSpeed);
+			curRotSpeed = Mathf.Clamp(curRotSpeed, minRotSpeed, maxRotSpeed);
+			Quaternion newRotation = Quaternion.Lerp(transform.rotation, targetRotation, curRotSpeed * Time.deltaTime);
+			
+			// Change the players rotation to this new rotation.
+			transform.rotation = newRotation;
+
+			if (moveVertical != 0f) {
+				moveDirection = targetDirection.normalized * speed;
+			}
+
+//			Vector3 lookDirection = new Vector3(targetDirection.x, 0f, targetDirection.z);
+//			transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.LookRotation(lookDirection)), 1f);
+//			Quaternion lookRotation = Quaternion.LookRotation(moveDirection);
+//			Vector3 v = lookRotation.eulerAngles;
+//			v.x = 0f;
+//			v.z = 0f;
+//			lookRotation = Quaternion.Euler(v.x, v.y, v.z);
+////			transform.rotation = lookRotation;
+////
+//////			
+//			float angle = Quaternion.Angle(transform.rotation, lookRotation);
+//			float timeToComplete = angle / curRotSpeed;
+//			float donePercentage = Mathf.Min(1F, Time.deltaTime / timeToComplete);
+////			
+////			//rotate towards a direction, but not immediately (rotate a little every frame)
+////			//The 3rd parameter is a number between 0 and 1, where 0 is the start rotation and 1 is the end rotation
+//			transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, donePercentage);
 		}
-		curRotSpeed = Mathf.Clamp(curRotSpeed, minRotSpeed, maxRotSpeed);
 
-		moveDirection = Vector3.RotateTowards (moveDirection, targetDirection, 360 * Mathf.Deg2Rad * Time.deltaTime, curRotSpeed);
-		moveDirection = moveDirection.normalized * speed;
-
-		// look in direction of movement if player is pressing joystick
-		if (moveHorizontal != 0 || moveVertical != 0) {
-			Vector3 lookDirection = new Vector3(targetDirection.x, 0f, targetDirection.z);
-			transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.LookRotation(lookDirection)), Time.deltaTime * curRotSpeed);
-		}
 
 		return(moveDirection);
 		
@@ -265,10 +314,13 @@ public class CharacterMotor : MonoBehaviour {
 	
 	private void UpdateAnimations(float moveHorizontal, float moveVertical, float speed) {
 		// update animation FSM with speed and turn info
-		if (verticalVelocity <= 0f && isNearlyGrounded() ) { // not jumping or falling
+		if (verticalVelocity <= 0f && isNearlyGrounded() && moveVertical != 0f ) { // not jumping or falling
 			animator.SetFloat ("speed", speed / runSpeed); // normalize to 0-1
-			animator.SetFloat ("angularVelocity", moveHorizontal);
 		}
+		if (moveVertical == 0f) 
+			animator.SetFloat ("speed", 0f); // normalize to 0-1
+
+		animator.SetFloat ("angularVelocity", moveHorizontal);
 	}
 
 	#endregion
@@ -294,7 +346,7 @@ public class CharacterMotor : MonoBehaviour {
 		// on ground
 		if (useDoubleJump && isNearlyGrounded() && Input.GetButtonDown ("Jump") && timeDoubleJumpRemaining > 0f)
 			StartDoubleJump ();
-		else if (isNearlyGrounded() && Input.GetButtonDown ("Jump"))
+		else if ((isNearlyGrounded() && Input.GetButtonDown ("Jump")) || triggerJump )
 			StartJump ();
 
 		// made it 1/2way through jump, stopped pressing button
@@ -360,6 +412,7 @@ public class CharacterMotor : MonoBehaviour {
 		soundEffectsSource.Stop(); // no footsteps sfx in air		
 		AudioSource.PlayClipAtPoint(jumpSound, transform.position);
 		Debug.Log ("Starting jump!");
+		triggerJump = false;
 	}
 	
 	public void JumpLoop() {
@@ -476,7 +529,7 @@ public class CharacterMotor : MonoBehaviour {
 		if (Physics.CapsuleCast(p1, p2, controller.radius, direction, out hit, 10)) {
 			if (hit.transform.tag != "Player") {
 				//Debug.Log ("Hit direction: " + direction + ", " + hit.transform.tag + " at point " + hit.point.ToString ("F1") + ", distance " + hit.distance.ToString ("F1"));
-				Debug.DrawRay (p2, direction * hit.distance, Color.cyan, Time.deltaTime);
+				//Debug.DrawRay (p2, direction * hit.distance, Color.cyan, Time.deltaTime);
 				dist = hit.distance;
 			}
 		}
@@ -528,6 +581,10 @@ public class CharacterMotor : MonoBehaviour {
 		// used to push player away from enemy after hit; accessed via other scripts
 		forceAmount = amount;
 		forceDirection = direction;			
+	}
+
+	public void TriggerJump() {
+		triggerJump = true;
 	}
 	
 	
