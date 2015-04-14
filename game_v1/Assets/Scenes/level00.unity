@@ -2332,11 +2332,8 @@ GameObject:
   - 124: {fileID: 1182207316}
   - 81: {fileID: 1182207315}
   - 114: {fileID: 1182207314}
-  - 114: {fileID: 1182207313}
-  - 114: {fileID: 1182207320}
   - 114: {fileID: 1182207321}
   - 65: {fileID: 1182207322}
-  - 54: {fileID: 1182207323}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -2344,30 +2341,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!114 &1182207313
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 11410956, guid: b7a2d2573465a4994a1a223e2c394a0a,
-    type: 2}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1182207312}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4b7176d06b98b4c34b34f4efdb83dfa2, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  distanceAway: 13
-  distanceUp: 2
-  minSpeed: .100000001
-  maxSpeed: 1.5
-  moveAccel: 1.20000005
-  minDegreesToRotate: 8
-  allowableDistance: 10
-  maxRotSpeed: 32
-  minRotSpeed: 32
-  rotAccel: 1
-  avoidObstacles: 0
-  timeTillMove: 1
 --- !u!114 &1182207314
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2452,18 +2425,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 1
---- !u!114 &1182207320
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1182207312}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 195b86b12c0194689ad39080ac364ea5, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  damping: 1
 --- !u!114 &1182207321
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2490,25 +2451,10 @@ BoxCollider:
   m_GameObject: {fileID: 1182207312}
   m_Material: {fileID: 0}
   m_IsTrigger: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!54 &1182207323
-Rigidbody:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 1182207312}
-  serializedVersion: 2
-  m_Mass: 1
-  m_Drag: 0
-  m_AngularDrag: .0500000007
-  m_UseGravity: 0
-  m_IsKinematic: 0
-  m_Interpolate: 0
-  m_Constraints: 80
-  m_CollisionDetection: 1
 --- !u!1 &1237709552
 GameObject:
   m_ObjectHideFlags: 0
