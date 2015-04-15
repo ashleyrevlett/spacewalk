@@ -23,7 +23,7 @@ public class CharacterMotor : MonoBehaviour {
 	public float runSpeed = 10.0f; // max speed while running
 	private float currentSpeed = 0f;
 	private float previousSpeed = 0f; // we base our new speed off the previous speed
-	private Vector3 moveDirection = Vector3.zero; // global var used to track intended movement dir
+	public Vector3 moveDirection = Vector3.zero; // global var used to track intended movement dir
 	private Vector2 playerInput = Vector2.zero; // horiz and vert joystick input
 	private float distToForwardObstacle = 100f;
 	public float obstacleDistanceTolerance = .2f;
@@ -260,14 +260,25 @@ public class CharacterMotor : MonoBehaviour {
 //		moveDirection = moveDirection.normalized * speed;
 		
 		if (moveVertical == 0f && moveHorizontal == 0f) {
-			moveDirection = Vector3.zero;
+		
+			// don't move
+			moveDirection = Vector3.zero; 
+		
 		} else if (moveHorizontal != 0 || moveVertical != 0) {
 
 			// look in direction of movement if player is pressing joystick
 		
 			// Create a new vector of the horizontal and vertical inputs.
 			Vector3 targetDirection = new Vector3(moveHorizontal, 0f, moveVertical);
-			targetDirection = Camera.main.transform.TransformDirection(targetDirection);
+
+			// if we're trying to only rotate, don't base it off camera, which may not be behind us
+			if  (moveVertical == 0f) {
+				targetDirection = gameObject.transform.TransformDirection(targetDirection);
+			} else {
+				targetDirection = Camera.main.transform.TransformDirection(targetDirection);
+			}
+
+			// targetDirection = Camera.main.transform.TransformDirection(targetDirection);
 
 			// Create a rotation based on this new vector assuming that up is the global y axis.
 			Quaternion targetRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
@@ -283,28 +294,14 @@ public class CharacterMotor : MonoBehaviour {
 			// Change the players rotation to this new rotation.
 			transform.rotation = newRotation;
 
+			// don't want to change animations, so don't set speed if only turning
 			if (moveVertical != 0f) {
 				moveDirection = targetDirection.normalized * speed;
 			}
 
-//			Vector3 lookDirection = new Vector3(targetDirection.x, 0f, targetDirection.z);
-//			transform.rotation = Quaternion.Slerp(transform.rotation, (Quaternion.LookRotation(lookDirection)), 1f);
-//			Quaternion lookRotation = Quaternion.LookRotation(moveDirection);
-//			Vector3 v = lookRotation.eulerAngles;
-//			v.x = 0f;
-//			v.z = 0f;
-//			lookRotation = Quaternion.Euler(v.x, v.y, v.z);
-////			transform.rotation = lookRotation;
-////
-//////			
-//			float angle = Quaternion.Angle(transform.rotation, lookRotation);
-//			float timeToComplete = angle / curRotSpeed;
-//			float donePercentage = Mathf.Min(1F, Time.deltaTime / timeToComplete);
-////			
-////			//rotate towards a direction, but not immediately (rotate a little every frame)
-////			//The 3rd parameter is a number between 0 and 1, where 0 is the start rotation and 1 is the end rotation
-//			transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, donePercentage);
+		
 		}
+
 
 
 		return(moveDirection);
