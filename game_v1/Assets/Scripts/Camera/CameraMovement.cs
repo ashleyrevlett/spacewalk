@@ -10,12 +10,14 @@ public class CameraMovement : MonoBehaviour
 	public float maxFollowDistance = 10f;
 	public float followHeight = 2f;
 	public float lookDistance = 5f;
-	public float rotationIncrement = 15f;
-	public float angleDifferenceAllowed = 15f;
+	public float angleDifferenceAllowed = 15f; // allowable difference in rotations between camera andn player before moving cam to update
 	public float borderPercent = .2f; // percent of screen edge to keep targets within
-	public float occlusionAllowedTime = .1f; // seconds occlusio is allowed before changing camera position
+	public float occlusionAllowedTime = .3f; // seconds occlusio is allowed before changing camera position
 	private float occludedTime = 0f;
 	private bool isOccluded = false;
+
+	private Vector3 rotationOffset = Vector3.zero; // player pushes right joystic, rotates camera around
+	public float joystickRotationForce = 3f;
 
 	private float minScreenYPos;
 	private float minScreenXPos;
@@ -37,6 +39,9 @@ public class CameraMovement : MonoBehaviour
 	private float startTime = 0f;
 
 	private List<Vector3> positions;
+	private bool holdCameraPosition;
+	private float timePositionHeld = 0f;
+	public float timeToHoldPositionAfterPlayerInput = 1f;
 
 	void Awake ()
 	{
@@ -119,26 +124,61 @@ public class CameraMovement : MonoBehaviour
 	}
 
 
+
+
 	
 	void FixedUpdate ()
 	{
-
 		
 		playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
-		// offset feet position up slightly so raycasts shouldn't collide with ground
 		playerFeetPos = playerHeadPos + (controller.height * -player.transform.up) + (controller.height/10f * player.transform.up);
 		playerLookPos = playerHeadPos + player.transform.forward * lookDistance;
+		Vector3 neutralPositionMin = (playerHeadPos + (-player.transform.forward * (minFollowDistance)));
 
-		Debug.DrawLine (transform.position, playerHeadPos, Color.white);
-		Debug.DrawLine (transform.position, playerFeetPos, Color.white);
-//		Debug.DrawLine (transform.position, playerLookPos, Color.white);
+		Vector2 playerInput = new Vector2 (Input.GetAxisRaw ("RightH"), Input.GetAxisRaw ("RightV"));
+		if (playerInput != Vector2.zero) {
+			holdCameraPosition = true;
+			timePositionHeld = 0f;
 
+			Debug.Log ("playerInput: " + playerInput.x.ToString("F1") + ", " + playerInput.y.ToString("F1"));
+
+			float yRotationOffset = Mathf.Clamp(playerInput.x * joystickRotationForce, -179f, 179f);
+			float xRotationOffset = Mathf.Clamp(playerInput.y * joystickRotationForce, -33, 33f);
+
+			Vector3 newdir = player.rotation * new Vector3(xRotationOffset, yRotationOffset, 0f);
+			Vector3 pos = RotatePointAroundPivot(transform.position, playerHeadPos, newdir);
+
+			// push position back to min distance
+			//Vector3 relPosition = pos - playerHeadPos;
+			Vector3 relPosition = pos - playerHeadPos;
+			float dist = Vector3.SqrMagnitude (relPosition);
+			float magnitudeDiff = Mathf.Abs(Vector3.SqrMagnitude (relPosition) - Vector3.SqrMagnitude (neutralPositionMin));
+			float scaleFactor = Vector3.SqrMagnitude (neutralPositionMin) / Vector3.SqrMagnitude (relPosition);
+			if (magnitudeDiff != 0f) {
+				relPosition.Scale( new Vector3(scaleFactor, scaleFactor, scaleFactor));
+			}
+
+			// camera shouldn't go lower than player's head
+			relPosition.y = Mathf.Max (relPosition.y, playerHeadPos.y);
+
+			transform.position = Vector3.Lerp(transform.position, playerHeadPos + relPosition, smooth * Time.deltaTime);
+			SmoothLookAt();
+
+		}
+
+		if (holdCameraPosition && timePositionHeld < timeToHoldPositionAfterPlayerInput) {		
+			timePositionHeld += Time.deltaTime;
+			SmoothLookAt();
 		
-		positions = CameraPositions ();
-		UpdatePosition();
-			
-//		print (positions);
+		} else {
+			holdCameraPosition = false;
+			positions = CameraPositions ();
+			UpdatePosition();
 
+		}
+//			Debug.DrawLine (transform.position, playerHeadPos, Color.white);
+//			Debug.DrawLine (transform.position, playerFeetPos, Color.white);
+//			Debug.DrawLine (transform.position, playerLookPos, Color.white);
 
 	}
 
@@ -300,19 +340,22 @@ public class CameraMovement : MonoBehaviour
 
 
 	void OnDrawGizmos() {
-		Gizmos.color = Color.blue;
+		Gizmos.color = Color.yellow;
 		Gizmos.DrawSphere(playerHeadPos, .25f);
 		Gizmos.DrawSphere(playerFeetPos, .25f);
 //		Gizmos.DrawSphere(playerLookPos, .25f);
 
-		
-		float colorincrement = 1f/positions.Count;
-		for (int i = 0; i < positions.Count; i++) {
-			Color32 thisColor = new Color(0f, 0f, (colorincrement*i), 1);
-			//Debug.DrawLine (playerHeadPos, positions[i], thisColor);
-			Gizmos.color = thisColor;
-			Gizmos.DrawSphere(positions[i], .1f);
-		};
+		if (positions != null) {
+			
+			float colorincrement = 1f/positions.Count;
+			for (int i = 0; i < positions.Count; i++) {
+				Color32 thisColor = new Color(0f, 0f, (colorincrement*i), 1);
+				//Debug.DrawLine (playerHeadPos, positions[i], thisColor);
+				Gizmos.color = thisColor;
+				Gizmos.DrawSphere(positions[i], .1f);
+			};
+
+		}
 
 	}
 

@@ -2442,11 +2442,12 @@ MonoBehaviour:
   maxFollowDistance: 9
   followHeight: .300000012
   lookDistance: 5
-  rotationIncrement: 15
   angleDifferenceAllowed: 15
   borderPercent: .200000003
   occlusionAllowedTime: .5
+  joystickRotationForce: 20
   journeyTime: 3
+  timeToHoldPositionAfterPlayerInput: .600000024
 --- !u!1 &1237709552
 GameObject:
   m_ObjectHideFlags: 0

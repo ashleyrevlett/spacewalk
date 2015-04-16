@@ -311,7 +311,7 @@ InputManager:
     joyNum: 0
   - serializedVersion: 3
     m_Name: RightH
-    descriptiveName: 
+    descriptiveName: mac xbox right joystick h
     descriptiveNegativeName: 
     negativeButton: 
     positiveButton: 
@@ -327,7 +327,7 @@ InputManager:
     joyNum: 0
   - serializedVersion: 3
     m_Name: RightV
-    descriptiveName: 
+    descriptiveName: mac xbox right joystick v
     descriptiveNegativeName: 
     negativeButton: 
     positiveButton: 
