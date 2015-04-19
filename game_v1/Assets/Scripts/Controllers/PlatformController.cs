@@ -8,20 +8,15 @@ public class PlatformController : MonoBehaviour {
 	public float fallSpeed = 1f;
 	public float fallAcceleration = .2f;
 	public Color triggeredColor;
-
-	public bool linearMove = false;
-	public Vector3 moveDirection = Vector3.up;
-	public float moveTime = 3f;
-	public float moveSpeed = 1f;
 	public float secondsTillReset = 10f; // time after fall to reset
-	
+	public float secondsAfterFallTillDisappear = 2f;
+
+	private float fallTimeElapsed = 0f;
 	private bool triggered = false;
 	private bool falling = false;
 	private float timeElapsed = 0f; // time waiting after trigger for action
 
-	private float moveTimeElapsed = 0f; // change direction timer
 	private CharacterController playerController;
-
 	private Vector3 originalPosition;
 	private Color originalColor;
 
@@ -50,31 +45,13 @@ public class PlatformController : MonoBehaviour {
 				Fall();
 
 			// fell below screen, reset
-			if (falling & transform.position.y <= -100f)  {
+			if (falling && transform.position.y <= -100f)  {
 				StartCoroutine("ResetPlatform", secondsTillReset);
 			}
 
 		}
 		
-		if (linearMove) {
-			
-			// move in direction at speed		
-			gameObject.transform.position = Vector3.Lerp (gameObject.transform.position, 
-			                                              gameObject.transform.position + (moveDirection * Time.deltaTime * moveSpeed),
-			                                              Time.deltaTime);	
-			
-			// time to turn around?
-			if (moveTimeElapsed >= moveTime) {
-				moveDirection = new Vector3(-moveDirection.x, -moveDirection.y, -moveDirection.z);
-				moveTimeElapsed = 0f;
-			}
-			
-			// add time to since the last direction change
-			moveTimeElapsed += Time.deltaTime;
-						
-		}
-		
-		
+
 	}
 
 	
@@ -107,6 +84,13 @@ public class PlatformController : MonoBehaviour {
 		Color newColor = new Color (gameObject.GetComponent<Renderer>().material.color.r + change, gameObject.GetComponent<Renderer>().material.color.g + change, gameObject.GetComponent<Renderer>().material.color.b + change);
 		gameObject.GetComponent<Renderer>().material.color = newColor;
 
+		
+		fallTimeElapsed += Time.deltaTime;
+		if (fallTimeElapsed >= secondsAfterFallTillDisappear) {
+			fallTimeElapsed = 0f;
+			gameObject.GetComponent<Renderer>().enabled = false;
+			falling = false;
+		}
 	}
 
 	
@@ -116,15 +100,14 @@ public class PlatformController : MonoBehaviour {
 		timeElapsed = 0f;
 		triggered = false;
 		timeElapsed = 0f;
-		moveTimeElapsed = 0f;
-		
+
 		// wait till reset timer goes off
 		yield return new WaitForSeconds (seconds);
 		
 		// restore appearance
 		transform.position = originalPosition; 
 		gameObject.GetComponent<Renderer>().material.color = originalColor;
-		
+		gameObject.GetComponent<Renderer>().enabled = true;
 		
 	}
 

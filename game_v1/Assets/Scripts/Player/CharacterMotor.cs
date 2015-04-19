@@ -1,4 +1,14 @@
-﻿using UnityEngine;
+﻿/* NOTES:
+ * 
+ * Terrain must be tagged "Terrain" in order to slide down it
+ * Falling Platforms must be tagged "FallingPlatform" to be triggered by the player
+ * Moving Platforms must be tagged "Platform" to affect the player's position
+ * Enemies must be tagged "Enemy" to hurt player and be killed
+ * Natural hazards (water, spikes) must be tagged "Hazard"
+ * 
+ * */
+
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
@@ -83,6 +93,12 @@ public class CharacterMotor : MonoBehaviour {
 	private Vector3 forceDirection = Vector3.zero;
 	private bool forceApplied = false;
 
+	// detect when we're on top of moving platforms and offset our motion by theirs
+	private GameObject objectBelowPlayer;
+	private bool isOnMovingPlatform;
+	private Vector3 platformMoveDirection = Vector3.zero;
+
+
 	#endregion
 
 
@@ -148,20 +164,35 @@ public class CharacterMotor : MonoBehaviour {
 			if (useSlide)
 				ProcessSlide ();
 			
-			// add gravity if not on ground
-			if (!isNearlyGrounded()) {
+			// add gravity if not on ground or platform
+			if (!isNearlyGrounded() && objectBelowPlayer == null) {
 				verticalVelocity -= gravity * Time.deltaTime;
 				verticalVelocity = Mathf.Max(-terminalVelocity, verticalVelocity);
-			}
+			} 
 			
 			// apply gravity & jump force if not sliding
-			if (!isSliding) {
+			if (!isSliding ) {
 				moveDirection.y = verticalVelocity;
 			}
 
+		} // end taking damage
 
+		// in all cases position may be affected by moving platform
+		//Debug.Log ("distToGround: " + distToGround.ToString("F1"));
+		if (objectBelowPlayer != null && playerInput == Vector2.zero) {
+			PlatformMove platformMove = objectBelowPlayer.GetComponent<PlatformMove>();
+			if (platformMove != null) {
+//				Vector3 scale = objectBelowPlayer.transform.localScale;
+				//Vector3 platformOffset = Vector3.Scale(platformMove.currentDirection.normalized, scale);					
+				Vector3 platformOffset = (platformMove.currentDirection * platformMove.moveSpeed);
+//				platformOffset = Vector3.Scale(platformOffset, objectBelowPlayer.transform.localScale);					
+				//platformOffset.y = Mathf.Max (0, platformOffset.y); // only push up, don't pull player down, gravity will do that
+				transform.position += platformOffset * Time.deltaTime;
+				//moveDirection += platformOffset;
+				Debug.Log("standing on platform, offset: " + platformOffset);
+
+			}
 		}
-
 
 		// move
 		controller.Move(moveDirection * Time.deltaTime);
@@ -183,6 +214,7 @@ public class CharacterMotor : MonoBehaviour {
 		distToForwardObstacle = ProbeDirection (transform.forward);
 		
 	}
+
 
 	#region Movement
 	
@@ -313,6 +345,8 @@ public class CharacterMotor : MonoBehaviour {
 		// update animation FSM with speed and turn info
 		if (verticalVelocity <= 0f && isNearlyGrounded() && moveVertical != 0f ) { // not jumping or falling
 			animator.SetFloat ("speed", speed / runSpeed); // normalize to 0-1
+			animator.SetBool("JumpLoop", false); // in case we're stuck in animator loop
+			animator.SetBool("JumpStart", false);
 		}
 		if (moveVertical == 0f) 
 			animator.SetFloat ("speed", 0f); // normalize to 0-1
@@ -479,8 +513,28 @@ public class CharacterMotor : MonoBehaviour {
 	/* 
 	 * Physics, pre-emptive collision detection and Collisions
 	 */
+
+	void OnTriggerEnter(Collider other) {
+		Debug.Log ("Trigger entered - " + other.gameObject.tag);
+		if (other.gameObject.tag == "Platform") {
+			objectBelowPlayer = other.gameObject; // remember what's below us
+		} else if (other.gameObject.tag == "Pole") {
+			// grab the pole
+		}
+	}
+
+	void OnTriggerExit(Collider other) {
+		Debug.Log ("Trigger exited - " + other.gameObject.tag);
+		if (other.gameObject.tag == "Platform") {
+			objectBelowPlayer = null; // nothing
+		}	
+	}
 	
 	void OnControllerColliderHit(ControllerColliderHit hit) {
+
+
+
+
 		// detect collisions with sloped terrain
 		
 		float slope = Mathf.Acos(hit.normal.y) * Mathf.Rad2Deg; // slope of hit surface
@@ -504,8 +558,11 @@ public class CharacterMotor : MonoBehaviour {
 			// not on slope any longer
 			isSliding = false;
 		}
+
 		
 	}
+
+
 
 	
 	private bool isNearlyGrounded() {
@@ -526,8 +583,12 @@ public class CharacterMotor : MonoBehaviour {
 		if (Physics.CapsuleCast(p1, p2, controller.radius, direction, out hit, 10)) {
 			if (hit.transform.tag != "Player") {
 				//Debug.Log ("Hit direction: " + direction + ", " + hit.transform.tag + " at point " + hit.point.ToString ("F1") + ", distance " + hit.distance.ToString ("F1"));
-				//Debug.DrawRay (p2, direction * hit.distance, Color.cyan, Time.deltaTime);
+
 				dist = hit.distance;
+//				if (direction == Vector3.down) {
+//					Debug.Log("Hit " +  hit.transform.gameObject.tag);
+//					Debug.DrawRay (p2, direction * hit.distance, Color.cyan, Time.deltaTime);
+//				}
 			}
 		}
 

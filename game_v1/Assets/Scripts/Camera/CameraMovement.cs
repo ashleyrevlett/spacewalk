@@ -127,13 +127,14 @@ public class CameraMovement : MonoBehaviour
 
 
 	
-	void FixedUpdate ()
+	void Update ()
 	{
 		
 		playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
 		playerFeetPos = playerHeadPos + (controller.height * -player.transform.up) + (controller.height/10f * player.transform.up);
 		playerLookPos = playerHeadPos + player.transform.forward * lookDistance;
 		Vector3 neutralPositionMin = (playerHeadPos + (-player.transform.forward * (minFollowDistance)));
+		Vector3 neutralPositionMax = (playerHeadPos + (-player.transform.forward * (maxFollowDistance)));
 
 		Vector2 playerInput = new Vector2 (Input.GetAxisRaw ("RightH"), Input.GetAxisRaw ("RightV"));
 		if (playerInput != Vector2.zero) {
@@ -143,23 +144,27 @@ public class CameraMovement : MonoBehaviour
 			Debug.Log ("playerInput: " + playerInput.x.ToString("F1") + ", " + playerInput.y.ToString("F1"));
 
 			float yRotationOffset = Mathf.Clamp(playerInput.x * joystickRotationForce, -179f, 179f);
-			float xRotationOffset = Mathf.Clamp(playerInput.y * joystickRotationForce, -33, 33f);
+			float xRotationOffset = Mathf.Clamp(playerInput.y * joystickRotationForce, -25, 25f);
 
 			Vector3 newdir = player.rotation * new Vector3(xRotationOffset, yRotationOffset, 0f);
+			float newdirDist = Vector3.Magnitude(newdir);
+
+
 			Vector3 pos = RotatePointAroundPivot(transform.position, playerHeadPos, newdir);
 
 			// push position back to min distance
-			//Vector3 relPosition = pos - playerHeadPos;
 			Vector3 relPosition = pos - playerHeadPos;
-			float dist = Vector3.SqrMagnitude (relPosition);
-			float magnitudeDiff = Mathf.Abs(Vector3.SqrMagnitude (relPosition) - Vector3.SqrMagnitude (neutralPositionMin));
-			float scaleFactor = Vector3.SqrMagnitude (neutralPositionMin) / Vector3.SqrMagnitude (relPosition);
-			if (magnitudeDiff != 0f) {
-				relPosition.Scale( new Vector3(scaleFactor, scaleFactor, scaleFactor));
+			float dist = Vector3.Distance(playerHeadPos, pos);
+			float scaleFactor = 1f;
+			if (dist < minFollowDistance) {
+				scaleFactor = minFollowDistance / dist;
+			} else if (dist > maxFollowDistance) {
+				scaleFactor = maxFollowDistance / dist;
 			}
-
+			relPosition.Scale( new Vector3(scaleFactor, scaleFactor, scaleFactor));
+			Debug.Log("scaleFactor: " + scaleFactor.ToString("F1"));
 			// camera shouldn't go lower than player's head
-			relPosition.y = Mathf.Max (relPosition.y, playerHeadPos.y);
+			//relPosition.y = Mathf.Max (relPosition.y, playerHeadPos.y);
 
 			transform.position = Vector3.Lerp(transform.position, playerHeadPos + relPosition, smooth * Time.deltaTime);
 			SmoothLookAt();
