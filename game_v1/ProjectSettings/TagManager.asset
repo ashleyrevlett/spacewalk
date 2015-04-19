@@ -14,6 +14,7 @@ TagManager:
   - Boss
   - Jetpack
   - Level
+  - Pole
   layers:
   - Default
   - TransparentFX

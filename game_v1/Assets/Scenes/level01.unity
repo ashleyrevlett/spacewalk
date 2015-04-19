@@ -115,6 +115,22 @@ Transform:
   - {fileID: 659128210}
   m_Father: {fileID: 245838124}
   m_RootOrder: 0
+--- !u!1 &119085214 stripped
+GameObject:
+  m_PrefabParentObject: {fileID: 100000, guid: def82ae3c85f4444e94c404f10dffd34, type: 3}
+  m_PrefabInternal: {fileID: 741424195}
+--- !u!65 &119085215
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 119085214}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 1
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: .374284625, y: 7.97413492, z: .374284625}
+  m_Center: {x: .0183531865, y: 3.98706746, z: 0}
 --- !u!1001 &142501079
 Prefab:
   m_ObjectHideFlags: 0
@@ -1388,22 +1404,6 @@ Transform:
   - {fileID: 1117766678}
   m_Father: {fileID: 952131990}
   m_RootOrder: 0
---- !u!1 &545573689 stripped
-GameObject:
-  m_PrefabParentObject: {fileID: 100002, guid: def82ae3c85f4444e94c404f10dffd34, type: 3}
-  m_PrefabInternal: {fileID: 741424195}
---- !u!65 &545573691
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_PrefabParentObject: {fileID: 0}
-  m_PrefabInternal: {fileID: 0}
-  m_GameObject: {fileID: 545573689}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: .374284625, y: 7.97413492, z: .374284625}
-  m_Center: {x: .0183531865, y: 3.98706746, z: 0}
 --- !u!1 &561470926
 GameObject:
   m_ObjectHideFlags: 0
@@ -1737,8 +1737,13 @@ Prefab:
       propertyPath: m_Materials.Array.data[0]
       value: 
       objectReference: {fileID: 2100000, guid: 369397f9f368c4bfca8e19b4c1258230, type: 2}
+    - target: {fileID: 100000, guid: def82ae3c85f4444e94c404f10dffd34, type: 3}
+      propertyPath: m_TagString
+      value: Pole
+      objectReference: {fileID: 0}
     m_RemovedComponents:
     - {fileID: 6400002, guid: def82ae3c85f4444e94c404f10dffd34, type: 3}
+    - {fileID: 6400004, guid: def82ae3c85f4444e94c404f10dffd34, type: 3}
   m_ParentPrefab: {fileID: 100100000, guid: def82ae3c85f4444e94c404f10dffd34, type: 3}
   m_IsPrefabParent: 0
 --- !u!1 &749775575

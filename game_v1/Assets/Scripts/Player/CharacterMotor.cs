@@ -98,6 +98,9 @@ public class CharacterMotor : MonoBehaviour {
 	private bool isOnMovingPlatform;
 	private Vector3 platformMoveDirection = Vector3.zero;
 
+	// pole grabbing
+	private bool isOnPole = false;
+	private GameObject activePole = null;
 
 	#endregion
 
@@ -134,14 +137,31 @@ public class CharacterMotor : MonoBehaviour {
 			animator.speed = 1f;
 		}
 
-		if (forceAmount > 0f) {
-			forceAmount -= gravity * Time.deltaTime;
-			forceAmount = Mathf.Clamp(forceAmount, 0f, terminalVelocity);
-		}
+//		if (forceAmount > 0f) {
+//			forceAmount -= gravity * Time.deltaTime;
+//			forceAmount = Mathf.Clamp(forceAmount, 0f, terminalVelocity);
+//		}
 
 		// if damage is being taken, don't let player control movement
 		if (healthController.takingDamage) {
 			moveDirection = forceDirection * forceAmount;
+		} else if (isOnPole) {
+
+			//float yVal = activePole.GetComponent<BoxCollider>().bounds.size.y / 2f;
+			//transform.position = new Vector3(activePole.transform.position.x, yVal, activePole.transform.position.z);
+//			Vector3 relPos = activePole.transform - transform.position;
+//			Vector3 newPos = activePole.transform.position + activePole.GetComponent<BoxCollider>().center + controller.bounds.size;
+//			transform.position = activePole.transform.position + activePole.GetComponent<BoxCollider>().center + controller.bounds.size;
+
+			//float moveHorizontal = Input.GetAxisRaw ("Horizontal");
+			float moveVertical = Input.GetAxisRaw ("Vertical");
+			moveDirection = new Vector3(0f, moveVertical * runSpeed, 0f);
+			if (isOnPole && Input.GetButtonDown ("Jump")) {
+				StartJump();
+				isOnPole = false;
+				activePole = null;
+			}
+
 		} else {
 					
 			// get input from player if not being moved elsewhere
@@ -190,12 +210,13 @@ public class CharacterMotor : MonoBehaviour {
 				transform.position += platformOffset * Time.deltaTime;
 				//moveDirection += platformOffset;
 				Debug.Log("standing on platform, offset: " + platformOffset);
-
 			}
 		}
 
 		// move
-		controller.Move(moveDirection * Time.deltaTime);
+		Debug.Log ("moveDirection: " + moveDirection);
+		if (moveDirection != Vector3.zero)
+			controller.Move(moveDirection * Time.deltaTime);
 		
 		// update the animator's values
 		UpdateAnimations (playerInput.x, playerInput.y, currentSpeed);
@@ -352,6 +373,13 @@ public class CharacterMotor : MonoBehaviour {
 			animator.SetFloat ("speed", 0f); // normalize to 0-1
 
 		animator.SetFloat ("angularVelocity", moveHorizontal);
+
+		if (isOnPole) {
+			animator.SetBool("Hanging", true);
+		} else {
+			animator.SetBool("Hanging", false);
+		}
+
 	}
 
 	#endregion
@@ -520,6 +548,8 @@ public class CharacterMotor : MonoBehaviour {
 			objectBelowPlayer = other.gameObject; // remember what's below us
 		} else if (other.gameObject.tag == "Pole") {
 			// grab the pole
+			activePole = other.gameObject;
+			isOnPole = true;
 		}
 	}
 
@@ -527,13 +557,12 @@ public class CharacterMotor : MonoBehaviour {
 		Debug.Log ("Trigger exited - " + other.gameObject.tag);
 		if (other.gameObject.tag == "Platform") {
 			objectBelowPlayer = null; // nothing
-		}	
+		} 
 	}
-	
+
+
+
 	void OnControllerColliderHit(ControllerColliderHit hit) {
-
-
-
 
 		// detect collisions with sloped terrain
 		
