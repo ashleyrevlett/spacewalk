@@ -1,10 +1,12 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Player/CharacterMotor.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Controllers/GameController.cs">
     <Files>
-      <File FileName="Assets/Scripts/Player/CharacterMotor.cs" Line="213" Column="36" />
-      <File FileName="Assets/Scripts/Camera/CameraMovement.cs" Line="180" Column="35" />
-      <File FileName="Assets/Scripts/Controllers/HUDController.cs" Line="40" Column="1" />
+      <File FileName="Assets/Scripts/Player/CharacterMotor.cs" Line="272" Column="50" />
+      <File FileName="Assets/Scripts/Camera/CameraMovement.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Controllers/HUDController.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Controllers/GameController.cs" Line="233" Column="39" />
+      <File FileName="Assets/LevelEnd.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
@@ -14,8 +16,8 @@
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/GameOverHUDController.cs" line="43" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/NPC/CauseDamage.cs" line="31" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/TakeDamage.cs" line="54" />
-      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/CharacterMotor.cs" line="668" />
-      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Camera/CameraMovement.cs" line="282" />
+      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/CharacterMotor.cs" line="759" />
+      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Camera/CameraMovement.cs" line="290" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/CharacterMotor.cs" line="129" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>

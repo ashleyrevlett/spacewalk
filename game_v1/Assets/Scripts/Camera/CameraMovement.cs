@@ -32,6 +32,7 @@ public class CameraMovement : MonoBehaviour
 	private Transform player;
 	private CharacterController controller;
 	private CharacterMotor motor;
+	private GameController gameController;
 //	private int currentCameraIndex;
 //	public float minSecondsBeforeCameraChange = 1f;
 //	private float timeSinceCameraChange = 0f;
@@ -49,6 +50,8 @@ public class CameraMovement : MonoBehaviour
 		player = GameObject.FindGameObjectWithTag("Player").transform;
 		motor = player.GetComponent<CharacterMotor> ();
 		controller = player.GetComponent<CharacterController> ();
+		GameObject gameControllerObject = GameObject.FindGameObjectWithTag("GameController");
+		gameController = gameControllerObject.GetComponent < GameController> ();
 
 		// set initial camera position
 		playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
@@ -129,6 +132,11 @@ public class CameraMovement : MonoBehaviour
 	
 	void Update ()
 	{
+
+		// dont change cam position once level ends
+		if (gameController.isLevelEnd)
+						return;
+
 		
 		playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
 		playerFeetPos = playerHeadPos + (controller.height * -player.transform.up) + (controller.height/10f * player.transform.up);

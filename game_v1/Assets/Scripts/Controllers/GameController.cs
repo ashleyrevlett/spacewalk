@@ -14,11 +14,13 @@ public class GameController : MonoBehaviour {
 	public bool isPaused = false;
 	public bool isGameOver = false;
 	public bool isPlaying = true;
+	public bool isLevelEnd = false;
 
 	public GameObject pauseCanvas; // need to manually wire this up in IDE
 	public GameObject loseLifeCanvas;
 	public GameObject gameOverCanvas;
 	public GameObject hudCanvas;
+	public GameObject levelWinCanvas;
 	//private int loseScene = 1; // scene # from build settings
 	
 	private HealthController healthController;
@@ -29,6 +31,7 @@ public class GameController : MonoBehaviour {
 //	private bool isPlaying = false;
 
 	private GameObject player;
+	private CharacterMotor motor;
 	private Animator playerAnim; 
 	private Vector3 playerSpawnPoint;
 	private Quaternion playerSpawnRotation;
@@ -46,6 +49,7 @@ public class GameController : MonoBehaviour {
 		remainingLives = startingLives;
 
 		player = GameObject.FindWithTag ("Player");
+		motor = player.GetComponent<CharacterMotor> ();
 		healthController = player.GetComponent<HealthController> ();
 		scoreController = gameObject.GetComponent<ScoreController> ();
 		playerAnim = player.GetComponent<Animator> ();
@@ -71,18 +75,14 @@ public class GameController : MonoBehaviour {
 		}
 
 		//lose conditions
-//		if (healthController.remainingHitPoints < 0 && remainingLives >= 0) {		 // 
-//			StartCoroutine ("LoseLife");
-//		}
-//
-//		} else if (healthController.remainingHitPoints <= 0 && remainingLives < 0) {
-//				
-//			StartCoroutine("GameOver");
-//
-//		}
+		if (healthController.remainingHitPoints < 0 && remainingLives >= 0) {		 // 
+			StartCoroutine ("LoseLife");
+		} else if (healthController.remainingHitPoints <= 0 && remainingLives < 0) {
+				
+			StartCoroutine("GameOver");
 
-
-
+		}
+	
 	}
 		
 	public void Pause() {
@@ -159,9 +159,11 @@ public class GameController : MonoBehaviour {
 		hudCanvas.SetActive(true);
 		loseLifeCanvas.SetActive(false);
 		gameOverCanvas.SetActive(false);
+		levelWinCanvas.SetActive (false);
 
 		isGameOver = false;
 		isPlaying = true;
+		isLevelEnd = false;
 
 		if (levelRoot) { // if level object is in scene, destroy and reload
 			Destroy (levelRoot);
@@ -211,5 +213,66 @@ public class GameController : MonoBehaviour {
 
 	}
 
+	public void WinLevel() {
+		StartCoroutine (WinLevelAction ());
+	}
 
+
+	IEnumerator WinLevelAction() {
+		if (!isLevelEnd) {
+
+			// wait until jump is landed
+			while (!motor.isNearlyGrounded()) {
+//				player.transform.position = Vector3.Lerp(player.transform.position, player.transform.position + (-player.transform.up * Time.deltaTime), 1f);
+				yield return null;
+			}
+
+			// turn off HUD
+			isLevelEnd = true;
+			hudCanvas.SetActive(false);
+
+			// do turning animation
+			playerAnim.SetFloat("speed", 0f);
+			playerAnim.SetFloat("angularVelocity", 0f);
+
+			// rotate to face camera
+			Vector3 playerToCamDir = Camera.main.transform.position - player.transform.position;
+			Vector3 playerForwardDir = player.transform.forward;
+			playerToCamDir.y = 0f;
+			playerForwardDir.y = 0f;
+			float angleDiff = Vector3.Angle(playerToCamDir, playerForwardDir);
+			float angleDiffAllowed = 2f;
+			while (angleDiff > angleDiffAllowed) {				
+				// rotate player toward us
+				playerToCamDir = Camera.main.transform.position - player.transform.position;
+				playerForwardDir = player.transform.forward;
+				playerToCamDir.y = 0f;
+				playerForwardDir.y = 0f;
+				angleDiff = Vector3.Angle(playerToCamDir, playerForwardDir);
+				Quaternion lookAtRotation = Quaternion.LookRotation(playerToCamDir);
+				player.transform.rotation = Quaternion.Slerp(player.transform.rotation, lookAtRotation, Time.deltaTime * 10f);	
+				yield return null;
+			}
+
+			// wait a second in idle
+			playerAnim.SetFloat("angularVelocity", 0f);
+			playerAnim.SetBool("JumpStart", false);
+			playerAnim.SetBool("JumpLoop", false);
+			playerAnim.SetBool("JumpEnd", false);
+			playerAnim.SetBool("DoubleJump", false);
+			playerAnim.SetBool("FallStart", false);
+			playerAnim.SetBool("Climbing", false);
+			playerAnim.SetBool("Hanging", false);
+
+			// do victory animation, wait for it to finish
+			playerAnim.SetTrigger("Victory");
+			yield return new WaitForSeconds(2.0f);
+
+			// show in canvas
+			levelWinCanvas.SetActive(true);
+
+		}
+		yield return null;
+	}
+	
 }

@@ -4,7 +4,10 @@ using System.Collections;
 
 public class SpinObject : MonoBehaviour {
 
+	public bool rotateEnabled = true;
 	public float rotateSpeed = 50.0f;
+
+
 
 	void Start () {
 
@@ -17,7 +20,9 @@ public class SpinObject : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		transform.Rotate(Vector3.up, rotateSpeed * Time.deltaTime);
+
+		if (rotateEnabled)
+			transform.Rotate(Vector3.up, rotateSpeed * Time.deltaTime);
 	}
 	
 }

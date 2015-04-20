@@ -133,11 +133,17 @@ public class CharacterMotor : MonoBehaviour {
 			animator.speed = 0f;
 			StopAllCoroutines();
 			return;
+		} else if (gameController.isLevelEnd) {
+			return;
 		} else {
 			animator.speed = 1f;
 		}
 
-//		if (forceAmount > 0f) {
+		
+		// get input from player if not being moved elsewhere
+		playerInput = ProcessPlayerInput ();
+
+		//		if (forceAmount > 0f) {
 //			forceAmount -= gravity * Time.deltaTime;
 //			forceAmount = Mathf.Clamp(forceAmount, 0f, terminalVelocity);
 //		}
@@ -154,8 +160,88 @@ public class CharacterMotor : MonoBehaviour {
 //			transform.position = activePole.transform.position + activePole.GetComponent<BoxCollider>().center + controller.bounds.size;
 
 			//float moveHorizontal = Input.GetAxisRaw ("Horizontal");
+
+
+			// have to center our position around it in case we hit it from an angle or edge
+			// first rotate to look in direction of pole
+
+			// if we're on a pole, we have to look toward the pole's center
+			// and be correct distance from it
+				
+
+			CapsuleCollider poleCollider = activePole.GetComponent<CapsuleCollider>();
+			Vector3 poleCenter = activePole.transform.position + poleCollider.center;		
+			// don't allow to move into flag; subtract flag height
+			Vector3 poleTopPosition = poleCenter + (Vector3.up * poleCollider.height/2f) + (-Vector3.up * 1f);
+
+
+			Vector3 playerHeadPosition = transform.position + controller.center + (Vector3.up * (controller.height/2f));
+			playerHeadPosition += -(Vector3.up * (controller.height/2f));
+			Vector3 playerFeetPosition = playerHeadPosition + (-Vector3.up * (controller.height));
+
+			Vector3 playerCenter = transform.position + controller.center;
+			Vector3 poleCenterHrz = new Vector3(poleCenter.x, playerCenter.y, poleCenter.z);
+			float dist = Vector3.Distance(poleCenterHrz, playerCenter);
+			float correctDist = controller.radius + poleCollider.radius;
+			float diff = correctDist - dist;
+			float diffAllowed = 0.01f;
+			if (diff > diffAllowed) {
+				Vector3 relDir = playerCenter - poleCenterHrz; 
+				transform.position = Vector3.Lerp(transform.position, transform.position + relDir.normalized * diff, Time.deltaTime);
+			}
+
+//			// first we have to push the player back the distance to exit collisions
+//			Vector3 closestPointOnPole = activePole.GetComponent<CapsuleCollider>().ClosestPointOnBounds(transform.position + controller.center);
+//			Vector3 relDirFromCenter = closestPointOnPole - transform.position + controller.center;
+//			Vector3 closestPointOnPlayer = transform.position + controller.center + (relDirFromCenter.normalized * controller.radius);
+//			float distToPole = Vector3.Distance(closestPointOnPlayer, closestPointOnPole);
+//			//Debug.Log ("distToPole: " + distToPole);
+//
+//			Debug.DrawRay (closestPointOnPlayer, relDirFromCenter.normalized * distToPole, Color.yellow, Time.deltaTime);
+//			Debug.DrawLine(closestPointOnPlayer, closestPointOnPole, Color.blue);
+
+
+			// then we rotate toward pole
+//			Vector3 newDir = Vector3.RotateTowards(transform.forward, poleCenter, 5f * Time.deltaTime, 0.0F);
+//			transform.rotation = Quaternion.LookRotation(newDir);
+			moveDirection = Vector3.zero;
+			float moveHorizontal = Input.GetAxisRaw ("Horizontal");
 			float moveVertical = Input.GetAxisRaw ("Vertical");
-			moveDirection = new Vector3(0f, moveVertical * runSpeed, 0f);
+
+			// left/right = rotation around pole
+			if (moveHorizontal != 0f) {
+								
+				float joystickRotationForce = 120f;
+				float yRot = Mathf.Clamp(moveHorizontal * joystickRotationForce, -179f, 179f);
+				Vector3 newRot = transform.rotation * new Vector3(0f, yRot, 0f);
+				Vector3 nearPoleCenter = new Vector3(poleCenter.x, transform.position.y, poleCenter.z);
+				Vector3 newPos = RotatePointAroundPivot(transform.position, nearPoleCenter, newRot);
+				Debug.Log("newPos: " + newPos);
+//				Vector3 newdir = transform.rotation * new Vector3(0f, yRotationOffset, 0f);
+//				Vector3 pos = RotatePointAroundPivot(transform.position, poleCenter, newdir);
+				Vector3 relPosition = newPos - transform.position;
+				moveDirection = relPosition;
+				
+			}
+
+			if (moveVertical != 0f) {
+				if (playerHeadPosition.y >= poleTopPosition.y) {
+					moveVertical = Mathf.Min (0f, moveVertical);
+				} else if (playerFeetPosition.y <= activePole.transform.position.y) {
+					if (moveVertical < 0) {
+						StartJump();
+						isOnPole = false;
+						activePole = null;
+					}
+					moveVertical = Mathf.Max (0f, moveVertical);
+
+				}
+
+				moveDirection = moveDirection + new Vector3(0f, moveVertical * runSpeed / 4f, 0f);
+
+
+			}
+
 			if (isOnPole && Input.GetButtonDown ("Jump")) {
 				StartJump();
 				isOnPole = false;
@@ -163,9 +249,6 @@ public class CharacterMotor : MonoBehaviour {
 			}
 
 		} else {
-					
-			// get input from player if not being moved elsewhere
-			playerInput = ProcessPlayerInput ();
 			
 			// figure current speed based on accel, past speed and player input
 			currentSpeed = CalculatePlayerSpeed (playerInput, currentSpeed);
@@ -214,10 +297,15 @@ public class CharacterMotor : MonoBehaviour {
 		}
 
 		// move
-		Debug.Log ("moveDirection: " + moveDirection);
+		//Debug.Log ("moveDirection: " + moveDirection);
 		if (moveDirection != Vector3.zero)
 			controller.Move(moveDirection * Time.deltaTime);
-		
+
+		// if we're on a pole, we need to look toward its center
+		if (isOnPole) {
+			Vector3 lookDir = new Vector3(activePole.transform.position.x, transform.position.y, activePole.transform.position.z);
+			transform.LookAt(lookDir);
+		}
 		// update the animator's values
 		UpdateAnimations (playerInput.x, playerInput.y, currentSpeed);
 
@@ -331,8 +419,6 @@ public class CharacterMotor : MonoBehaviour {
 				targetDirection = Camera.main.transform.TransformDirection(targetDirection);
 			}
 
-			// targetDirection = Camera.main.transform.TransformDirection(targetDirection);
-
 			// Create a rotation based on this new vector assuming that up is the global y axis.
 			Quaternion targetRotation = Quaternion.LookRotation(targetDirection, Vector3.up);
 
@@ -352,7 +438,6 @@ public class CharacterMotor : MonoBehaviour {
 				moveDirection = targetDirection.normalized * speed;
 			}
 
-		
 		}
 
 
@@ -374,10 +459,16 @@ public class CharacterMotor : MonoBehaviour {
 
 		animator.SetFloat ("angularVelocity", moveHorizontal);
 
-		if (isOnPole) {
+		// pole positions
+		if (isOnPole && (moveHorizontal == 0f && moveVertical == 0f)) {
 			animator.SetBool("Hanging", true);
+			animator.SetBool("Climbing", false);
+		} else if (isOnPole && (moveHorizontal != 0f || moveVertical != 0f)) {
+			animator.SetBool("Hanging", true);
+			animator.SetBool("Climbing", true);
 		} else {
 			animator.SetBool("Hanging", false);
+			animator.SetBool("Climbing", false);
 		}
 
 	}
@@ -550,6 +641,7 @@ public class CharacterMotor : MonoBehaviour {
 			// grab the pole
 			activePole = other.gameObject;
 			isOnPole = true;
+
 		}
 	}
 
@@ -594,7 +686,7 @@ public class CharacterMotor : MonoBehaviour {
 
 
 	
-	private bool isNearlyGrounded() {
+	public bool isNearlyGrounded() {
 		// can't trust character controller's isGrounded, so cast for nearest object below 
 		// and use this distance instead to determine whether we're grounded		
 		if (distToGround <= groundTolerance)
@@ -677,6 +769,15 @@ public class CharacterMotor : MonoBehaviour {
 	
 	#endregion
 	
+	
+	Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angles) {
+		Vector3 dir = point - pivot; // get point direction relative to pivot
+		dir = Quaternion.Euler(angles) * dir; // rotate it
+		point = dir + pivot; // calculate rotated point
+		return point; // return it
+	}
+	
+
 }
 
 

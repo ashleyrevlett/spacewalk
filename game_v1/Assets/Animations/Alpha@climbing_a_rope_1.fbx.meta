@@ -141,6 +141,7 @@ ModelImporter:
     400132: //RootNode
     7400000: climbing_a_rope_1
     7400002: hanging_from_rope
+    7400004: rope hang
     9500000: //RootNode
   materials:
     importMaterials: 1
@@ -150,7 +151,7 @@ ModelImporter:
     legacyGenerateAnimations: 4
     bakeSimulation: 0
     optimizeGameObjects: 0
-    motionNodeName: 
+    motionNodeName: Alpha:Hips
     animationCompression: 3
     animationRotationError: .5
     animationPositionError: .5
@@ -171,7 +172,7 @@ ModelImporter:
       loopTime: 1
       loopBlend: 1
       loopBlendOrientation: 1
-      loopBlendPositionY: 1
+      loopBlendPositionY: 0
       loopBlendPositionXZ: 1
       keepOriginalOrientation: 0
       keepOriginalPositionY: 1
@@ -319,19 +320,19 @@ ModelImporter:
       maskType: 0
       maskSource: {instanceID: 0}
     - serializedVersion: 16
-      name: hanging_from_rope
+      name: rope hang
       takeName: mixamo.com
       firstFrame: 0
-      lastFrame: 1
+      lastFrame: 0
       wrapMode: 0
       orientationOffsetY: 0
-      level: 0
+      level: 10
       cycleOffset: 0
       loop: 0
       loopTime: 0
       loopBlend: 0
       loopBlendOrientation: 1
-      loopBlendPositionY: 1
+      loopBlendPositionY: 0
       loopBlendPositionXZ: 1
       keepOriginalOrientation: 0
       keepOriginalPositionY: 1

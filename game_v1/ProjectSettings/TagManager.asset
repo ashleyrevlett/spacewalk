@@ -15,6 +15,7 @@ TagManager:
   - Jetpack
   - Level
   - Pole
+  - Star
   layers:
   - Default
   - TransparentFX
