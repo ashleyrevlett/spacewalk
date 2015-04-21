@@ -102,6 +102,9 @@ public class CharacterMotor : MonoBehaviour {
 	private bool isOnPole = false;
 	private GameObject activePole = null;
 
+	// dieing while falling out of screen
+	public bool fallingDeath;
+
 	#endregion
 
 
@@ -122,10 +125,14 @@ public class CharacterMotor : MonoBehaviour {
 		soundEffectsSource.loop = false;
 		soundEffectsSource.Stop ();
 
+		fallingDeath = false;
 
 	}
-	
-	
+//
+//	void Reset() {
+//		healthController = player.GetComponent<HealthController> ();
+//	}
+//	
 	void Update () {	
 
 		if (!gameController.isPlaying) {
@@ -133,7 +140,7 @@ public class CharacterMotor : MonoBehaviour {
 			animator.speed = 0f;
 			StopAllCoroutines();
 			return;
-		} else if (gameController.isLevelEnd) {
+		} else if (gameController.isLevelEnd || fallingDeath) {
 			return;
 		} else {
 			animator.speed = 1f;
@@ -147,6 +154,9 @@ public class CharacterMotor : MonoBehaviour {
 //			forceAmount -= gravity * Time.deltaTime;
 //			forceAmount = Mathf.Clamp(forceAmount, 0f, terminalVelocity);
 //		}
+
+
+
 
 		// if damage is being taken, don't let player control movement
 		if (healthController.takingDamage) {

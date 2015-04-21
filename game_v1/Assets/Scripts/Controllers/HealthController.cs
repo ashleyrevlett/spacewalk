@@ -17,12 +17,14 @@ public class HealthController : MonoBehaviour {
 	private Component[] characterMeshes;
 	private SkinnedMeshRenderer characterSkin;
 
+	public bool isDead = false;
+
 	private GameObject levelRoot; // make all instantiated objects children of this
 	private GameController gameController;
 	private GameObject particleObject;
 	private ShakeObject cameraShake;
 	private Animator animator; // player's animator, to set damaged animation state
-	
+	private CameraMovement camera;
 
 	void Start () {	
 		characterMeshes = gameObject.GetComponentsInChildren<MeshRenderer> ();
@@ -33,8 +35,12 @@ public class HealthController : MonoBehaviour {
 		gameController = gameControllerObject.GetComponent<GameController> ();
 		cameraShake = Camera.main.GetComponent<ShakeObject> ();
 		animator = gameObject.GetComponent<Animator> ();
+		camera = Camera.main.GetComponent<CameraMovement> ();
 		takingDamage = false;
+		isDead = false;
 	}
+
+
 
 	void Update() {
 
@@ -59,17 +65,6 @@ public class HealthController : MonoBehaviour {
 				particleSystem.enableEmission = false;
 			}
 		}
-//				
-//		// if the damage animations are done, we're done taking damage
-//		if (animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion")) { 
-//			takingDamage = false;
-////			int locoHash = Animator.StringToHash("Locomotion");
-////			int baseLocoHash = Animator.StringToHash("Base Layer.Locomotion");
-////			int mainBaseLocoHash = Animator.StringToHash("Main.Base Layer.Locomotion");
-////			int nowHash = animator.GetCurrentAnimatorStateInfo(0).shortNameHash;
-////			Debug.Log (animator.GetCurrentAnimatorStateInfo(0).IsName("Locomotion"));
-////			Debug.Log ("nowHash: " + nowHash + " locoHash: " + locoHash);
-//		}
 
 	}
 
@@ -87,10 +82,9 @@ public class HealthController : MonoBehaviour {
 
 	}
 
-
-	IEnumerator DoDamage(float points) {
-
-		if (remainingHitPoints == 0) {
+	public void Die() {
+		if (!isDead) {
+			isDead = true;
 			animator.SetTrigger ("Dead");
 			AudioSource.PlayClipAtPoint (damageSound, gameObject.transform.position);
 			particleObject = (GameObject)Instantiate (damageParticlePrefab, gameObject.transform.position, gameObject.transform.rotation);	
@@ -102,7 +96,27 @@ public class HealthController : MonoBehaviour {
 				gameController.EndLife ();
 			else 
 				gameController.EndGame();
+		}
+	}
 
+
+	public void FallDeath() {
+		if (!isDead) {
+			isDead = true;
+			camera.isPaused = true;
+			animator.SetTrigger ("Dead");
+			if ( gameController.remainingLives > 0)
+				gameController.EndLife ();
+			else 
+				gameController.EndGame();
+		}
+	}
+
+
+	IEnumerator DoDamage(float points) {
+
+		if (remainingHitPoints == 0) {
+			Die ();
 		// OR TAKE DAMAGE
 		} else {
 			// cameraShake.SendMessage("Shake", .05f);		

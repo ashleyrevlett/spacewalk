@@ -39,12 +39,13 @@ public class CameraMovement : MonoBehaviour
 	public float journeyTime = 3.0F;
 	private float startTime = 0f;
 
+	public bool isPaused = false;
 	private List<Vector3> positions;
 	private bool holdCameraPosition;
 	private float timePositionHeld = 0f;
 	public float timeToHoldPositionAfterPlayerInput = 1f;
 
-	void Awake ()
+	void Start ()
 	{
 		// Setting up the reference.
 		player = GameObject.FindGameObjectWithTag("Player").transform;
@@ -67,7 +68,8 @@ public class CameraMovement : MonoBehaviour
 		maxScreenYPos = (int)(Screen.height - minScreenYPos);
 		correctionIncrement = (int)(Screen.width * borderPercent) / 2;
 
-
+		holdCameraPosition = false;
+		isPaused = false;
 	}
 
 
@@ -136,6 +138,13 @@ public class CameraMovement : MonoBehaviour
 		// dont change cam position once level ends
 		if (gameController.isLevelEnd)
 						return;
+
+		// don't move camera but do rotate to track player
+		if (isPaused) {
+			playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
+			SmoothLookAt();
+			return;
+		}
 
 		
 		playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);

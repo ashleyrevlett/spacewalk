@@ -46,8 +46,6 @@
 	</Reference>
   </ItemGroup>
   <ItemGroup>
-     <Compile Include="Assets\LevelEnd.cs" />
-     <Compile Include="Assets\PoleSlide.cs" />
      <Compile Include="Assets\Scripts\Camera\CameraMovement.cs" />
      <Compile Include="Assets\Scripts\Camera\FollowCamera.cs" />
      <Compile Include="Assets\Scripts\Camera\PlayerCamera.cs" />
@@ -61,6 +59,8 @@
      <Compile Include="Assets\Scripts\Controllers\WaterController.cs" />
      <Compile Include="Assets\Scripts\FlashLivesRemaining.cs" />
      <Compile Include="Assets\Scripts\GameOverHUDController.cs" />
+     <Compile Include="Assets\Scripts\KillPlayer.cs" />
+     <Compile Include="Assets\Scripts\LevelEnd.cs" />
      <Compile Include="Assets\Scripts\LevelTimer.cs" />
      <Compile Include="Assets\Scripts\NPC\AttackNearby.cs" />
      <Compile Include="Assets\Scripts\NPC\CauseDamage.cs" />

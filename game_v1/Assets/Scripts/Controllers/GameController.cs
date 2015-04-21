@@ -38,6 +38,7 @@ public class GameController : MonoBehaviour {
 	private Vector3 cameraSpawnPoint;
 	private Quaternion cameraSpawnRotation;
 	private GameObject levelRoot;
+	private CameraMovement camera;
 
 	// Use this for initialization
 	void Start () {
@@ -53,6 +54,7 @@ public class GameController : MonoBehaviour {
 		healthController = player.GetComponent<HealthController> ();
 		scoreController = gameObject.GetComponent<ScoreController> ();
 		playerAnim = player.GetComponent<Animator> ();
+		camera = Camera.main.GetComponent<CameraMovement> ();
 
 		playerSpawnPoint = player.transform.position;
 		playerSpawnRotation = player.transform.rotation;
@@ -77,8 +79,7 @@ public class GameController : MonoBehaviour {
 		//lose conditions
 		if (healthController.remainingHitPoints < 0 && remainingLives >= 0) {		 // 
 			StartCoroutine ("LoseLife");
-		} else if (healthController.remainingHitPoints <= 0 && remainingLives < 0) {
-				
+		} else if (healthController.remainingHitPoints <= 0 && remainingLives < 0) {				
 			StartCoroutine("GameOver");
 
 		}
@@ -89,12 +90,14 @@ public class GameController : MonoBehaviour {
 		pauseCanvas.SetActive(true);
 		isPlaying = false;
 		isPaused = true;
+		camera.isPaused = true;
 	}
 
 	public void Unpause() {	
 		pauseCanvas.SetActive(false);
 		isPlaying = true;
 		isPaused = false;
+		camera.isPaused = false;
 	}
 
 	public void EndGame() {
@@ -125,7 +128,7 @@ public class GameController : MonoBehaviour {
 		Debug.Log ("Losing life!!!");
 		if (!isGameOver) {
 			// finish death animation
-			yield return new WaitForSeconds(2.5f);
+			yield return new WaitForSeconds(3.8f);
 			isGameOver = true;
 			isPlaying = false;
 			hudCanvas.SetActive(false);
@@ -142,6 +145,15 @@ public class GameController : MonoBehaviour {
 	// should this contain the health logic instead of the player character?
 
 	public void RestartLevel() {
+		
+		// reset animations (after game over)
+		playerAnim.SetBool ("Damaged", false);
+		playerAnim.SetBool ("FallStart", false);
+		playerAnim.SetBool ("JumpStart", false);
+		playerAnim.SetBool ("JumpLoop", false);
+		playerAnim.SetBool ("JumpEnd", false);
+		playerAnim.SetBool ("DoubleJump", false);
+		playerAnim.SetTrigger ("Alive");
 
 		hudCanvas.SetActive (true);
 
@@ -164,13 +176,17 @@ public class GameController : MonoBehaviour {
 		isGameOver = false;
 		isPlaying = true;
 		isLevelEnd = false;
+		motor.fallingDeath = false;
+		camera.isPaused = false;
+		healthController.isDead = false;
+
 
 		if (levelRoot) { // if level object is in scene, destroy and reload
 			Destroy (levelRoot);
 			levelRoot = Instantiate (levelPrefab) as GameObject;
 		}
 		Unpause (); // need to unpause in case we have left a paused scene behind
-		
+
 		// wait for player to hit start before upausing and playing
 		if (showIntro) {
 			isPlaying = false;
@@ -178,15 +194,6 @@ public class GameController : MonoBehaviour {
 		} else {
 			StartLevel ();
 		}
-
-		// reset animations (after game over)
-		playerAnim.SetBool ("Damaged", false);
-		playerAnim.SetBool ("FallStart", false);
-		playerAnim.SetBool ("JumpStart", false);
-		playerAnim.SetBool ("JumpLoop", false);
-		playerAnim.SetBool ("JumpEnd", false);
-		playerAnim.SetBool ("DoubleJump", false);
-		playerAnim.SetTrigger ("Alive");
 
 
 	}
