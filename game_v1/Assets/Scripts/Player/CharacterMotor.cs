@@ -95,8 +95,9 @@ public class CharacterMotor : MonoBehaviour {
 
 	// detect when we're on top of moving platforms and offset our motion by theirs
 	private GameObject objectBelowPlayer;
-	private bool isOnMovingPlatform;
+	private bool isMovingWithPlatform;
 	private Vector3 platformMoveDirection = Vector3.zero;
+	private PlatformMove platformMove;
 
 	// pole grabbing
 	private bool isOnPole = false;
@@ -126,6 +127,7 @@ public class CharacterMotor : MonoBehaviour {
 		soundEffectsSource.Stop ();
 
 		fallingDeath = false;
+		isMovingWithPlatform = false;
 
 	}
 //
@@ -277,8 +279,8 @@ public class CharacterMotor : MonoBehaviour {
 			if (useSlide)
 				ProcessSlide ();
 			
-			// add gravity if not on ground or platform
-			if (!isNearlyGrounded() && objectBelowPlayer == null) {
+			// add gravity if not on ground
+			if (!isNearlyGrounded()) {
 				verticalVelocity -= gravity * Time.deltaTime;
 				verticalVelocity = Mathf.Max(-terminalVelocity, verticalVelocity);
 			} 
@@ -292,18 +294,8 @@ public class CharacterMotor : MonoBehaviour {
 
 		// in all cases position may be affected by moving platform
 		//Debug.Log ("distToGround: " + distToGround.ToString("F1"));
-		if (objectBelowPlayer != null && playerInput == Vector2.zero) {
-			PlatformMove platformMove = objectBelowPlayer.GetComponent<PlatformMove>();
-			if (platformMove != null) {
-//				Vector3 scale = objectBelowPlayer.transform.localScale;
-				//Vector3 platformOffset = Vector3.Scale(platformMove.currentDirection.normalized, scale);					
-				Vector3 platformOffset = (platformMove.currentDirection * platformMove.moveSpeed);
-//				platformOffset = Vector3.Scale(platformOffset, objectBelowPlayer.transform.localScale);					
-				//platformOffset.y = Mathf.Max (0, platformOffset.y); // only push up, don't pull player down, gravity will do that
-				transform.position += platformOffset * Time.deltaTime;
-				//moveDirection += platformOffset;
-				Debug.Log("standing on platform, offset: " + platformOffset);
-			}
+		if (objectBelowPlayer != null && !isMovingWithPlatform) {
+			StartCoroutine(MoveWithPlatform());
 		}
 
 		// move
@@ -320,7 +312,30 @@ public class CharacterMotor : MonoBehaviour {
 		UpdateAnimations (playerInput.x, playerInput.y, currentSpeed);
 
 	}
-	
+
+	IEnumerator MoveWithPlatform() {
+
+		isMovingWithPlatform = true;
+
+		platformMove = objectBelowPlayer.GetComponent<PlatformMove>();
+
+		while (objectBelowPlayer != null) {
+
+			float moveDistance = .1f;
+			float distanceMoved = 0f;
+			while (distanceMoved < moveDistance) {
+				distanceMoved += Time.deltaTime * platformMove.moveSpeed;
+				Vector3 newPosition = transform.position + (platformMove.currentDirection * Time.deltaTime * platformMove.moveSpeed);
+				transform.position = newPosition;
+				yield return null;
+			}
+		}
+
+		isMovingWithPlatform = false;
+
+		yield return null;
+
+	}
 	
 	void FixedUpdate() {
 
@@ -571,6 +586,14 @@ public class CharacterMotor : MonoBehaviour {
 		animator.SetBool("JumpStart", true);
 		soundEffectsSource.Stop(); // no footsteps sfx in air		
 		AudioSource.PlayClipAtPoint(jumpSound, transform.position);
+				
+		// add platform velocity to ours
+		if (isMovingWithPlatform) {
+			Vector3 platformDir = platformMove.currentDirection * Time.deltaTime * platformMove.moveSpeed;
+			if (platformDir.y > 0)
+				verticalVelocity += platformMove.currentDirection.y * platformMove.moveSpeed;	
+		}
+
 		Debug.Log ("Starting jump!");
 		triggerJump = false;
 	}
@@ -656,7 +679,7 @@ public class CharacterMotor : MonoBehaviour {
 	}
 
 	void OnTriggerExit(Collider other) {
-		Debug.Log ("Trigger exited - " + other.gameObject.tag);
+//		Debug.Log ("Trigger exited - " + other.gameObject.tag);
 		if (other.gameObject.tag == "Platform") {
 			objectBelowPlayer = null; // nothing
 		} 
@@ -699,7 +722,9 @@ public class CharacterMotor : MonoBehaviour {
 	public bool isNearlyGrounded() {
 		// can't trust character controller's isGrounded, so cast for nearest object below 
 		// and use this distance instead to determine whether we're grounded		
-		if (distToGround <= groundTolerance)
+		if (isMovingWithPlatform && distToGround * 3f <= groundTolerance) // need to be more forgiving when on platforms
+			return true;		
+		else if (distToGround <= groundTolerance)
 			return true;		
 		return false;
 	}
