@@ -2,12 +2,12 @@
   <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
   <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Player/CharacterMotor.cs">
     <Files>
+      <File FileName="Assets/Scripts/Player/CharacterMotor.cs" Line="184" Column="1" />
       <File FileName="Assets/Scripts/Utilities/SpinObject.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Camera/CameraMovement.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Player/CharacterMotor.cs" Line="703" Column="10" />
       <File FileName="Assets/Scripts/Controllers/HealthController.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/Controllers/GameController.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/PlatformMove.cs" Line="1" Column="1" />
+      <File FileName="Assets/Scripts/Camera/CameraMovement.cs" Line="335" Column="49" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>

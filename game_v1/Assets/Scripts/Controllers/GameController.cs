@@ -6,7 +6,9 @@ public class GameController : MonoBehaviour {
 	public int startingLives = 3;
 	public int remainingLives;
 
-	public GameObject levelPrefab;
+	public GameObject level1Prefab;
+	public GameObject level2Prefab;
+	public int currentLevel = 1;
 
 	public bool showIntro = false;
 
@@ -43,9 +45,6 @@ public class GameController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 
-		
-		GameObject levelTimerObject = GameObject.FindWithTag ("Level");
-		levelTimer = levelTimerObject.GetComponent<LevelTimer> ();	
 
 		remainingLives = startingLives;
 
@@ -61,8 +60,14 @@ public class GameController : MonoBehaviour {
 		cameraSpawnPoint = Camera.main.transform.position;
 		cameraSpawnRotation = Camera.main.transform.rotation;
 
-		levelRoot = GameObject.FindGameObjectWithTag ("Level");
+		if (currentLevel == 1)
+			levelRoot = Instantiate (level1Prefab) as GameObject;
+		else if (currentLevel == 2)
+			levelRoot = Instantiate (level2Prefab) as GameObject;
 		RestartLevel ();
+		
+		GameObject levelTimerObject = GameObject.FindWithTag ("Level");
+		levelTimer = levelTimerObject.GetComponent<LevelTimer> ();	
 
 	}
 
@@ -161,6 +166,11 @@ public class GameController : MonoBehaviour {
 
 		healthController.remainingHitPoints = healthController.startingHitPoints;
 		scoreController.score = 0;
+
+		if (levelTimer == null) {			
+			GameObject levelTimerObject = GameObject.FindWithTag ("Level");
+			levelTimer = levelTimerObject.GetComponent<LevelTimer> ();	
+		}
 		levelTimer.ResetTimer ();
 
 		player.transform.position = playerSpawnPoint;
@@ -183,7 +193,10 @@ public class GameController : MonoBehaviour {
 
 		if (levelRoot) { // if level object is in scene, destroy and reload
 			Destroy (levelRoot);
-			levelRoot = Instantiate (levelPrefab) as GameObject;
+			if (currentLevel == 1)
+				levelRoot = Instantiate (level1Prefab) as GameObject;
+			else if (currentLevel == 2)
+				levelRoot = Instantiate (level2Prefab) as GameObject;
 		}
 		Unpause (); // need to unpause in case we have left a paused scene behind
 
@@ -216,8 +229,13 @@ public class GameController : MonoBehaviour {
 
 	public void RestartGame() {
 		remainingLives = startingLives;
+		currentLevel = 1;
 		RestartLevel ();
+	}
 
+	public void NextLevel() {
+		currentLevel = 2;
+		RestartLevel ();
 	}
 
 	public void WinLevel() {

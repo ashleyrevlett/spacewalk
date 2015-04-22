@@ -87,7 +87,7 @@ public class CameraMovement : MonoBehaviour
 		int verticalDivisions = 3;
 		int verticalIncrement = (int)60f / verticalDivisions;
 
-		int distDivisions = 3;
+		int distDivisions = 2;
 		int distIncrement = (int)(maxFollowDistance - minFollowDistance) / distDivisions;
 
 		for (int k = 0; k < distDivisions; k++) {
