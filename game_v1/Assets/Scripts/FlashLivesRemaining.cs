@@ -6,14 +6,17 @@ public class FlashLivesRemaining : MonoBehaviour {
 
 	private Text livesText;
 	private GameController gameController;
+	private HealthController healthcontroller;
 
 	// Use this for initialization
 	void Start () {
 //		Debug.Log ("TXT Starting");
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
 		gameController = gameControllerObject.GetComponent<GameController> ();
+		GameObject player = GameObject.FindGameObjectWithTag ("Player");
+		healthcontroller = player.GetComponent<HealthController> ();
 		livesText = gameObject.GetComponent<Text> ();
-		int lives = gameController.remainingLives + 1;
+		int lives = healthcontroller.remainingLives + 1;
 		livesText.text = "x " + lives.ToString();
 //		Debug.Log ("Flashing lives");		
 		StartCoroutine(UpdateLives());
@@ -31,7 +34,7 @@ public class FlashLivesRemaining : MonoBehaviour {
 	void OnEnable() {
 //		Debug.Log ("TXT Enabling");
 		if (gameController) {
-			int lives = gameController.remainingLives + 1;
+			int lives = healthcontroller.remainingLives + 1;
 			livesText.text = "x " + lives.ToString();
 			StartCoroutine(UpdateLives());
 		}
@@ -43,7 +46,7 @@ public class FlashLivesRemaining : MonoBehaviour {
 
 	private IEnumerator UpdateLives() {
 		yield return new WaitForSeconds(.5f);
-		int lives = gameController.remainingLives;
+		int lives = healthcontroller.remainingLives;
 		livesText.text = "x " + lives.ToString();
 		yield return null;
 	}

@@ -3,9 +3,6 @@ using System.Collections;
 
 public class GameController : MonoBehaviour {
 
-	public int startingLives = 3;
-	public int remainingLives;
-
 	public string level1SceneName = "level01";
 	public string level2SceneName = "level02";
 	
@@ -41,13 +38,11 @@ public class GameController : MonoBehaviour {
 	private Vector3 cameraSpawnPoint;
 	private Quaternion cameraSpawnRotation;
 	private GameObject levelRoot;
-	private CameraMovement camera;
+	private CameraMovement camMove;
 
 	// Use this for initialization
 	void Start () {
 
-
-		remainingLives = startingLives;
 
 		player = GameObject.FindWithTag ("Player");
 		motor = player.GetComponent<CharacterMotor> ();
@@ -70,9 +65,9 @@ public class GameController : MonoBehaviour {
 		}
 
 		//lose conditions
-		if (healthController.remainingHitPoints < 0 && remainingLives >= 0) {		 // 
+		if (healthController.remainingHitPoints < 0 && healthController.remainingLives >= 0) {		 // 
 			StartCoroutine ("LoseLife");
-		} else if (healthController.remainingHitPoints <= 0 && remainingLives < 0) {				
+		} else if (healthController.remainingHitPoints <= 0 && healthController.remainingLives < 0) {				
 			StartCoroutine("GameOver");
 
 		}
@@ -83,14 +78,14 @@ public class GameController : MonoBehaviour {
 		pauseCanvas.SetActive(true);
 		isPlaying = false;
 		isPaused = true;
-		camera.isPaused = true;
+		camMove.isPaused = true;
 	}
 
 	public void Unpause() {	
 		pauseCanvas.SetActive(false);
 		isPlaying = true;
 		isPaused = false;
-		camera.isPaused = false;
+		camMove.isPaused = false;
 	}
 
 	public void EndGame() {
@@ -125,7 +120,7 @@ public class GameController : MonoBehaviour {
 			isGameOver = true;
 			isPlaying = false;
 			hudCanvas.SetActive(false);
-			remainingLives -= 1;
+			healthController.remainingLives -= 1;
 			healthController.remainingHitPoints = healthController.startingHitPoints;
 			loseLifeCanvas.SetActive(true);
 			yield return null;
@@ -163,17 +158,15 @@ public class GameController : MonoBehaviour {
 		scoreController.score = 0;
 
 		GameObject cam = GameObject.FindGameObjectWithTag ("MainCamera");
-		camera = cam.GetComponent<CameraMovement> ();
-		camera.isPaused = false;
+		camMove = cam.GetComponent<CameraMovement> ();
+		camMove.isPaused = false;
 		
 		GameObject respawn = GameObject.FindGameObjectWithTag ("Respawn");
 		playerSpawnPoint = respawn.transform.position;
 		playerSpawnRotation = respawn.transform.rotation;		
 		player.transform.position = playerSpawnPoint;
 		player.transform.rotation = playerSpawnRotation;
-		
-		camera = Camera.main.GetComponent<CameraMovement> ();
-		
+
 		// reset animations (after game over)
 		playerAnim.SetBool ("Damaged", false);
 		playerAnim.SetBool ("FallStart", false);
@@ -231,7 +224,7 @@ public class GameController : MonoBehaviour {
 
 
 	public void RestartGame() {
-		remainingLives = startingLives;
+		healthController.Reset ();
 		currentLevel = 1;
 		RestartLevel ();
 	}

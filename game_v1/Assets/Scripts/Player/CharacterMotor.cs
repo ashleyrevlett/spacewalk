@@ -117,9 +117,7 @@ public class CharacterMotor : MonoBehaviour {
 		levelRoot = GameObject.FindGameObjectWithTag ("Level");
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
 		gameController = gameControllerObject.GetComponent<GameController> ();
-
-		GameObject player = GameObject.FindGameObjectWithTag ("Player");
-		healthController = player.GetComponent<HealthController> ();
+		healthController = gameObject.GetComponent<HealthController> ();
 
 		// create new sound source for sfx
 		soundEffectsSource = gameObject.AddComponent<AudioSource>();

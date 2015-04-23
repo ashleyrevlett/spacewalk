@@ -15,8 +15,6 @@ public class HUDController : MonoBehaviour {
 	public float textEffectSpeed = .5f;
 
 	private float startTime; // timekeeping	
-	private GameObject gameControllerObject;
-	private GameController gameController;
 	private ScoreController scoreController;
 	private HealthController healthController;
 	private LevelTimer levelTimer;
@@ -24,8 +22,7 @@ public class HUDController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		GameObject player = GameObject.FindWithTag ("Player");
-		gameControllerObject = GameObject.FindWithTag ("GameController");
-		gameController = gameControllerObject.GetComponent<GameController> ();	
+		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
 		scoreController = gameControllerObject.GetComponent<ScoreController> ();	
 		healthController = player.GetComponent<HealthController> ();	
 
@@ -47,8 +44,8 @@ public class HUDController : MonoBehaviour {
 		if (int.Parse(hitPointsText.text) != healthController.remainingHitPoints) 
 			StartCoroutine( ChangeText(healthController.remainingHitPoints.ToString(), hitPointsText) );
 
-		if (int.Parse(livesText.text) != gameController.remainingLives) 
-			StartCoroutine( ChangeText(gameController.remainingLives.ToString(), livesText) );		
+		if (int.Parse(livesText.text) != healthController.remainingLives) 
+			StartCoroutine( ChangeText(healthController.remainingLives.ToString(), livesText) );		
 
 	}
 

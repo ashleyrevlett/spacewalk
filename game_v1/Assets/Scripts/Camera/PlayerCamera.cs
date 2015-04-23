@@ -20,7 +20,7 @@ public class PlayerCamera : MonoBehaviour {
 	public float maxRotSpeed = 300f;
 	public float minRotSpeed = 2f;
 	public float rotAccel = 2f;
-	private float curRotSpeed = 0f;
+//	private float curRotSpeed = 0f;
 
 
 	private GameObject player;
@@ -30,11 +30,11 @@ public class PlayerCamera : MonoBehaviour {
 
 	public bool avoidObstacles = true;
 	public float timeTillMove = 1f; // seconds for view to be obstructed until we move; avoid jitter
-	private bool viewIsClear = true;
-	private float rotateOffset = 0f;
+//	private bool viewIsClear = true;
+//	private float rotateOffset = 0f;
 
-	private bool isMoving = false;
-	private bool isRotating = false;
+//	private bool isMoving = false;
+//	private bool isRotating = false;
 	private bool holdPosition = true;
 
 
@@ -71,10 +71,10 @@ public class PlayerCamera : MonoBehaviour {
 		}
 
 		if (distance > 1f && startMoveTime <= 0f) {
-			isMoving = true;
+//			isMoving = true;
 			startMoveTime = Time.time;
 		} else if (distance <= .1f) {
-			isMoving = false;
+//			isMoving = false;
 			startMoveTime = 0f;
 		}			
 				

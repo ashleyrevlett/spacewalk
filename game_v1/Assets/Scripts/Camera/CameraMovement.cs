@@ -4,46 +4,29 @@ using System.Collections.Generic;
 
 public class CameraMovement : MonoBehaviour
 {
-	public float smooth = 1.5f;         // The relative speed at which the camera will catch up.
+	public float smooth = 1.5f; // relative speed at which the camera will catch up
 	public float rotateSmooth = 2.5f;
-	public float minFollowDistance = 5f;
-	public float maxFollowDistance = 10f;
-	public float followHeight = 2f;
-	public float lookDistance = 5f;
+	public float minFollowDistance = 5f; // default distance
+	public float maxFollowDistance = 10f; // distance we can be before camera will move
+	public float followHeight = 2f; // height above player to follow at
 	public float angleDifferenceAllowed = 15f; // allowable difference in rotations between camera andn player before moving cam to update
-	public float borderPercent = .2f; // percent of screen edge to keep targets within
-	public float occlusionAllowedTime = .3f; // seconds occlusio is allowed before changing camera position
+	public float joystickRotationForce = 3f; // camera rotation speed when joystick is pressed
+	public float timeToHoldPositionAfterPlayerInput = 1f; // after releasing joystick camera pauses for thid long
+	public bool isPaused = false; // disables camera movement, used when we fall off screen
+
+	private Transform player;
+	private Vector3 playerHeadPos; 
+	private Vector3 playerFeetPos; 
+	private CharacterController controller;
+	private GameController gameController;
+	
+	private List<Vector3> positions; // possible camera positions
+	private bool holdCameraPosition; // whether to hold the camera in the same position for limited time
+	private float timePositionHeld = 0f; // how long it's been held in place
+
+	public float occlusionAllowedTime = .3f; // seconds occlusion is allowed before changing camera position
 	private float occludedTime = 0f;
 	private bool isOccluded = false;
-
-	private Vector3 rotationOffset = Vector3.zero; // player pushes right joystic, rotates camera around
-	public float joystickRotationForce = 3f;
-
-	private float minScreenYPos;
-	private float minScreenXPos;
-	private float maxScreenYPos;
-	private float maxScreenXPos;
-	private float correctionIncrement;
-
-	private Vector3 playerHeadPos; // A1
-	private Vector3 playerFeetPos; // A2
-	private Vector3 playerLookPos; // B
-	
-	private Transform player;
-	private CharacterController controller;
-	private CharacterMotor motor;
-	private GameController gameController;
-//	private int currentCameraIndex;
-//	public float minSecondsBeforeCameraChange = 1f;
-//	private float timeSinceCameraChange = 0f;
-	public float journeyTime = 3.0F;
-	private float startTime = 0f;
-
-	public bool isPaused = false;
-	private List<Vector3> positions;
-	private bool holdCameraPosition;
-	private float timePositionHeld = 0f;
-	public float timeToHoldPositionAfterPlayerInput = 1f;
 
 	void Start ()
 	{
@@ -54,32 +37,23 @@ public class CameraMovement : MonoBehaviour
 		if (player == null)
 			return;
 
-		motor = player.GetComponent<CharacterMotor> ();
+		// store refs
 		controller = player.GetComponent<CharacterController> ();
-		GameObject gameControllerObject = GameObject.FindGameObjectWithTag("GameController");
-		gameController = gameControllerObject.GetComponent < GameController> ();
+		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent < GameController> ();
 
 		// set initial camera position
 		playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
-
 		transform.position = playerHeadPos + (-player.transform.forward * minFollowDistance) + (player.transform.up * followHeight);
 		transform.LookAt (playerHeadPos);
 
-		startTime = Time.time;
-
-		minScreenXPos = (int)(Screen.width * borderPercent);
-		maxScreenXPos = (int)(Screen.width - minScreenXPos);
-		minScreenYPos = (int)(Screen.height * borderPercent);
-		maxScreenYPos = (int)(Screen.height - minScreenYPos);
-		correctionIncrement = (int)(Screen.width * borderPercent) / 2;
-
+		// not currently paused or holding position
 		holdCameraPosition = false;
 		isPaused = false;
 	}
 
 
-	List<Vector3> CameraPositions() {
-	
+
+	List<Vector3> CameraPositions() {	
 		// return list of possible camera positions, sorted by dist from neutral pos
 		// all positions are relative directions from the player's head position
 
@@ -112,7 +86,7 @@ public class CameraMovement : MonoBehaviour
 
 		cameraPositions.Sort ((a, b) => Vector3.Distance(a, neutralPositionMin).CompareTo(Vector3.Distance(b, neutralPositionMin)));		
 		cameraPositions.Reverse ();
-//
+
 //		float colorincrement = 1f/cameraPositions.Count;
 //		for (int i = 0; i < cameraPositions.Count; i++) {
 //			Color32 thisColor = new Color(0f, colorincrement*i, 0f, 1);
@@ -124,8 +98,6 @@ public class CameraMovement : MonoBehaviour
 	}
 
 
-
-
 	Vector3 RotatePointAroundPivot(Vector3 point, Vector3 pivot, Vector3 angles) {
 		Vector3 dir = point - pivot; // get point direction relative to pivot
 		dir = Quaternion.Euler(angles) * dir; // rotate it
@@ -134,44 +106,32 @@ public class CameraMovement : MonoBehaviour
 	}
 
 
-
-
-	
 	void Update ()
 	{
 
 		// dont change cam position once level ends
 		if (gameController.isLevelEnd)
-						return;
+			return;
 
-		// don't move camera but do rotate to track player
+		// don't move camera but do rotate to track player if paused
 		if (isPaused) {
 			playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
 			SmoothLookAt();
 			return;
 		}
-
-		
+				
 		playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
 		playerFeetPos = playerHeadPos + (controller.height * -player.transform.up) + (controller.height/10f * player.transform.up);
-		playerLookPos = playerHeadPos + player.transform.forward * lookDistance;
-		Vector3 neutralPositionMin = (playerHeadPos + (-player.transform.forward * (minFollowDistance)));
-		Vector3 neutralPositionMax = (playerHeadPos + (-player.transform.forward * (maxFollowDistance)));
 
+		// player moves right joystick, adjusts camera
 		Vector2 playerInput = new Vector2 (Input.GetAxisRaw ("RightH"), Input.GetAxisRaw ("RightV"));
 		if (playerInput != Vector2.zero) {
+
 			holdCameraPosition = true;
 			timePositionHeld = 0f;
-
-			Debug.Log ("playerInput: " + playerInput.x.ToString("F1") + ", " + playerInput.y.ToString("F1"));
-
 			float yRotationOffset = Mathf.Clamp(playerInput.x * joystickRotationForce, -179f, 179f);
 			float xRotationOffset = Mathf.Clamp(playerInput.y * joystickRotationForce, -25, 25f);
-
 			Vector3 newdir = player.rotation * new Vector3(xRotationOffset, yRotationOffset, 0f);
-			float newdirDist = Vector3.Magnitude(newdir);
-
-
 			Vector3 pos = RotatePointAroundPivot(transform.position, playerHeadPos, newdir);
 
 			// push position back to min distance
@@ -184,9 +144,9 @@ public class CameraMovement : MonoBehaviour
 				scaleFactor = maxFollowDistance / dist;
 			}
 			relPosition.Scale( new Vector3(scaleFactor, scaleFactor, scaleFactor));
-			Debug.Log("scaleFactor: " + scaleFactor.ToString("F1"));
+
 			// camera shouldn't go lower than player's head
-			//relPosition.y = Mathf.Max (relPosition.y, playerHeadPos.y);
+			relPosition.y = Mathf.Max (relPosition.y, playerHeadPos.y);
 
 			transform.position = Vector3.Lerp(transform.position, playerHeadPos + relPosition, smooth * Time.deltaTime);
 			SmoothLookAt();
@@ -194,27 +154,22 @@ public class CameraMovement : MonoBehaviour
 		}
 
 		if (holdCameraPosition && timePositionHeld < timeToHoldPositionAfterPlayerInput) {		
+			// hold position, look at player
 			timePositionHeld += Time.deltaTime;
-			SmoothLookAt();
-		
+			SmoothLookAt();		
 		} else {
+			// normal update - test position for occlusion and choose new pos if nec.
 			holdCameraPosition = false;
 			positions = CameraPositions ();
 			UpdatePosition();
 
 		}
-//			Debug.DrawLine (transform.position, playerHeadPos, Color.white);
-//			Debug.DrawLine (transform.position, playerFeetPos, Color.white);
-//			Debug.DrawLine (transform.position, playerLookPos, Color.white);
 
 	}
 
 
 	void UpdatePosition() {
-		
-		bool validPositionFound = false;
-		float degreesTurned = 0f;
-		float distanceTried = 0f;
+
 		Vector3 newPos = transform.position;
 		
 		// if player has moved outside allowed distance, move back within range
@@ -236,9 +191,9 @@ public class CameraMovement : MonoBehaviour
 		
 		// check new pos and rotate if nec
 		// sort positions by distance from current camera position
-
 		if (!ViewingPosCheck(newPos)) {
-//
+
+			//
 //			if (occludedTime < occlusionAllowedTime) {
 //				occludedTime += Time.deltaTime;
 //			} else {
@@ -262,62 +217,12 @@ public class CameraMovement : MonoBehaviour
 
 		// Lerp the camera's position between it's current position and it's new position.
 		transform.position = Vector3.Lerp(transform.position, newPos, smooth * Time.deltaTime);
-		
-		// now make sure points remain within margin of camera's viewport
-		//		int runs = 5;
-		//		int i = 0;
-		//		while (!InBoundsPosCheck () && i < runs) {
-		//
-		//			i += 1;
-		//
-		//			// find which point is out of bounds and move camera in that direction by an increment
-		//			Vector3 dir = InBoundsCorrection();
-		//			transform.position = Vector3.Lerp(transform.position, transform.position + dir, smooth * Time.deltaTime);
-		//
-		//		}
-		
+
 		// Make sure the camera is looking at the player.
 		SmoothLookAt();
-		
-		//Debug.Log ("currentCameraIndex: " + currentCameraIndex);
-		//Debug.Log ("timeSinceCameraChange: " + timeSinceCameraChange.ToString("F1"));
 
 	}
 
-
-	Vector3 InBoundsCorrection() {
-		Vector3[] positionArray = new [] { playerHeadPos, playerLookPos }; // , playerFeetPos, playerLookPos
-		Vector3 adjustment = Vector3.zero;
-		for (int i = 0; i < positionArray.Length; i++) {
-			Vector3 screenPos = Camera.main.WorldToScreenPoint(positionArray[i]);
-			if (screenPos.x <= maxScreenXPos || screenPos.x >= minScreenXPos || 
-			    screenPos.y <= maxScreenYPos || screenPos.y >= minScreenYPos) {
-				Vector3 dirToObj = positionArray[i] - transform.position;
-				adjustment += dirToObj.normalized * correctionIncrement;
-			}
-		}
-		return adjustment;
-
-	}
-
-
-	bool InBoundsPosCheck () { 
-		bool validPosition = true;
-		Vector3[] positionArray = new [] { playerHeadPos, playerLookPos }; // , playerFeetPos, playerLookPos
-		for (int i = 0; i < positionArray.Length; i++) {
-			Vector3 screenPos = Camera.main.WorldToScreenPoint(positionArray[i]);
-			if (screenPos.x <= maxScreenXPos && screenPos.x >= minScreenXPos &&
-			    screenPos.y <= maxScreenYPos && screenPos.y >= minScreenYPos) {
-				continue;
-				//print("target " + i.ToString() + " is in bounds: (" + screenPos.x.ToString() + ", " + screenPos.y.ToString());
-			} else {
-				print ("out of bounds");
-				//print("target " + i.ToString() + " is out of bounds: (" + screenPos.x.ToString() + ", " + screenPos.y.ToString());
-				return false;
-			}
-		}
-		return true;
-	}
 
 
 	bool ViewingPosCheck (Vector3 checkPos)
@@ -326,14 +231,12 @@ public class CameraMovement : MonoBehaviour
 
 		RaycastHit hit;
 		Vector3[] positionArray = new [] { playerHeadPos, playerFeetPos }; // , playerLookPos
-		Color[] colors = new[] { Color.blue, Color.red, Color.magenta };
 
 		for (int i = 0; i < positionArray.Length; i++) {
 			// reverse ray in case camera position is *inside* collider which is not detected by rayhit
 			Vector3 direction = checkPos - positionArray[i];
 			// If a raycast from the check position to the player hits something...
-//			Debug.DrawRay (positionArray[i], direction, colors[i]);
-
+			// Debug.DrawRay (positionArray[i], direction, colors[i]);
 			if(Physics.Raycast(positionArray[i], direction, out hit, direction.magnitude)) {	
 				// camera won't be hit because it has no collider
 				// if anything is hit the view is blocked
@@ -350,12 +253,7 @@ public class CameraMovement : MonoBehaviour
 	void SmoothLookAt ()
 	{
 		// Create a vector from the camera towards the player's head
-//		Vector3 lookAtPoint = player.position + player.transform.forward * lookAheadDistance;
-		//Vector3 relPlayerPosition = playerPos - transform.position;
-		// Create a vector from the camera towards the player.
 		Vector3 relPlayerPosition = playerHeadPos - transform.position;
-
-//		Debug.DrawLine(player.position, lookAtPoint, Color.magenta);
 
 		// Create a rotation based on the relative position of the player being the forward vector.
 		Quaternion lookAtRotation = Quaternion.LookRotation(relPlayerPosition, Vector3.up);
@@ -367,17 +265,16 @@ public class CameraMovement : MonoBehaviour
 
 
 	void OnDrawGizmos() {
+		// debug draw for possible camera positions
 		Gizmos.color = Color.yellow;
 		Gizmos.DrawSphere(playerHeadPos, .25f);
 		Gizmos.DrawSphere(playerFeetPos, .25f);
-//		Gizmos.DrawSphere(playerLookPos, .25f);
 
 		if (positions != null) {
 			
 			float colorincrement = 1f/positions.Count;
 			for (int i = 0; i < positions.Count; i++) {
 				Color32 thisColor = new Color(0f, 0f, (colorincrement*i), 1);
-				//Debug.DrawLine (playerHeadPos, positions[i], thisColor);
 				Gizmos.color = thisColor;
 				Gizmos.DrawSphere(positions[i], .1f);
 			};

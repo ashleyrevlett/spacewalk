@@ -4,9 +4,12 @@ using System.Collections.Generic;
 
 
 public class HealthController : MonoBehaviour {
-
+	
+	public int startingLives = 3;
+	public int remainingLives;
 	public float startingHitPoints = 3f;
 	public float remainingHitPoints;
+
 	public GameObject damageParticlePrefab;
 	public AudioClip damageSound;
 	public AudioClip deathSound;
@@ -22,9 +25,9 @@ public class HealthController : MonoBehaviour {
 	private GameObject levelRoot; // make all instantiated objects children of this
 	private GameController gameController;
 	private GameObject particleObject;
-	private ShakeObject cameraShake;
+//	private ShakeObject cameraShake;
 	private Animator animator; // player's animator, to set damaged animation state
-	private CameraMovement camera;
+	private CameraMovement camMove;
 
 	void Start () {	
 		characterMeshes = gameObject.GetComponentsInChildren<MeshRenderer> ();
@@ -47,9 +50,10 @@ public class HealthController : MonoBehaviour {
 			return;
 
 		GameObject cam = GameObject.FindGameObjectWithTag ("MainCamera");
-		camera = cam.GetComponent<CameraMovement> ();
-		cameraShake = cam.GetComponent<ShakeObject> ();
+		camMove = cam.GetComponent<CameraMovement> ();
+//		cameraShake = cam.GetComponent<ShakeObject> ();
 		remainingHitPoints = startingHitPoints;
+		remainingLives = startingLives;
 	}
 
 
@@ -106,7 +110,7 @@ public class HealthController : MonoBehaviour {
 				particleObject.transform.parent = levelRoot.transform;
 				Destroy (particleObject, 3f); // destroy the particles in X sec
 			}
-			if ( gameController.remainingLives > 0)
+			if ( remainingLives > 0)
 				gameController.EndLife ();
 			else 
 				gameController.EndGame();
@@ -117,9 +121,9 @@ public class HealthController : MonoBehaviour {
 	public void FallDeath() {
 		if (!isDead) {
 			isDead = true;
-			camera.isPaused = true;
+			camMove.isPaused = true;
 			animator.SetTrigger ("Dead");
-			if ( gameController.remainingLives > 0)
+			if ( remainingLives > 0)
 				gameController.EndLife ();
 			else 
 				gameController.EndGame();
