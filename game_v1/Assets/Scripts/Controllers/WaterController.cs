@@ -18,7 +18,8 @@ public class WaterController : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
-		gameController = gameControllerObject.GetComponent<GameController> ();
+		if (gameControllerObject != null)
+			gameController = gameControllerObject.GetComponent<GameController> ();
 
 //		randomOffsets = new float[numberRandoms];
 //		for (int i = 0; i < numberRandoms; i++) {
@@ -29,8 +30,9 @@ public class WaterController : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 
-		if (gameController.isPaused || gameController.isGameOver)
-			return;
+		if (gameController != null)
+			if (gameController.isPaused || gameController.isGameOver)
+				return;
 
 		Mesh mesh = GetComponent<MeshFilter>().mesh;
 		Vector3[] vertices = mesh.vertices;

@@ -9,7 +9,8 @@ public class CauseDamage : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		GameObject player = GameObject.FindWithTag ("Player");
-		healthController = player.GetComponent<HealthController> ();
+		if (player != null)
+			healthController = player.GetComponent<HealthController> ();
 	}
 		
 	/* 

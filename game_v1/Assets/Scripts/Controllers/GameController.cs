@@ -6,8 +6,9 @@ public class GameController : MonoBehaviour {
 	public int startingLives = 3;
 	public int remainingLives;
 
-	public GameObject level1Prefab;
-	public GameObject level2Prefab;
+	public string level1SceneName = "level01";
+	public string level2SceneName = "level02";
+	
 	public int currentLevel = 1;
 
 	public bool showIntro = false;
@@ -53,21 +54,8 @@ public class GameController : MonoBehaviour {
 		healthController = player.GetComponent<HealthController> ();
 		scoreController = gameObject.GetComponent<ScoreController> ();
 		playerAnim = player.GetComponent<Animator> ();
-		camera = Camera.main.GetComponent<CameraMovement> ();
 
-		playerSpawnPoint = player.transform.position;
-		playerSpawnRotation = player.transform.rotation;
-		cameraSpawnPoint = Camera.main.transform.position;
-		cameraSpawnRotation = Camera.main.transform.rotation;
-
-		if (currentLevel == 1)
-			levelRoot = Instantiate (level1Prefab) as GameObject;
-		else if (currentLevel == 2)
-			levelRoot = Instantiate (level2Prefab) as GameObject;
 		RestartLevel ();
-		
-		GameObject levelTimerObject = GameObject.FindWithTag ("Level");
-		levelTimer = levelTimerObject.GetComponent<LevelTimer> ();	
 
 	}
 
@@ -149,7 +137,42 @@ public class GameController : MonoBehaviour {
 	// requires game controller to be outside level so it won't get destroyed
 	// should this contain the health logic instead of the player character?
 
-	public void RestartLevel() {
+	IEnumerator LoadLevelAction() {
+		
+		levelRoot = GameObject.FindGameObjectWithTag("Level");
+		if (levelRoot) { // if level object is in scene, destroy and reload
+			Destroy (levelRoot);
+		}
+		
+		if (currentLevel == 1) {
+			Application.LoadLevelAdditive(level1SceneName);
+		} else if (currentLevel == 2) {
+			Application.LoadLevelAdditive(level2SceneName);
+		}		
+
+		// wait a frame for loadlevel to take effect
+		yield return 0;
+
+		levelRoot = GameObject.FindGameObjectWithTag("Level");
+
+
+		levelTimer = levelRoot.GetComponent<LevelTimer> ();	
+		levelTimer.ResetTimer ();
+		
+		healthController.Reset ();
+		scoreController.score = 0;
+
+		GameObject cam = GameObject.FindGameObjectWithTag ("MainCamera");
+		camera = cam.GetComponent<CameraMovement> ();
+		camera.isPaused = false;
+		
+		GameObject respawn = GameObject.FindGameObjectWithTag ("Respawn");
+		playerSpawnPoint = respawn.transform.position;
+		playerSpawnRotation = respawn.transform.rotation;		
+		player.transform.position = playerSpawnPoint;
+		player.transform.rotation = playerSpawnRotation;
+		
+		camera = Camera.main.GetComponent<CameraMovement> ();
 		
 		// reset animations (after game over)
 		playerAnim.SetBool ("Damaged", false);
@@ -159,47 +182,20 @@ public class GameController : MonoBehaviour {
 		playerAnim.SetBool ("JumpEnd", false);
 		playerAnim.SetBool ("DoubleJump", false);
 		playerAnim.SetTrigger ("Alive");
-
-		hudCanvas.SetActive (true);
-
-		Debug.Log ("Restarting level!");
-
-		healthController.remainingHitPoints = healthController.startingHitPoints;
-		scoreController.score = 0;
-
-		if (levelTimer == null) {			
-			GameObject levelTimerObject = GameObject.FindWithTag ("Level");
-			levelTimer = levelTimerObject.GetComponent<LevelTimer> ();	
-		}
-		levelTimer.ResetTimer ();
-
-		player.transform.position = playerSpawnPoint;
-		player.transform.rotation = playerSpawnRotation;
-		Camera.main.transform.position = cameraSpawnPoint;
-		Camera.main.transform.rotation = cameraSpawnRotation;
-
+		
 		hudCanvas.SetActive(true);
 		loseLifeCanvas.SetActive(false);
 		gameOverCanvas.SetActive(false);
 		levelWinCanvas.SetActive (false);
-
+		
 		isGameOver = false;
 		isPlaying = true;
 		isLevelEnd = false;
 		motor.fallingDeath = false;
-		camera.isPaused = false;
 		healthController.isDead = false;
-
-
-		if (levelRoot) { // if level object is in scene, destroy and reload
-			Destroy (levelRoot);
-			if (currentLevel == 1)
-				levelRoot = Instantiate (level1Prefab) as GameObject;
-			else if (currentLevel == 2)
-				levelRoot = Instantiate (level2Prefab) as GameObject;
-		}
+		
 		Unpause (); // need to unpause in case we have left a paused scene behind
-
+		
 		// wait for player to hit start before upausing and playing
 		if (showIntro) {
 			isPlaying = false;
@@ -209,6 +205,13 @@ public class GameController : MonoBehaviour {
 		}
 
 
+	}
+
+
+	public void RestartLevel() {
+		// loadleveladditive requires a frame to set up, so we use RestartLevel() as a public function
+		// that calls a coroutine to load the level and wait a frame for it to load before acting upon it
+		StartCoroutine (LoadLevelAction ());
 	}
 
 

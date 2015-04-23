@@ -9,7 +9,8 @@ public class LevelEnd : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
-		gameController = gameControllerObject.GetComponent<GameController> ();
+		if (gameControllerObject != null)
+			gameController = gameControllerObject.GetComponent<GameController> ();
 		spinObjectScript = gameObject.GetComponent<SpinObject> ();
 	}
 

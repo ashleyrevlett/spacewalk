@@ -10,6 +10,8 @@ public class KillPlayer : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		player = GameObject.FindGameObjectWithTag ("Player");
+		if (player == null)
+						return;
 		playerHealth = player.GetComponent<HealthController> ();
 		motor = player.GetComponent<CharacterMotor> ();
 	}

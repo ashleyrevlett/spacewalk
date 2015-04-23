@@ -19,7 +19,8 @@ public class PlatformMove : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		GameObject player = GameObject.FindGameObjectWithTag ("Player");
-		playerController = player.GetComponent<CharacterController> ();
+		if (player != null)
+			playerController = player.GetComponent<CharacterController> ();
 		originalPosition = transform.position; // remember for when we reset the platform
 		currentDirection = moveDirection;
 	}

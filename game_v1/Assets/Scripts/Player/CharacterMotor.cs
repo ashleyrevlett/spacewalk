@@ -289,7 +289,8 @@ public class CharacterMotor : MonoBehaviour {
 			} 
 			
 			// apply gravity & jump force if not sliding
-			if (!isSliding ) {
+			// if we slide then fall off the surface
+			if (!isSliding || !isNearlyGrounded() ) {
 				moveDirection.y = verticalVelocity;
 			}
 
@@ -650,14 +651,18 @@ public class CharacterMotor : MonoBehaviour {
 				soundEffectsSource.loop = true;
 				soundEffectsSource.Play ();	
 			}
-		} else {
-			// reached non-sloped ground, stop sliding
+		}
+
+		// if we're no longer on the ground, or if the surface below us is not sloped
+		// we are no longer sliding
+		if (!isNearlyGrounded() || !isSliding) {
 			isSliding = false;
 			if (soundEffectsSource.clip == slideSound && soundEffectsSource.isPlaying) {
 				soundEffectsSource.Stop ();
 				soundEffectsSource.loop = false;
 			}
 		}
+
 		
 	}
 

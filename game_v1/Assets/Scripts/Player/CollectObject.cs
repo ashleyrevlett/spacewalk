@@ -12,6 +12,9 @@ public class CollectObject : MonoBehaviour {
 
 	void Start() {	
 		gameController = GameObject.FindWithTag ("GameController");
+		if (gameController == null)
+			return;
+
 		scoreController = gameController.GetComponent<ScoreController> ();	
 		levelRoot = GameObject.FindGameObjectWithTag ("Level");
 	}

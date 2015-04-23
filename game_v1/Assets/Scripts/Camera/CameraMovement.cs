@@ -49,6 +49,11 @@ public class CameraMovement : MonoBehaviour
 	{
 		// Setting up the reference.
 		player = GameObject.FindGameObjectWithTag("Player").transform;
+
+		// if there's no player in scene, we are just testing the level
+		if (player == null)
+			return;
+
 		motor = player.GetComponent<CharacterMotor> ();
 		controller = player.GetComponent<CharacterController> ();
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag("GameController");

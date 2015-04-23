@@ -48,7 +48,8 @@ public class NPCController : MonoBehaviour {
 		timeUntilTurn = secondsTillTurn;
 
 		GameObject gameControllerObject = GameObject.FindWithTag ("GameController");
-		gameController = gameControllerObject.GetComponent<GameController> ();
+		if (gameControllerObject != null)
+			gameController = gameControllerObject.GetComponent<GameController> ();
 
 		renderers = gameObject.GetComponentsInChildren<MeshRenderer> ();
 		skinnedRenderers = gameObject.GetComponentsInChildren<SkinnedMeshRenderer> ();
@@ -59,14 +60,15 @@ public class NPCController : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-		
-		if (!gameController.isPlaying) {
-			animator.speed = 0f;
-			StopAllCoroutines();
-			return;
-		} else {
-			animator.speed = 1f;
-		}
+
+		if (gameController != null)
+			if (!gameController.isPlaying) {
+				animator.speed = 0f;
+				StopAllCoroutines();
+				return;
+			} else {
+				animator.speed = 1f;
+			}
 	
 		if (attackTarget && !damaged) {
 

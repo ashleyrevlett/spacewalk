@@ -30,14 +30,26 @@ public class HealthController : MonoBehaviour {
 		characterMeshes = gameObject.GetComponentsInChildren<MeshRenderer> ();
 		characterSkin = gameObject.GetComponentInChildren<SkinnedMeshRenderer> ();
 		remainingHitPoints = startingHitPoints;
-		levelRoot = GameObject.FindGameObjectWithTag ("Level");
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
 		gameController = gameControllerObject.GetComponent<GameController> ();
-		cameraShake = Camera.main.GetComponent<ShakeObject> ();
 		animator = gameObject.GetComponent<Animator> ();
-		camera = Camera.main.GetComponent<CameraMovement> ();
 		takingDamage = false;
 		isDead = false;
+
+		Reset ();
+
+	}
+
+
+	public void Reset() {	
+		levelRoot = GameObject.FindGameObjectWithTag ("Level");
+		if (levelRoot == null) // if the level hasn't loaded yet do nothing
+			return;
+
+		GameObject cam = GameObject.FindGameObjectWithTag ("MainCamera");
+		camera = cam.GetComponent<CameraMovement> ();
+		cameraShake = cam.GetComponent<ShakeObject> ();
+		remainingHitPoints = startingHitPoints;
 	}
 
 
@@ -46,7 +58,7 @@ public class HealthController : MonoBehaviour {
 
 		// game has been restarted and we need a new reference to level root
 		if (levelRoot == null) 
-			levelRoot = GameObject.FindGameObjectWithTag ("Level");
+				Reset ();
 
 		// on pause or game over, stop everything
 		if (!gameController.isPlaying) {
@@ -89,6 +101,8 @@ public class HealthController : MonoBehaviour {
 			AudioSource.PlayClipAtPoint (damageSound, gameObject.transform.position);
 			particleObject = (GameObject)Instantiate (damageParticlePrefab, gameObject.transform.position, gameObject.transform.rotation);	
 			if (particleObject != null) {
+				if (levelRoot == null)
+					Reset();
 				particleObject.transform.parent = levelRoot.transform;
 				Destroy (particleObject, 3f); // destroy the particles in X sec
 			}
