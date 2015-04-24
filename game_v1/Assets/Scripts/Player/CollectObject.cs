@@ -12,11 +12,10 @@ public class CollectObject : MonoBehaviour {
 
 	void Start() {	
 		gameController = GameObject.FindWithTag ("GameController");
-		if (gameController == null)
-			return;
-
-		scoreController = gameController.GetComponent<ScoreController> ();	
-		levelRoot = GameObject.FindGameObjectWithTag ("Level");
+		if (gameController != null) {
+			scoreController = gameController.GetComponent<ScoreController> ();	
+			levelRoot = GameObject.FindGameObjectWithTag ("Level");
+		}
 	}
 	
 	void OnTriggerEnter(Collider other) {
@@ -34,7 +33,8 @@ public class CollectObject : MonoBehaviour {
 			AudioSource.PlayClipAtPoint(collectSound, transform.position);
 
 			// increment score
-			scoreController.score += objectPoints;
+			if (scoreController != null)
+				scoreController.score += objectPoints;
 			
 			// destroy mineral and particle after collection
 			Destroy(gameObject, .2f);

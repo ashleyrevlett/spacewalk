@@ -27,7 +27,6 @@ public class CharacterMotor : MonoBehaviour {
 	public float minRotSpeed = 2f;
 	public float rotAccel = 2f;
 	private float curRotSpeed = 0f;
-	
 
 	//public float rotateSpeed = 2.6f; // how fast to rotate the player when turning
 	public float runSpeed = 10.0f; // max speed while running
@@ -103,7 +102,7 @@ public class CharacterMotor : MonoBehaviour {
 	private bool isOnPole = false;
 	private GameObject activePole = null;
 
-	// dieing while falling out of screen
+	// dieing while falling off screen
 	public bool fallingDeath;
 
 	#endregion
@@ -116,7 +115,8 @@ public class CharacterMotor : MonoBehaviour {
 		animator = GetComponent<Animator> ();
 		levelRoot = GameObject.FindGameObjectWithTag ("Level");
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
-		gameController = gameControllerObject.GetComponent<GameController> ();
+		if (gameControllerObject != null)
+			gameController = gameControllerObject.GetComponent<GameController> ();
 		healthController = gameObject.GetComponent<HealthController> ();
 
 		// create new sound source for sfx
@@ -128,34 +128,32 @@ public class CharacterMotor : MonoBehaviour {
 		isMovingWithPlatform = false;
 
 	}
-//
-//	void Reset() {
-//		healthController = player.GetComponent<HealthController> ();
-//	}
-//	
+
+
 	void Update () {	
 
-		if (!gameController.isPlaying) {
-			// we are paused or a dialog is displaying
-			animator.speed = 0f;
-			StopAllCoroutines();
-			return;
-		} else if (gameController.isLevelEnd || fallingDeath) {
-			return;
-		} else {
-			animator.speed = 1f;
-		}
+		if (gameController != null) {
+			if (!gameController.isPlaying) {
+				// we are paused or a dialog is displaying
+				animator.speed = 0f;
+				StopAllCoroutines();
+				return;
+			} else if (gameController.isLevelEnd || fallingDeath) {
+				return;
+			}
+		} 
 
-		
+		animator.speed = 1f;
+
 		// get input from player if not being moved elsewhere
 		playerInput = ProcessPlayerInput ();
 
-		//		if (forceAmount > 0f) {
-//			forceAmount -= gravity * Time.deltaTime;
-//			forceAmount = Mathf.Clamp(forceAmount, 0f, terminalVelocity);
-//		}
 
-
+		// apply outside forces
+		if (forceAmount > 0f) {
+			forceAmount -= gravity * Time.deltaTime;
+			forceAmount = Mathf.Clamp(forceAmount, 0f, terminalVelocity);
+		}
 
 
 		// if damage is being taken, don't let player control movement
@@ -163,35 +161,17 @@ public class CharacterMotor : MonoBehaviour {
 			moveDirection = forceDirection * forceAmount;
 		} else if (isOnPole && activePole != null) {
 
-			//float yVal = activePole.GetComponent<BoxCollider>().bounds.size.y / 2f;
-			//transform.position = new Vector3(activePole.transform.position.x, yVal, activePole.transform.position.z);
-//			Vector3 relPos = activePole.transform - transform.position;
-//			Vector3 newPos = activePole.transform.position + activePole.GetComponent<BoxCollider>().center + controller.bounds.size;
-//			transform.position = activePole.transform.position + activePole.GetComponent<BoxCollider>().center + controller.bounds.size;
-
-			//float moveHorizontal = Input.GetAxisRaw ("Horizontal");
-
-
-			// have to center our position around it in case we hit it from an angle or edge
-			// first rotate to look in direction of pole
-
-			// if we're on a pole, we have to look toward the pole's center
-			// and be correct distance from it
-	
-
-
+			// if we're on a pole, we have to be correct distance from it
+			// also keep vertical position between pole bottom and pole top (minus flag's height)
 			CapsuleCollider poleCollider = activePole.GetComponent<CapsuleCollider>();
 			Vector3 poleCenter = activePole.transform.position + poleCollider.center;		
-			// don't allow to move into flag; subtract flag height
 			Vector3 poleTopPosition = poleCenter + (Vector3.up * poleCollider.height/2f) + (-Vector3.up * 1f);
-
-
 			Vector3 playerHeadPosition = transform.position + controller.center + (Vector3.up * (controller.height/2f));
-			playerHeadPosition += -(Vector3.up * (controller.height/2f));
+			playerHeadPosition += -(Vector3.up * (controller.height/2f)); // don't overlap flag
 			Vector3 playerFeetPosition = playerHeadPosition + (-Vector3.up * (controller.height));
-
 			Vector3 playerCenter = transform.position + controller.center;
 			Vector3 poleCenterHrz = new Vector3(poleCenter.x, playerCenter.y, poleCenter.z);
+
 			float dist = Vector3.Distance(poleCenterHrz, playerCenter);
 			float correctDist = controller.radius + poleCollider.radius;
 			float diff = correctDist - dist;
@@ -200,25 +180,30 @@ public class CharacterMotor : MonoBehaviour {
 				Vector3 relDir = playerCenter - poleCenterHrz; 
 				transform.position = Vector3.Lerp(transform.position, transform.position + relDir.normalized * diff, Time.deltaTime);
 			}
+			if (playerHeadPosition.y >= poleTopPosition.y) {
+				float vertDiff = playerHeadPosition.y - poleTopPosition.y;
+				Vector3 newpos = new Vector3(transform.position.x, transform.position.y - vertDiff, transform.position.z);
+				transform.position = Vector3.Lerp(transform.position, newpos, Time.deltaTime);
+			} else if (playerFeetPosition.y <= activePole.transform.position.y) {
+				float vertDiff = activePole.transform.position.y - playerFeetPosition.y;
+				Vector3 newpos = new Vector3(transform.position.x, transform.position.y + vertDiff, transform.position.z);
+				transform.position = Vector3.Lerp(transform.position, newpos, Time.deltaTime);
+			}
 
+			// apply player input to pole position
 			moveDirection = Vector3.zero;
 			float moveHorizontal = Input.GetAxisRaw ("Horizontal");
 			float moveVertical = Input.GetAxisRaw ("Vertical");
 			
 			// left/right = rotation around pole
-			if (moveHorizontal != 0f) {
-				
+			if (moveHorizontal != 0f) {			
 				float joystickRotationForce = 120f;
 				float yRot = Mathf.Clamp(moveHorizontal * joystickRotationForce, -179f, 179f);
 				Vector3 newRot = transform.rotation * new Vector3(0f, yRot, 0f);
 				Vector3 nearPoleCenter = new Vector3(poleCenter.x, transform.position.y, poleCenter.z);
 				Vector3 newPos = RotatePointAroundPivot(transform.position, nearPoleCenter, newRot);
-				Debug.Log("newPos: " + newPos);
-				//				Vector3 newdir = transform.rotation * new Vector3(0f, yRotationOffset, 0f);
-				//				Vector3 pos = RotatePointAroundPivot(transform.position, poleCenter, newdir);
 				Vector3 relPosition = newPos - transform.position;
-				moveDirection = relPosition;
-				
+				moveDirection = relPosition;				
 			}
 			
 			if (moveVertical != 0f) {
@@ -230,8 +215,7 @@ public class CharacterMotor : MonoBehaviour {
 						isOnPole = false;
 						activePole = null;
 					}
-					moveVertical = Mathf.Max (0f, moveVertical);
-					
+					moveVertical = Mathf.Max (0f, moveVertical);					
 				}
 				
 				moveDirection = moveDirection + new Vector3(0f, moveVertical * runSpeed / 4f, 0f);
@@ -786,22 +770,21 @@ public class CharacterMotor : MonoBehaviour {
 	void AddDustClouds() {		
 		// add dust particles if sudden acceleration
 		if (Mathf.Abs(currentSpeed - previousSpeed) >= runSpeed / 2 && controller.isGrounded) {
-
 			GameObject particleObject = (GameObject) Instantiate(dustParticlePrefab, transform.position, transform.rotation);
-
 			if (!levelRoot)
 				levelRoot = GameObject.FindGameObjectWithTag ("Level");
 			particleObject.transform.parent = levelRoot.transform;
 			Destroy(particleObject, 2f); // destroy in 2 sec
-		}
-		
+		}		
 	}
+
 
 	public void ApplyForce(Vector3 direction, float amount) {
 		// used to push player away from enemy after hit; accessed via other scripts
 		forceAmount = amount;
 		forceDirection = direction;			
 	}
+
 
 	public void TriggerJump() {
 		triggerJump = true;

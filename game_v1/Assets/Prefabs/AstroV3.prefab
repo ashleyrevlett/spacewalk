@@ -1534,7 +1534,7 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 115752}
   m_LocalRotation: {x: 0, y: -.719407558, z: 0, w: .694588304}
-  m_LocalPosition: {x: -13.5, y: 3.19000006, z: 37.2599983}
+  m_LocalPosition: {x: -66.4899979, y: 20.6700001, z: 83.5199966}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 433244}
@@ -2107,7 +2107,7 @@ MonoBehaviour:
   timeDoubleJumpAvailable: .5
   useSlide: 1
   slideFriction: 1.20000005
-  dustParticlePrefab: {fileID: 137932, guid: a66e8fbfc5e4f46b7a650454cbd19e74, type: 2}
+  dustParticlePrefab: {fileID: 169550, guid: d5e72e2a810de4a7fa64a3255d9f5e9e, type: 2}
   footstepSound: {fileID: 8300000, guid: d1a2ce9a2b311458a90d41fab08a7ebc, type: 3}
   jumpSound: {fileID: 8300000, guid: ada37c6f5fad14a45817ed93fd27eedc, type: 3}
   slideSound: {fileID: 8300000, guid: 27e2df538143844bf92b7c87f11bccc2, type: 3}
@@ -2125,6 +2125,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d65206875135d4a5e9c3eff454aaf339, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startingLives: 3
+  remainingLives: 0
   startingHitPoints: 2
   remainingHitPoints: 0
   damageParticlePrefab: {fileID: 100000, guid: 30afdbc00946d4b36a3f24b88b6046f4, type: 2}

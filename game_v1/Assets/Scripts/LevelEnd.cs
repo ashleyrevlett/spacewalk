@@ -16,8 +16,9 @@ public class LevelEnd : MonoBehaviour {
 
 	void OnTriggerEnter(Collider other) {
 		if (other.gameObject.tag == "Player") {
-			gameController.WinLevel ();
 			StartCoroutine(StarVictoryMovement());
+			if (gameController != null)
+				gameController.WinLevel ();
 		}
 	}
 

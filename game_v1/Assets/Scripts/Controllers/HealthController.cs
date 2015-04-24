@@ -34,7 +34,8 @@ public class HealthController : MonoBehaviour {
 		characterSkin = gameObject.GetComponentInChildren<SkinnedMeshRenderer> ();
 		remainingHitPoints = startingHitPoints;
 		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
-		gameController = gameControllerObject.GetComponent<GameController> ();
+		if (gameControllerObject != null)
+			gameController = gameControllerObject.GetComponent<GameController> ();
 		animator = gameObject.GetComponent<Animator> ();
 		takingDamage = false;
 		isDead = false;
@@ -64,6 +65,10 @@ public class HealthController : MonoBehaviour {
 		if (levelRoot == null) 
 				Reset ();
 
+		// testing no gc
+		if (gameController == null)
+			return;
+
 		// on pause or game over, stop everything
 		if (!gameController.isPlaying) {
 			StopAllCoroutines();
@@ -87,8 +92,9 @@ public class HealthController : MonoBehaviour {
 
 	public void ApplyDamage(float points) {	
 
-		if (!gameController.isPlaying || takingDamage)
-			return;
+		if (gameController != null)
+			if (!gameController.isPlaying || takingDamage)
+				return;
 
 		takingDamage = true;
 		Debug.Log ("Applying damage, takingDamage: " + takingDamage);
@@ -110,10 +116,12 @@ public class HealthController : MonoBehaviour {
 				particleObject.transform.parent = levelRoot.transform;
 				Destroy (particleObject, 3f); // destroy the particles in X sec
 			}
-			if ( remainingLives > 0)
-				gameController.EndLife ();
-			else 
-				gameController.EndGame();
+			if (gameController != null) {
+				if ( remainingLives > 0)
+					gameController.EndLife ();
+				else 
+					gameController.EndGame();
+			}
 		}
 	}
 
@@ -123,10 +131,12 @@ public class HealthController : MonoBehaviour {
 			isDead = true;
 			camMove.isPaused = true;
 			animator.SetTrigger ("Dead");
-			if ( remainingLives > 0)
-				gameController.EndLife ();
-			else 
-				gameController.EndGame();
+			if (gameController != null) {
+				if ( remainingLives > 0)
+					gameController.EndLife ();
+				else 
+					gameController.EndGame();
+			}
 		}
 	}
 

@@ -1,33 +1,35 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Camera/CameraMovement.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Controllers/GameController.cs">
     <Files>
-      <File FileName="Assets/Scripts/Player/CharacterMotor.cs" Line="650" Column="32" />
+      <File FileName="Assets/Scripts/Player/CharacterMotor.cs" Line="174" Column="4" />
       <File FileName="Assets/Scripts/Utilities/SpinObject.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/PlatformMove.cs" Line="23" Column="67" />
-      <File FileName="Assets/Scripts/Camera/CameraMovement.cs" Line="53" Column="61" />
+      <File FileName="Assets/Scripts/Camera/CameraMovement.cs" Line="60" Column="14" />
       <File FileName="Assets/Scripts/NPC/CauseDamage.cs" Line="13" Column="64" />
-      <File FileName="Assets/Scripts/LevelEnd.cs" Line="13" Column="4" />
-      <File FileName="Assets/Scripts/Controllers/GameController.cs" Line="157" Column="3" />
-      <File FileName="Assets/Scripts/Controllers/HealthController.cs" Line="39" Column="12" />
-      <File FileName="Assets/Scripts/Player/CollectObject.cs" Line="16" Column="4" />
-      <File FileName="Assets/Scripts/Controllers/WaterController.cs" Line="36" Column="3" />
+      <File FileName="Assets/Scripts/LevelEnd.cs" Line="21" Column="32" />
+      <File FileName="Assets/Scripts/Controllers/GameController.cs" Line="236" Column="19" />
+      <File FileName="Assets/Scripts/Controllers/HealthController.cs" Line="124" Column="5" />
+      <File FileName="Assets/Scripts/Player/CollectObject.cs" Line="37" Column="43" />
+      <File FileName="Assets/Scripts/Controllers/WaterController.cs" Line="36" Column="1" />
       <File FileName="Assets/Scripts/KillPlayer.cs" Line="14" Column="14" />
       <File FileName="Assets/Scripts/Controllers/PlatformController.cs" Line="27" Column="67" />
       <File FileName="Assets/Scripts/Controllers/NPCController.cs" Line="71" Column="5" />
+      <File FileName="Assets/Scripts/Controllers/HUDController.cs" Line="25" Column="14" />
+      <File FileName="Assets/Scripts/FlashLivesRemaining.cs" Line="49" Column="31" />
+      <File FileName="Assets/Scripts/Camera/PlayerCamera.cs" Line="37" Column="36" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
     <BreakpointStore>
-      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/FlashLivesRemaining.cs" line="63" />
+      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/FlashLivesRemaining.cs" line="66" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/GameOverHUDController.cs" line="68" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/GameOverHUDController.cs" line="43" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/NPC/CauseDamage.cs" line="32" />
       <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/TakeDamage.cs" line="54" />
-      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/CharacterMotor.cs" line="802" />
-      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Camera/CameraMovement.cs" line="304" />
-      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/CharacterMotor.cs" line="680" />
-      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/CharacterMotor.cs" line="286" />
+      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/CharacterMotor.cs" line="782" />
+      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Player/CharacterMotor.cs" line="662" />
+      <Breakpoint file="/Users/ashleyrevlett1/Documents/school/2015 spring/game project/src/github/spacewalk/game_v1/Assets/Scripts/Camera/CameraMovement.cs" line="246" />
     </BreakpointStore>
   </MonoDevelop.Ide.DebuggingService.Breakpoints>
   <MonoDevelop.Ide.DebuggingService.PinnedWatches />

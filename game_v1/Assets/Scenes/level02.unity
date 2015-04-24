@@ -23,7 +23,7 @@ RenderSettings:
   m_AmbientSkyColor: {r: .211999997, g: .226999998, b: .259000003, a: 1}
   m_AmbientEquatorColor: {r: .114, g: .125, b: .133000001, a: 1}
   m_AmbientGroundColor: {r: .0469999984, g: .0430000015, b: .0350000001, a: 1}
-  m_AmbientIntensity: 1
+  m_AmbientIntensity: 0
   m_AmbientMode: 0
   m_SkyboxMaterial: {fileID: 2100000, guid: abe8d12a8165548aa9f00e25fce8dbab, type: 2}
   m_HaloStrength: .5
@@ -63,13 +63,12 @@ LightmapSettings:
     m_TextureHeight: 1024
     m_AOMaxDistance: 1
     m_Padding: 2
-    m_CompAOExponent: 0
+    m_CompAOExponent: 2.16000009
     m_LightmapParameters: {fileID: 0}
     m_TextureCompression: 1
     m_FinalGather: 0
     m_FinalGatherRayCount: 1024
-  m_LightmapSnapshot: {fileID: 112000000, guid: 2c3d751396a604e7ab234eb625f62945,
-    type: 2}
+  m_LightmapSnapshot: {fileID: 0}
   m_RuntimeCPUUsage: 25
 --- !u!196 &5
 NavMeshSettings:
@@ -134,6 +133,70 @@ Prefab:
     - target: {fileID: 11401732, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
       propertyPath: intensity
       value: .879999995
+      objectReference: {fileID: 0}
+    - target: {fileID: 121858, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 179652, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 106516, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 132640, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 111086, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 108888, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 169316, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 183300, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 111410, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 107926, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 143782, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 140430, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_StaticEditorFlags
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 10872388, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_Intensity
+      value: 1.73000002
+      objectReference: {fileID: 0}
+    - target: {fileID: 11401732, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 10872388, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_BounceIntensity
+      value: .649999976
+      objectReference: {fileID: 0}
+    - target: {fileID: 11407786, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}
+      propertyPath: m_Enabled
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: 9adc19ce012a941368edb90fa3b20685, type: 2}

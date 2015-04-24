@@ -1,6 +1,22 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
+
+public class CameraPosition {
+	public int index;
+	public Vector3 position; // relative to player
+	public bool isActive; // whether this camera position is the one in use
+
+	public CameraPosition(int index, Vector3 position, bool isActive)
+	{
+		this.isActive = isActive;
+		this.position = position;
+		this.index = index;
+	}
+
+}
+
 
 public class CameraMovement : MonoBehaviour
 {
@@ -13,14 +29,16 @@ public class CameraMovement : MonoBehaviour
 	public float joystickRotationForce = 3f; // camera rotation speed when joystick is pressed
 	public float timeToHoldPositionAfterPlayerInput = 1f; // after releasing joystick camera pauses for thid long
 	public bool isPaused = false; // disables camera movement, used when we fall off screen
+	private bool isMoving = false;
 
 	private Transform player;
 	private Vector3 playerHeadPos; 
 	private Vector3 playerFeetPos; 
 	private CharacterController controller;
 	private GameController gameController;
-	
-	private List<Vector3> positions; // possible camera positions
+
+	private List<CameraPosition> positions;
+	//private List<Vector3> positions; // possible camera positions
 	private bool holdCameraPosition; // whether to hold the camera in the same position for limited time
 	private float timePositionHeld = 0f; // how long it's been held in place
 
@@ -39,52 +57,73 @@ public class CameraMovement : MonoBehaviour
 
 		// store refs
 		controller = player.GetComponent<CharacterController> ();
-		gameController = GameObject.FindGameObjectWithTag("GameController").GetComponent < GameController> ();
-
-		// set initial camera position
-		playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
-		transform.position = playerHeadPos + (-player.transform.forward * minFollowDistance) + (player.transform.up * followHeight);
-		transform.LookAt (playerHeadPos);
+		GameObject gameControllerObject = GameObject.FindGameObjectWithTag ("GameController");
+		if (gameControllerObject != null)
+			gameController = gameControllerObject.GetComponent <GameController> ();
 
 		// not currently paused or holding position
 		holdCameraPosition = false;
 		isPaused = false;
+
+		// set starting positions
+		positions = CameraPositions ();
 	}
 
 
+	IEnumerator MoveToNewPosition(Vector3 newPos) {
+		Debug.Log ("Moving to new position");
+		isMoving = true;
+		float distance = Vector3.Distance (transform.position, newPos);
+		float traveled = 0f;
+		while (traveled < distance) {
+			traveled += Time.deltaTime * smooth;
+			transform.position = Vector3.Lerp(transform.position, newPos, traveled / distance);
+			yield return 0;
+		}
+		isMoving = false;
+		Debug.Log ("Moving completed");
 
-	List<Vector3> CameraPositions() {	
+	}
+
+
+	List<CameraPosition> CameraPositions() {	
 		// return list of possible camera positions, sorted by dist from neutral pos
 		// all positions are relative directions from the player's head position
 
-		List<Vector3> cameraPositions = new List<Vector3>();
-		Vector3 neutralPositionMin = (playerHeadPos + (-player.transform.forward * (minFollowDistance)));
+		List<CameraPosition> cameraPositions = new List<CameraPosition>();
 
-		int divisions = 12;
-		int increment = (int)360f / divisions;
+		// set initial camera position
+		playerHeadPos = controller.center + (controller.height/2f * player.transform.up);
+
+		int divisions = 6;
+		float increment = 360f / divisions;
 
 		int verticalDivisions = 3;
-		int verticalIncrement = (int)60f / verticalDivisions;
+		float verticalIncrement = 60f / verticalDivisions;
 
-		int distDivisions = 2;
-		int distIncrement = (int)(maxFollowDistance - minFollowDistance) / distDivisions;
+		int distDivisions = 3;
+		float distIncrement = (maxFollowDistance - minFollowDistance) / distDivisions;
 
-		for (int k = 0; k < distDivisions; k++) {
+		int count = 0;
+		for (float k = 0; k < distDivisions; k++) {
 
-			Vector3 neutralPosition = (playerHeadPos + (-player.transform.forward * (minFollowDistance + (distIncrement * k))));
+			Vector3 startingPosition = (-player.transform.forward * (minFollowDistance + k * distIncrement)) + (player.transform.up * followHeight);
 
-			for (int j = 0; j < 60; j += verticalIncrement) {
-				for (int i = -180; i < 180f; i += increment) {
-
+			for (float j = 0; j < 60; j += verticalIncrement) {
+				for (float i = -180; i < 180f; i += increment) {
+					count += 1;
 					Vector3 newdir = player.rotation * new Vector3(j, i, 0f);
-
-					Vector3 pos = RotatePointAroundPivot(neutralPosition, playerHeadPos, newdir);
-					cameraPositions.Add (pos);
+					Vector3 pos = RotatePointAroundPivot(startingPosition, playerHeadPos, newdir);
+					CameraPosition campos = new CameraPosition(count, pos, false);
+					cameraPositions.Add (campos);
 				}
 			}
 		}
 
-		cameraPositions.Sort ((a, b) => Vector3.Distance(a, neutralPositionMin).CompareTo(Vector3.Distance(b, neutralPositionMin)));		
+		// sort by dist from neutral position first
+		Vector3 defaultPosition = (-player.transform.forward * minFollowDistance) + (player.transform.up * followHeight);
+
+		cameraPositions.Sort ((a, b) => Vector3.Distance(a.position, defaultPosition).CompareTo(Vector3.Distance(b.position, defaultPosition)));		
 		cameraPositions.Reverse ();
 
 //		float colorincrement = 1f/cameraPositions.Count;
@@ -109,24 +148,24 @@ public class CameraMovement : MonoBehaviour
 	void Update ()
 	{
 
+		// update position of player's head and feat
+		playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
+		playerFeetPos = playerHeadPos + (controller.height * -player.transform.up) + (controller.height/10f * player.transform.up);
+
 		// dont change cam position once level ends
-		if (gameController.isLevelEnd)
-			return;
+		if (gameController != null)
+			if (gameController.isLevelEnd)
+				return;
 
 		// don't move camera but do rotate to track player if paused
 		if (isPaused) {
-			playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
 			SmoothLookAt();
 			return;
 		}
 				
-		playerHeadPos = player.position + controller.center + (controller.height/2f * player.transform.up);
-		playerFeetPos = playerHeadPos + (controller.height * -player.transform.up) + (controller.height/10f * player.transform.up);
-
 		// player moves right joystick, adjusts camera
 		Vector2 playerInput = new Vector2 (Input.GetAxisRaw ("RightH"), Input.GetAxisRaw ("RightV"));
 		if (playerInput != Vector2.zero) {
-
 			holdCameraPosition = true;
 			timePositionHeld = 0f;
 			float yRotationOffset = Mathf.Clamp(playerInput.x * joystickRotationForce, -179f, 179f);
@@ -147,7 +186,6 @@ public class CameraMovement : MonoBehaviour
 
 			// camera shouldn't go lower than player's head
 			relPosition.y = Mathf.Max (relPosition.y, playerHeadPos.y);
-
 			transform.position = Vector3.Lerp(transform.position, playerHeadPos + relPosition, smooth * Time.deltaTime);
 			SmoothLookAt();
 
@@ -160,7 +198,6 @@ public class CameraMovement : MonoBehaviour
 		} else {
 			// normal update - test position for occlusion and choose new pos if nec.
 			holdCameraPosition = false;
-			positions = CameraPositions ();
 			UpdatePosition();
 
 		}
@@ -188,34 +225,35 @@ public class CameraMovement : MonoBehaviour
 		if (Mathf.Abs (playerYRot - cameraYRot) > angleDifferenceAllowed) {
 			newPos = playerHeadPos + (-player.transform.forward * minFollowDistance) + (player.transform.up * followHeight);
 		}
-		
-		// check new pos and rotate if nec
-		// sort positions by distance from current camera position
+
+
 		if (!ViewingPosCheck(newPos)) {
 
-			//
-//			if (occludedTime < occlusionAllowedTime) {
-//				occludedTime += Time.deltaTime;
-//			} else {
-//				occludedTime = 0f;
-
-				positions.Sort ((a, b) => Vector3.Distance(a, transform.position).CompareTo(Vector3.Distance(b, transform.position)));		
-				positions.Reverse ();
-				
-				Stack<Vector3> positionStack = new Stack<Vector3>(positions);			
-				while (positionStack.Count > 0) {
-					newPos = positionStack.Pop();
-					if (ViewingPosCheck(newPos)) // keep the 1st valid pos we find
-						break;
+		// check new pos and rotate if nec
+		// sort positions by distance from current camera position
+//		bool visible = ViewingPosCheck(newPos);
+//		if (!visible && occludedTime <= occlusionAllowedTime ) {
+//			occludedTime += Time.deltaTime;
+//		} else if (!visible && !isMoving) {
+//			occludedTime = 0f;
+			positions.Sort ((a, b) => Vector3.Distance(playerHeadPos + a.position, transform.position).CompareTo(Vector3.Distance(playerHeadPos + b.position, transform.position)));		
+			positions.Reverse ();
+			
+			Stack<CameraPosition> positionStack = new Stack<CameraPosition>(positions);			
+			while (positionStack.Count > 0) {
+				CameraPosition pos = positionStack.Pop();
+				if (ViewingPosCheck(pos.position + playerHeadPos)) {// keep the 1st valid pos we find
+					Debug.DrawLine(playerHeadPos, playerHeadPos + pos.position, Color.cyan);
+					newPos = playerHeadPos + pos.position;
+					//StartCoroutine(MoveToNewPosition(pos.position));
+					break;
 				}
-				// if we didn't find a good position, just stay where we are
-				if (positionStack.Count == 0)
-					newPos = transform.position;
-//			}
-		
+			}
+
 		}
 
 		// Lerp the camera's position between it's current position and it's new position.
+//		if (!isMoving)
 		transform.position = Vector3.Lerp(transform.position, newPos, smooth * Time.deltaTime);
 
 		// Make sure the camera is looking at the player.
@@ -276,7 +314,7 @@ public class CameraMovement : MonoBehaviour
 			for (int i = 0; i < positions.Count; i++) {
 				Color32 thisColor = new Color(0f, 0f, (colorincrement*i), 1);
 				Gizmos.color = thisColor;
-				Gizmos.DrawSphere(positions[i], .1f);
+				Gizmos.DrawSphere(playerHeadPos + positions[i].position, .1f);
 			};
 
 		}

@@ -5,6 +5,7 @@ public class GameController : MonoBehaviour {
 
 	public string level1SceneName = "level01";
 	public string level2SceneName = "level02";
+	public string level3SceneName = "level00";
 	
 	public int currentLevel = 1;
 
@@ -143,8 +144,9 @@ public class GameController : MonoBehaviour {
 			Application.LoadLevelAdditive(level1SceneName);
 		} else if (currentLevel == 2) {
 			Application.LoadLevelAdditive(level2SceneName);
-		}		
-
+		} else if (currentLevel == 3) {
+			Application.LoadLevelAdditive(level3SceneName);
+		}
 		// wait a frame for loadlevel to take effect
 		yield return 0;
 
@@ -230,7 +232,7 @@ public class GameController : MonoBehaviour {
 	}
 
 	public void NextLevel() {
-		currentLevel = 2;
+		currentLevel = Mathf.Min (3, currentLevel+1);
 		RestartLevel ();
 	}
 
