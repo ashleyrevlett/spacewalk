@@ -656,6 +656,22 @@ public class CharacterMotor : MonoBehaviour {
 	 * Physics, pre-emptive collision detection and Collisions
 	 */
 
+
+	
+	void OnCollisionEnter(Collision collision) {
+
+		foreach (ContactPoint contact in collision.contacts) {
+			// make sure player is above platform; don't trigger if hit from below
+			if (contact.otherCollider.tag == "Pole" || contact.thisCollider.tag == "Pole") {
+				// grab the pole
+				Debug.Log ("Collision entered - " + contact.thisCollider.tag + " - " + contact.otherCollider.tag);
+				activePole = contact.thisCollider.gameObject;
+				isOnPole = true;				
+			}			
+		}
+	}
+
+
 	void OnTriggerEnter(Collider other) {
 		Debug.Log ("Trigger entered - " + other.gameObject.tag);
 		if (other.gameObject.tag == "Platform") {
@@ -678,6 +694,15 @@ public class CharacterMotor : MonoBehaviour {
 
 
 	void OnControllerColliderHit(ControllerColliderHit hit) {
+
+		Debug.Log ("OnControllerColliderHit - " + hit.gameObject.tag);
+
+		if (hit.gameObject.tag == "Pole") {
+			// grab the pole
+			activePole = hit.gameObject;
+			isOnPole = true;
+			return;
+		}
 
 		// detect collisions with sloped terrain
 		
