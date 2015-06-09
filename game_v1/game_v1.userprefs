@@ -1,7 +1,8 @@
 ﻿<Properties>
-  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="MonoDevelop.Default" />
-  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/PlatformMove.cs">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets/Scripts/Utilities/LoadOnClick.cs">
     <Files>
+      <File FileName="Assets/Scripts/Utilities/LoadOnClick.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/PlatformMove.cs" Line="51" Column="40" />
       <File FileName="Assets/Scripts/Controllers/GameController.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/Utilities/SpinObject.cs" Line="1" Column="1" />
@@ -15,7 +16,6 @@
       <File FileName="Assets/Scripts/Controllers/HUDController.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/FlashLivesRemaining.cs" Line="1" Column="1" />
       <File FileName="Assets/Scripts/Camera/PlayerCamera.cs" Line="1" Column="1" />
-      <File FileName="Assets/Scripts/Utilities/LoadOnClick.cs" Line="1" Column="1" />
     </Files>
   </MonoDevelop.Ide.Workbench>
   <MonoDevelop.Ide.DebuggingService.Breakpoints>
